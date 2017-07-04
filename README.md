@@ -229,7 +229,7 @@ Let's see our system behavior under load: A service calls another service and it
 
 ### Before you start
 * Install docker and docker compose
-* Export environment variables: `SW_CONFIG_SERVICE_PASSWORD`, `MSW_ROOT_PASSWORD`,  `MSW_DB_USER`, `MSW_DB_PASSWORD`, `MSW_SERVICE_ACCOUNT_PASSOWRD`, `MSW_DB_TEST_PASSWORD`.
+* Export environment variables: `MSW_CONFIG_SERVICE_PASSWORD`, `MSW_ROOT_PASSWORD`,  `MSW_DB_USER`, `MSW_DB_PASSWORD`, `MSW_SERVICE_ACCOUNT_PASSOWRD`, `MSW_DB_TEST_PASSWORD`.
 
 ### Production
 In production mode, all images will be pulled from docker hub. 
