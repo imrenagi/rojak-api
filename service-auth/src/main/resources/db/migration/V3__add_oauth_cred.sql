@@ -10,5 +10,6 @@ INSERT INTO oauth_client_details
 	web_server_redirect_uri, authorities, access_token_validity,
 	refresh_token_validity, additional_information, autoapprove)
 VALUES
-	("service-account", "service-account", "server",
-	"client_credentials,refresh_token", null, null, 36000, 36000, null, true);
+	("service-account", "service-account", "server", "client_credentials,refresh_token", null, null, 36000, 36000, null, true),
+	("service-election", "service-election", "server", "client_credentials,refresh_token", null, null, 36000, 36000, null, true),
+	("service-analytics", "service-analytics", "server", "client_credentials,refresh_token", null, null, 36000, 36000, null, true);

@@ -13,7 +13,7 @@ services:
   config:
     environment:
       CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
-    image: imrenagi/rojak-config
+    image: rojak/rojak-config
     restart: always
     logging:
       options:
@@ -43,7 +43,7 @@ services:
       options:
         max-size: "10M"
         max-file: "10"
-
+#
   monitoring:
     environment:
       CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
@@ -56,12 +56,14 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-
+#
   service-auth:
     environment:
       CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
 #      NOTIFICATION_SERVICE_PASSWORD: $NOTIFICATION_SERVICE_PASSWORD
 #      STATISTICS_SERVICE_PASSWORD: $STATISTICS_SERVICE_PASSWORD
+      SERVICE_ANALYTICS_PASSWORD: $MSW_SERVICE_ANALYTICS_PASSWORD
+      SERVICE_ELECTION_PASSWORD: $MSW_SERVICE_ELECTION_PASSWORD
       SERVICE_ACCOUNT_PASSWORD: $MSW_SERVICE_ACCOUNT_PASSWORD
       SERVICE_AUTH_DB_USER: $MSW_DB_USER
       SERVICE_AUTH_DB_PASSWORD: $MSW_DB_PASSWORD
@@ -114,3 +116,59 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
+
+#  service-election:
+#    environment:
+#      CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
+#      SERVICE_ELECTION_PASSWORD: $MSW_SERVICE_ELECTION_PASSWORD
+#      SERVICE_ELECTION_DB_USER: $MSW_DB_USER
+#      SERVICE_ELECTION_DB_PASSWORD: $MSW_DB_PASSWORD
+#    image: rojak/rojak-service-election
+#    restart: always
+#    logging:
+#      options:
+#        max-size: "10m"
+#        max-file: "10"
+#
+#  service-election-db:
+#    image: mysql
+#    container_name: rojak-election-db
+#    environment:
+#      - MYSQL_DATABASE=election
+#      - MYSQL_ROOT_PASSWORD=$MSW_ROOT_PASSWORD
+#      - MYSQL_USER=$MSW_DB_USER
+#      - MYSQL_PASSWORD=$MSW_DB_PASSWORD
+#    ports:
+#      - "3309:3306"
+#    logging:
+#      options:
+#        max-size: "10m"
+#        max-file: "10"
+#
+#  service-analytics:
+#    environment:
+#      CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
+#      SERVICE_ANALYTICS_PASSWORD: $MSW_SERVICE_ANALYTICS_PASSWORD
+#      SERVICE_ANALYTICS_DB_USER: $MSW_DB_USER
+#      SERVICE_ANALYTICS_DB_PASSWORD: $MSW_DB_PASSWORD
+#    image: rojak/rojak-service-analytics
+#    restart: always
+#    logging:
+#      options:
+#        max-size: "10m"
+#        max-file: "10"
+#
+#  service-analytics-db:
+#    image: mysql
+#    container_name: rojak-analytics-db
+#    environment:
+#      - MYSQL_DATABASE=analytics
+#      - MYSQL_ROOT_PASSWORD=$MSW_ROOT_PASSWORD
+#      - MYSQL_USER=$MSW_DB_USER
+#      - MYSQL_PASSWORD=$MSW_DB_PASSWORD
+#    ports:
+#      - "3310:3306"
+#    logging:
+#      options:
+#        max-size: "10m"
+#        max-file: "10"

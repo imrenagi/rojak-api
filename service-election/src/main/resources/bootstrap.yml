@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: service-election
+  cloud:
+    config:
+      enabled: true
+      uri: http://config:8888
+      fail-fast: true
+      password: ${CONFIG_SERVICE_PASSWORD}
+      username: user
+

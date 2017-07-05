@@ -14,6 +14,7 @@ if [ $1 == "all" ]; then
     cd ${DIR}/registry && mvn clean package
     cd ${DIR}/service-account && mvn clean package
     cd ${DIR}/service-auth && mvn clean package
+    cd ${DIR}/service-election && mvn clean package
 else
     for var in "$@"
     do

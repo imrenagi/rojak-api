@@ -29,5 +29,11 @@ zuul:
       stripPrefix: false
       sensitiveHeaders:
 
+#    service-election:
+#      path: /elections/**
+#      serviceId: service-election
+#      stripPrefix: false
+#      sensitiveHeaders:
+
 server:
   port: 4000
