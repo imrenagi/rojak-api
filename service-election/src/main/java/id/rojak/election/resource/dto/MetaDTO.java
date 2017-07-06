@@ -13,9 +13,10 @@ public class MetaDTO {
     private int totalPage;
     private int totalItems;
 
-    protected MetaDTO() {}
+    public MetaDTO() {}
 
     public MetaDTO(int currentPage, int totalPage, int totalItems) {
+        this();
         this.currentPage = currentPage;
         this.totalPage = totalPage;
         this.totalItems = totalItems;
@@ -31,7 +32,7 @@ public class MetaDTO {
         return totalPage;
     }
 
-    @JsonProperty("page")
+    @JsonProperty("total_items")
     public int getTotalItems() {
         return totalItems;
     }

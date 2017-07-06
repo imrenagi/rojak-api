@@ -9,16 +9,16 @@ import java.util.Date;
 /**
  * Created by inagi on 7/4/17.
  */
-//@Embeddable
+@Embeddable
 public class ElectionDate extends ValueObject {
 
-//    @Column(name="election_date")
+    @Column(name="election_date")
     private Date electionDate;
 
-//    @Column(name="election_campaign_start_date")
+    @Column(name="election_campaign_start_date")
     private Date campaignStartDate;
 
-//    @Column(name="election_campaign_end_date")
+    @Column(name="election_campaign_end_date")
     private Date campaignEndDate;
 
     private ElectionDate() {

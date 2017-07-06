@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Created by inagi on 7/4/17.
  */
 @ControllerAdvice
-public class ErrorHandler {
+public class    ErrorHandler {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 

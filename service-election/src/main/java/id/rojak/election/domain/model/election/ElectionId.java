@@ -8,10 +8,10 @@ import javax.persistence.Embeddable;
 /**
  * Created by inagi on 7/3/17.
  */
-//@Embeddable
+@Embeddable
 public class ElectionId extends ValueObject {
 
-//    @Column(name="election_id")
+    @Column(name="election_id")
     private String id;
 
     public ElectionId(String anId) {

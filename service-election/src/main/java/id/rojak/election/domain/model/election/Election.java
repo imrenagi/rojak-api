@@ -13,29 +13,32 @@ import java.util.Date;
 /**
  * Created by inagi on 7/3/17.
  */
-//@Entity
-//@Table(name="elections")
+@Entity
+@Table(name="tbl_elections")
 public class Election extends IdentifiedDomainObject {
 
-//    @Embedded
+    @Embedded
     private ElectionId electionId;
 
-//    @Column(name="name")
+    @Column(name="name")
     private String name;
 
-//    @Embedded
+    @Embedded
     private ElectionDate electionDate;
-//    @Enumerated(EnumType.STRING)
-//    @Column(name="type")
+
+    @Enumerated(EnumType.STRING)
     private ElectionType type;
 
-//    @Column(name="city_id")
+    @Column(name="city_id")
     private Integer cityId = -1;
 
-//    @Column(name="province_id")
+    @Column(name="province_id")
     private Integer provinceId = -1;
 
 //    private Set<Candidate> candidates;
+    protected Election() {
+        super();
+    }
 
     public Election(
             ElectionId electionId,
@@ -44,7 +47,7 @@ public class Election extends IdentifiedDomainObject {
             Date electionCampaignStart,
             Date electionCampaignEnd,
             ElectionType type) {
-        super();
+        this();
 
         this.setName(name);
         this.setElectionDate(new ElectionDate(
