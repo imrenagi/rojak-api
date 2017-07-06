@@ -24,12 +24,12 @@ services:
     build: service-auth
     ports:
       - 5000:5000
-#
-#  service-election:
-#    build: service-election
-#    ports:
-#      - 7000:7000
-#
+
+  service-election:
+    build: service-election
+    ports:
+      - 7000:7000
+
 #  service-analytics:
 #    build: service-analytics
 #    ports:

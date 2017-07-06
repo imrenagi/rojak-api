@@ -20,7 +20,7 @@ public class Election extends IdentifiedDomainObject {
 //    @Embedded
     private ElectionId electionId;
 
-    @Column(name="name")
+//    @Column(name="name")
     private String name;
 
 //    @Embedded
