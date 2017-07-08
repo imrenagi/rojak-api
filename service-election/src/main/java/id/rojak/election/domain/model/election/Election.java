@@ -9,6 +9,7 @@ import id.rojak.election.domain.model.candidate.Candidate;
 import javax.persistence.*;
 
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Created by inagi on 7/3/17.
@@ -35,7 +36,9 @@ public class Election extends IdentifiedDomainObject {
     @Column(name="province_id")
     private Integer provinceId = -1;
 
-//    private Set<Candidate> candidates;
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "electionId", orphanRemoval = true)
+    private Set<Candidate> candidates;
+
     protected Election() {
         super();
     }
@@ -49,6 +52,7 @@ public class Election extends IdentifiedDomainObject {
             ElectionType type) {
         this();
 
+        this.setElectionId(electionId);
         this.setName(name);
         this.setElectionDate(new ElectionDate(
                 electionDate,

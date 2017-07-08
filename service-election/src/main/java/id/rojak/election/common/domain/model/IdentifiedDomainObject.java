@@ -9,8 +9,6 @@ import java.io.Serializable;
  * Created by inagi on 7/3/17.
  */
 @MappedSuperclass
-//@Entity
-//@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 public class IdentifiedDomainObject extends AssertionConcern implements Serializable {
 
     private static final long serialVersionUID = 1L;

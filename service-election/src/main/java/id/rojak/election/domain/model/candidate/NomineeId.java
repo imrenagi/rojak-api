@@ -6,26 +6,26 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
- * Created by inagi on 7/4/17.
+ * Created by imrenagi on 7/6/17.
  */
 @Embeddable
-public class CandidateId extends ValueObject {
+public class NomineeId extends ValueObject {
 
-    @Column(name="candidate_id")
+    @Column(name="nominee_id", insertable = false, updatable = false)
     private String id;
 
-    protected CandidateId() {
+    protected NomineeId() {
         super();
     }
 
-    public CandidateId(String anId) {
+    public NomineeId(String anId) {
         this();
 
         this.setId(anId);
     }
 
     public void setId(String id) {
-        this.assertArgumentNotNull(id, "The Candidate identity is required");
+        this.assertArgumentNotNull(id, "The Nominee identity is required");
 
         this.id = id;
     }
@@ -39,9 +39,10 @@ public class CandidateId extends ValueObject {
         boolean equalObjects = false;
 
         if (anObject != null && this.getClass() == anObject.getClass()) {
-            CandidateId typedObject = (CandidateId) anObject;
+            NomineeId typedObject = (NomineeId) anObject;
             equalObjects = typedObject.id().equals(this.id());
         }
         return equalObjects;
     }
 }
+
