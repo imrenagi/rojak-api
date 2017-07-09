@@ -31,15 +31,15 @@ public class ElectionApplicationService {
 
     @Transactional
     public List<Election> allElections() {
-//        Nominee nom = nomineeRepository.findByNomineeId(new NomineeId("imrenagi"));
-        Nominee nom = nomineeRepository.findOne(1L);
+        Nominee nom = nomineeRepository.findByNomineeId(new NomineeId("imrenagi"));
+//        Nominee nom = nomineeRepository.findOne(1L);
         log.info("Receive Nominee info => {} {} ", nom.fullName().asFormattedName(), nom.nomineeId());
 
-        nom = nomineeRepository.findByNomineeId(new NomineeId("imrenagi123"));
+        nom = nomineeRepository.findByNomineeId(new NomineeId("dyaminda"));
         log.info("Receive Nominee info xxx => {} {} ", nom.fullName().asFormattedName(), nom.nomineeId());
 
 
-        Candidate can = candidateRepository.findOne(1L);//candidateRepository.findByCandidateId(new CandidateId("okeoce"));
+        Candidate can = candidateRepository.findByCandidateId(new CandidateId("okeoce"));
         if (can != null)
             log.info("Candidate info => {} {} {} {}", can.candidateId().id(),
                 can.mainCandidate().nomineeId().id(),

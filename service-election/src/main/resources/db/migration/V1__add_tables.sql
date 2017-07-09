@@ -34,8 +34,8 @@ CREATE TABLE `tbl_candidates` (
     `candidate_id` varchar(36) NOT NULL,
     `election_id` varchar(36) NOT NULL,
     `candidate_number` int NOT NULL,
-    `main_nominee_id` varchar(36) NOT NULL,
-    `vice_nominee_id` varchar(36) NOT NULL,
+    `main_nominee_id` bigint(20) NOT NULL,
+    `vice_nominee_id` bigint(20) NOT NULL,
     `tag_line` varchar(255),
     `social_media_web_url` varchar(255),
     `social_media_twitter_id` varchar(255),
@@ -45,9 +45,8 @@ CREATE TABLE `tbl_candidates` (
     KEY `k_election_id` (`election_id`),
     UNIQUE KEY `k_election_candidate` (`election_id`, `candidate_id`),
     UNIQUE KEY `k_election_candidate_number` (`election_id`, `candidate_number`),
-    CONSTRAINT `fk_main_nominee_id` FOREIGN KEY (`main_nominee_id`) REFERENCES `tbl_nominees` (`nominee_id`),
-    CONSTRAINT `fk_vice_nominee_id` FOREIGN KEY (`vice_nominee_id`) REFERENCES `tbl_nominees` (`nominee_id`),
-    CONSTRAINT `fk_election_id` FOREIGN KEY (`election_id`) REFERENCES `tbl_elections` (`election_id`),
+    CONSTRAINT `fk_main_nominee_id` FOREIGN KEY (`main_nominee_id`) REFERENCES `tbl_nominees` (`id`),
+    CONSTRAINT `fk_vice_nominee_id` FOREIGN KEY (`vice_nominee_id`) REFERENCES `tbl_nominees` (`id`),
     PRIMARY KEY (`id`)
 );
 

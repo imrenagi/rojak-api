@@ -16,8 +16,6 @@ public class Candidate extends IdentifiedDomainObject {
     @Embedded
     private CandidateId candidateId;
 
-    //@ManyToOne //TODO make sure this is correct
-    //@JoinColumn(name="election_id") //TODO perlu dikasih ?
     @Embedded
     private ElectionId electionId;
 
@@ -28,11 +26,11 @@ public class Candidate extends IdentifiedDomainObject {
     private String tagLine;
 
     @ManyToOne
-    @JoinColumn(name="main_nominee_id", referencedColumnName = "nominee_id", insertable = false, updatable = false)
+    @JoinColumn(name="main_nominee_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Nominee mainCandidate;
 
     @ManyToOne
-    @JoinColumn(name="vice_nominee_id", referencedColumnName = "nominee_id", insertable = false, updatable = false)
+    @JoinColumn(name="vice_nominee_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Nominee viceCandidate;
 
     @Embedded
