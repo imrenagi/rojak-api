@@ -9,6 +9,7 @@ import id.rojak.election.domain.model.candidate.Candidate;
 import javax.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -37,7 +38,7 @@ public class Election extends IdentifiedDomainObject {
     private Integer provinceId = -1;
 
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "electionId", orphanRemoval = true)
-    private Set<Candidate> candidates;
+    private List<Candidate> candidates;
 
     protected Election() {
         super();
@@ -94,27 +95,41 @@ public class Election extends IdentifiedDomainObject {
         return this.electionId;
     }
 
+    public List<Candidate> candidates() { return this.candidates; }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean equalObject = false;
+
+        if (obj != null && obj.getClass() == this.getClass()) {
+            Election typedObject = (Election) obj;
+            equalObject = typedObject.electionId().equals(this.electionId());
+        }
+        return equalObject;
+    }
+
     public void setElectionId(ElectionId anElectionId) {
-        this.assertArgumentNotNull(anElectionId, "ElectionDTO Id must not be null");
-        this.assertArgumentNotEmpty(anElectionId.id(), "ElectionDTO Id must not be empty");
+        this.assertArgumentNotNull(anElectionId, "Election Id must not be null");
+        this.assertArgumentNotEmpty(anElectionId.id(), "Election Id must not be empty");
 
         this.electionId = anElectionId;
     }
 
     public void setName(String name) {
-        this.assertArgumentNotEmpty(name, "ElectionDTO name must not be empty");
+        this.assertArgumentNotNull(name, "Election name must not be null");
+        this.assertArgumentNotEmpty(name, "Election name must not be empty");
 
         this.name = name;
     }
 
     public void setElectionDate(ElectionDate electionDate) {
-        this.assertArgumentNotNull(electionDate, "ElectionDTO Dates must not be null");
+        this.assertArgumentNotNull(electionDate, "Election Dates must not be null");
 
         this.electionDate = electionDate;
     }
 
     public void setType(ElectionType type) {
-        this.assertArgumentNotNull(type, "ElectionDTO type must no be empty");
+        this.assertArgumentNotNull(type, "Election type must no be empty");
 
         this.type = type;
     }
