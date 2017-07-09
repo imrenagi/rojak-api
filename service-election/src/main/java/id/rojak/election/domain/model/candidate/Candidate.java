@@ -33,6 +33,9 @@ public class Candidate extends IdentifiedDomainObject {
     @JoinColumn(name="vice_nominee_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Nominee viceCandidate;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Embedded
     private SocialMediaInformation socialMediaInformation;
 
@@ -159,6 +162,12 @@ public class Candidate extends IdentifiedDomainObject {
         this.socialMediaInformation = socialMediaInformation;
     }
 
+    public void setImageUrl(String imageUrl) {
+        this.assertArgumentNotEmpty(imageUrl, "Image URL should not be empty");
+
+        this.imageUrl = imageUrl;
+    }
+
     public CandidateId candidateId() { return this.candidateId; }
 
     public ElectionId electionId() { return this.electionId; }
@@ -174,6 +183,8 @@ public class Candidate extends IdentifiedDomainObject {
     public SocialMediaInformation socialMediaInformation() {
         return this.socialMediaInformation;
     }
+
+    public String imageuRL() { return this.imageUrl; }
 
 
 

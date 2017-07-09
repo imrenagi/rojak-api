@@ -67,8 +67,9 @@ public class ElectionApplication extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/" , "/elections").permitAll()
-                .anyRequest().authenticated();
+//                .antMatchers("/" , "/elections")
+//                .anyRequest().authenticated();
+        .anyRequest().permitAll();
     }
 }
 

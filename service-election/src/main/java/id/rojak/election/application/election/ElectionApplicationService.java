@@ -3,6 +3,7 @@ package id.rojak.election.application.election;
 import com.netflix.discovery.converters.Auto;
 import id.rojak.election.domain.model.candidate.*;
 import id.rojak.election.domain.model.election.Election;
+import id.rojak.election.domain.model.election.ElectionId;
 import id.rojak.election.domain.model.election.ElectionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,29 +24,8 @@ public class ElectionApplicationService {
     @Autowired
     private ElectionRepository electionRepository;
 
-    @Autowired
-    private NomineeRepository nomineeRepository;
-
-    @Autowired
-    private CandidateRepository candidateRepository;
-
     @Transactional
     public List<Election> allElections() {
-        Nominee nom = nomineeRepository.findByNomineeId(new NomineeId("imrenagi"));
-//        Nominee nom = nomineeRepository.findOne(1L);
-        log.info("Receive Nominee info => {} {} ", nom.fullName().asFormattedName(), nom.nomineeId());
-
-        nom = nomineeRepository.findByNomineeId(new NomineeId("dyaminda"));
-        log.info("Receive Nominee info xxx => {} {} ", nom.fullName().asFormattedName(), nom.nomineeId());
-
-
-        Candidate can = candidateRepository.findByCandidateId(new CandidateId("okeoce"));
-        if (can != null)
-            log.info("Candidate info => {} {} {} {}", can.candidateId().id(),
-                can.mainCandidate().nomineeId().id(),
-                can.viceCandidate().nomineeId().id(),
-                can.socialMediaInformation().facebookUrl());
-
         List<Election> elections = electionRepository().findAll();
 
         return elections;
@@ -54,8 +34,5 @@ public class ElectionApplicationService {
     public ElectionRepository electionRepository() {
         return this.electionRepository;
     }
-//
-//    public void setElectionRepository(ElectionRepository electionRepository) {
-//        this.electionRepository = electionRepository;
-//    }
+
 }

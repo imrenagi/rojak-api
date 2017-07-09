@@ -36,6 +36,7 @@ CREATE TABLE `tbl_candidates` (
     `candidate_number` int NOT NULL,
     `main_nominee_id` bigint(20) NOT NULL,
     `vice_nominee_id` bigint(20) NOT NULL,
+    `image_url` varchar(255),
     `tag_line` varchar(255),
     `social_media_web_url` varchar(255),
     `social_media_twitter_id` varchar(255),
