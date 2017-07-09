@@ -11,14 +11,14 @@ import static org.junit.Assert.*;
 /**
  * Created by imrenagi on 7/9/17.
  */
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@SpringApplicationConfiguration(classes = ElectionApplication.class)
-//@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = ElectionApplication.class)
+@WebAppConfiguration
 public class ElectionApplicationTest {
 
-//    @Test
-//    public void contextLoads() {
-//
-//    }
+    @Test
+    public void contextLoads() {
+
+    }
 
 }
