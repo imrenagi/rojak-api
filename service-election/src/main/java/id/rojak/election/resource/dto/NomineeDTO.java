@@ -1,61 +1,66 @@
 package id.rojak.election.resource.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import id.rojak.election.domain.model.candidate.Nominee;
 
 /**
- * Created by imrenagi on 7/8/17.
+ * Created by imrenagi on 7/9/17.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class NomineeDTO {
 
-    private String fullName;
+    private String id;
+    private String fistName;
+    private String middleName;
+    private String lastName;
     private String nickName;
-    private String twitterId;
 
     protected NomineeDTO() {
 
     }
 
     public NomineeDTO(Nominee nominee) {
-        this(nominee.fullName().asFormattedName(),
-                nominee.nickName(),
-                nominee.socialMediaInformation().twitterId());
+        this(nominee.nomineeId().id(),
+                nominee.fullName().firstName(),
+                nominee.fullName().middleName(),
+                nominee.fullName().lastName(),
+                nominee.nickName());
     }
 
-    public NomineeDTO(String fullName,
-                      String nickName,
-                      String twitterId) {
-        this.fullName = fullName;
+
+    public NomineeDTO(String id,
+                      String fistName,
+                      String middleName,
+                      String lastName,
+                      String nickName) {
+        this.id = id;
+        this.fistName = fistName;
+        this.middleName = middleName;
+        this.lastName = lastName;
         this.nickName = nickName;
-        this.twitterId = twitterId;
     }
 
-    @JsonProperty("name")
-    public String getFullName() {
-        return fullName;
+    @JsonProperty("id")
+    public String getId() {
+        return id;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    @JsonProperty("first_name")
+    public String getFistName() {
+        return fistName;
+    }
+
+    @JsonProperty("middle_name")
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    @JsonProperty("last_name")
+    public String getLastName() {
+        return lastName;
     }
 
     @JsonProperty("nick_name")
     public String getNickName() {
-        return this.nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    @JsonProperty("twitter_id")
-    public String getTwitterId() {
-        return twitterId;
-    }
-
-    public void setTwitterId(String twitterId) {
-        this.twitterId = twitterId;
+        return nickName;
     }
 }

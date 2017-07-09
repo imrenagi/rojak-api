@@ -119,4 +119,8 @@ public class Nominee extends IdentifiedDomainObject {
     public NomineeId nomineeId() {
         return this.nomineeId;
     }
+
+    public List<Candidate> asMainCandidate() {
+        return this.asMainCandidates;
+    }
 }

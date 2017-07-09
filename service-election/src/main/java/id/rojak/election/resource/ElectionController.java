@@ -31,11 +31,6 @@ public class ElectionController {
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     @ResponseBody
-//    private ResponseEntity<MetaDTO> getAllElection() {
-//        MetaDTO dto = new MetaDTO(1, 1, 1);
-//        log.info("{} {} {}", dto.getCurrentPage(), dto.getTotalPage(), dto.getTotalItems());
-//        return new ResponseEntity<>(dto, HttpStatus.OK);
-//    }
     public ResponseEntity<ElectionCollectionDTO> getAllElection() {
 
         List<Election> elections = this.electionApplicationService.allElections();
@@ -44,10 +39,5 @@ public class ElectionController {
                 elections.stream().map(election -> new ElectionDTO(election)).collect(Collectors.toSet()),
                 new MetaDTO(1,1,1)), HttpStatus.OK);
     }
-
-//    protected ElectionApplicationService electionApplicationService() {
-//        return this.electionApplicationService;
-//    }
-
 
 }

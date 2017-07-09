@@ -3,7 +3,6 @@ package id.rojak.election.resource.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import id.rojak.election.domain.model.candidate.Candidate;
-import id.rojak.election.domain.model.candidate.Nominee;
 
 /**
  * Created by imrenagi on 7/8/17.
@@ -15,8 +14,8 @@ public class CandidateDTO {
     private String electionId;
     private int candidateNumber;
     private String name;
-    private NomineeDTO mainCandidate;
-    private NomineeDTO viceCandidate;
+    private NomineeSmallDTO mainCandidate;
+    private NomineeSmallDTO viceCandidate;
     private String imageUrl;
     private String twitterId;
     private String facebookUrl;
@@ -29,8 +28,8 @@ public class CandidateDTO {
         this.candidateNumber = candidate.candidateNumber();
         this.name = candidate.mainCandidate().fullName().asFormattedName() + " & " +
                 candidate.viceCandidate().fullName().asFormattedName();
-        this.mainCandidate = new NomineeDTO(candidate.mainCandidate());
-        this.viceCandidate = new NomineeDTO(candidate.viceCandidate());
+        this.mainCandidate = new NomineeSmallDTO(candidate.mainCandidate());
+        this.viceCandidate = new NomineeSmallDTO(candidate.viceCandidate());
         this.imageUrl = candidate.imageuRL();
         this.twitterId = candidate.socialMediaInformation().twitterId();
         this.facebookUrl = candidate.socialMediaInformation().facebookUrl();
@@ -60,12 +59,12 @@ public class CandidateDTO {
     }
 
     @JsonProperty("main_candidate")
-    public NomineeDTO getMainCandidate() {
+    public NomineeSmallDTO getMainCandidate() {
         return mainCandidate;
     }
 
     @JsonProperty("vice_candidate")
-    public NomineeDTO getViceCandidate() {
+    public NomineeSmallDTO getViceCandidate() {
         return viceCandidate;
     }
 

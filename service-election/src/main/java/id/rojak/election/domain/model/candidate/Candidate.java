@@ -36,6 +36,10 @@ public class Candidate extends IdentifiedDomainObject {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @ManyToOne
+    @JoinColumn(name="election_id", referencedColumnName = "election_id", insertable = false, updatable = false)
+    private Election election;
+
     @Embedded
     private SocialMediaInformation socialMediaInformation;
 

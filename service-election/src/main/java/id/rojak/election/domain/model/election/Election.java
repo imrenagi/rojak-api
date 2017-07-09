@@ -37,7 +37,7 @@ public class Election extends IdentifiedDomainObject {
     @Column(name="province_id")
     private Integer provinceId = -1;
 
-    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "electionId", orphanRemoval = true)
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "election", orphanRemoval = true)
     private List<Candidate> candidates;
 
     protected Election() {
