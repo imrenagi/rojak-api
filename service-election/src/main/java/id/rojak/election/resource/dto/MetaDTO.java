@@ -11,11 +11,11 @@ public class MetaDTO {
 
     private int currentPage;
     private int totalPage;
-    private int totalItems;
+    private long totalItems;
 
     public MetaDTO() {}
 
-    public MetaDTO(int currentPage, int totalPage, int totalItems) {
+    public MetaDTO(int currentPage, int totalPage, long totalItems) {
         this();
         this.currentPage = currentPage;
         this.totalPage = totalPage;
@@ -33,7 +33,7 @@ public class MetaDTO {
     }
 
     @JsonProperty("total_items")
-    public int getTotalItems() {
+    public long getTotalItems() {
         return totalItems;
     }
 }

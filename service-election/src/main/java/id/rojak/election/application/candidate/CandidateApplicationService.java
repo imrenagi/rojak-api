@@ -4,6 +4,10 @@ import id.rojak.election.domain.model.candidate.Candidate;
 import id.rojak.election.domain.model.candidate.CandidateRepository;
 import id.rojak.election.domain.model.election.ElectionId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,11 +23,17 @@ public class CandidateApplicationService {
     private CandidateRepository candidateRepository;
 
     @Transactional
-    public List<Candidate> allCandidates(String anElectionId) {
-        List<Candidate> candidates = this.candidateRepository
-                .findByElectionId(
-                        new ElectionId(anElectionId));
-        return candidates;
+    public Page<Candidate> allCandidates(String anElectionId, Pageable pageRequest) {
+
+        Page<Candidate> result = this.candidateRepository
+                .findByElectionId(new ElectionId(anElectionId),
+                        pageRequest);
+
+        return result;
+    }
+
+    private Pageable candidatePageRequest(int page, int size) {
+        return new PageRequest(page, size);
     }
 
     @Transactional

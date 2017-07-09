@@ -8,6 +8,8 @@ import id.rojak.election.resource.dto.MetaDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,18 +32,25 @@ public class CandidateController {
     @RequestMapping(path = "/{election_id}/candidates", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<CandidateCollectionDTO> getAllCandidates(
-            @PathVariable("election_id") String anElectionId) {
+            @PathVariable("election_id") String anElectionId,
+            @RequestParam(value="page", defaultValue = "0") Integer page,
+            @RequestParam(value="limit", defaultValue="10") Integer size) {
 
-        List<Candidate> candidates = this.candidateApplicationService.allCandidates(anElectionId);
+        Page<Candidate> candidatesPage = this.candidateApplicationService
+                    .allCandidates(
+                            anElectionId,
+                            new PageRequest(page, size));
 
-        Set<CandidateDTO> candidateDTOSet = candidates.stream()
-                .map(candidate -> new CandidateDTO(candidate))
-                .collect(Collectors.toSet());
+        List<CandidateDTO> candidates = candidatesPage.map(candidate -> new CandidateDTO(candidate))
+                                    .getContent();
 
-        return new ResponseEntity<CandidateCollectionDTO>(
+        return new ResponseEntity<>(
                 new CandidateCollectionDTO(
-                        candidateDTOSet,
-                        new MetaDTO(1,1,1)),
+                        candidates,
+                        new MetaDTO(
+                                page,
+                                candidatesPage.getTotalPages(),
+                                candidatesPage.getTotalElements())),
                 HttpStatus.OK);
 
     }

@@ -1,6 +1,8 @@
 package id.rojak.election.domain.model.candidate;
 
 import id.rojak.election.domain.model.election.ElectionId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,8 +14,5 @@ import java.util.List;
 @Repository
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 
-    public Candidate findByCandidateId(CandidateId candidateId);
-
-    public List<Candidate> findByElectionId(ElectionId electionId);
-
+    Page<Candidate> findByElectionId(ElectionId electionId, Pageable pageRequest);
 }
