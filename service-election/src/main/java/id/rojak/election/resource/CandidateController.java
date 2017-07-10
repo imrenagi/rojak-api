@@ -1,6 +1,9 @@
 package id.rojak.election.resource;
 
 import id.rojak.election.application.candidate.CandidateApplicationService;
+import id.rojak.election.application.candidate.NewCandidateCommand;
+import id.rojak.election.application.candidate.UpdateCandidateDetailCommand;
+import id.rojak.election.application.candidate.UpdateCandidateSocialMediaCommand;
 import id.rojak.election.domain.model.candidate.Candidate;
 import id.rojak.election.resource.dto.CandidateCollectionDTO;
 import id.rojak.election.resource.dto.CandidateDTO;
@@ -14,9 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Created by imrenagi on 7/8/17.
@@ -55,6 +57,63 @@ public class CandidateController {
 
     }
 
+    @RequestMapping(path = "/{election_id}/candidates/{candidate_id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<String> getCandidateFromElection(
+            @PathVariable("election_id") String anElectionId,
+            @PathVariable("candidate_id") String aCandidateId) {
+
+        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @RequestMapping(path = "/{election_id}/candidates", method = RequestMethod.POST)
+    public ResponseEntity<String> newCandidateForElection(@PathVariable("election_id") String anElectionId,
+                                                          @Valid @RequestBody NewCandidateCommand aCommand) {
+
+        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @RequestMapping(path = "/{election_id}/candidates/{candidate_id}", method = RequestMethod.PUT)
+    public ResponseEntity<String> updateCandidateForAnElection(
+            @PathVariable("election_id") String anElectionId,
+            @PathVariable("candidate_id") String candidateId,
+            @Valid @RequestBody UpdateCandidateDetailCommand aCommand) {
+
+        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @RequestMapping(path = "/{election_id}/candidates/{candidate_id}/socmed", method = RequestMethod.PUT)
+    public ResponseEntity<String> updateCandidateSocialMediaInElection(
+            @PathVariable("election_id") String anElectionId,
+            @PathVariable("candidate_id") String candidateId,
+            @Valid @RequestBody UpdateCandidateSocialMediaCommand aCommand) {
+
+        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @RequestMapping(path = "/{election_id}/candidates/{candidate_id}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteCandidateOfAnElection(
+            @PathVariable("election_id") String anElectionId,
+            @PathVariable("candidate_id") String candidateId) {
+
+        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @RequestMapping(path = "/{election_id}/candidates/{candidate_id}/statistics", method = RequestMethod.GET)
+    public ResponseEntity<String> candidateStatisticOverTheTime(
+            @PathVariable("election_id") String anElectionId,
+            @PathVariable("candidate_id") String candidateId) {
+
+        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @RequestMapping(path = "/{election_id}/candidates/{candidate_id}/media", method = RequestMethod.GET)
+    public ResponseEntity<String> allMediaStatisticForCandidate(
+            @PathVariable("election_id") String anElectionId,
+            @PathVariable("candidate_id") String candidateId) {
+
+        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+    }
 
 }
 
