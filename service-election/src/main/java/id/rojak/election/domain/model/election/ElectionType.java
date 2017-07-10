@@ -24,6 +24,13 @@ public enum ElectionType {
         public boolean isMayorElection() {
             return true;
         }
+    },
+
+    REGENT {
+        @Override
+        public boolean isRegencyElection() {
+            return true;
+        }
     };
 
     public boolean isPresidentElection() {
@@ -35,6 +42,10 @@ public enum ElectionType {
     }
 
     public boolean isMayorElection() {
+        return false;
+    }
+
+    public boolean isRegencyElection() {
         return false;
     }
 }
