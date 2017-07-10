@@ -11,7 +11,8 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class NomineeId extends ValueObject {
 
-    @Column(name="nominee_id", insertable = false, updatable = false)
+//    @Column(name="nominee_id", insertable = false, updatable = false)
+    @Column(name="nominee_id")
     private String id;
 
     protected NomineeId() {

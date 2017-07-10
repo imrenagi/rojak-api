@@ -18,30 +18,41 @@ public class Nominee extends IdentifiedDomainObject {
     @Embedded
     private SocialMediaInformation socialMediaInformation;
 
-    @Column(name="nick_name")
+    @Column(name = "nick_name")
     private String nickName;
 
     @Embedded
     private NomineeId nomineeId;
 
-    @Column(name="photo_url")
+    @Column(name = "photo_url")
     private String photoUrl;
 
     @OneToMany(cascade = {CascadeType.REMOVE}, mappedBy = "mainCandidate", orphanRemoval = true)
     private List<Candidate> asMainCandidates;
 
-    protected Nominee() { super(); }
+    protected Nominee() {
+        super();
+    }
 
     public Nominee(
             NomineeId nomineeId,
             FullName aName,
-                  String aNickName,
-                  SocialMediaInformation aSocialMediaInformation) {
+            String aNickName,
+            SocialMediaInformation aSocialMediaInformation) {
         super();
         this.setFullName(aName);
         this.setNickName(aNickName);
         this.setSocialMediaInformation(aSocialMediaInformation);
         this.setNomineeId(nomineeId);
+    }
+
+    public Nominee(NomineeId nomineeId,
+                   FullName aName,
+                   String aNickName,
+                   String photoUrl,
+                   SocialMediaInformation aSocialMediaInformation) {
+        this(nomineeId, aName, aNickName, aSocialMediaInformation);
+        this.setPhotoUrl(photoUrl);
     }
 
     public void installPhoto(String anPhotoUrl) {
@@ -106,7 +117,9 @@ public class Nominee extends IdentifiedDomainObject {
         this.nickName = nickName;
     }
 
-    public FullName fullName() { return this.fullName; }
+    public FullName fullName() {
+        return this.fullName;
+    }
 
     public SocialMediaInformation socialMediaInformation() {
         return this.socialMediaInformation;

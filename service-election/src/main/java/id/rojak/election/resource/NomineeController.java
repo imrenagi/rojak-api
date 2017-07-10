@@ -1,5 +1,6 @@
 package id.rojak.election.resource;
 
+import id.rojak.election.application.candidate.NewNomineeCommand;
 import id.rojak.election.application.candidate.NomineeApplicationService;
 import id.rojak.election.application.election.ElectionApplicationService;
 import id.rojak.election.domain.model.candidate.Candidate;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -28,11 +30,9 @@ public class NomineeController {
     private NomineeApplicationService nomineeApplicationService;
 
     @RequestMapping(path = "/nominees", method = RequestMethod.GET)
-    @ResponseBody
     public ResponseEntity<NomineesCollectionDTO> getAllCandidates(
             @RequestParam(value="page", defaultValue = "0") Integer page,
             @RequestParam(value="limit", defaultValue="10") Integer size) {
-
 
         Page<Nominee> nomineesPage = nomineeApplicationService.allNominees(new PageRequest(page, size));
 
@@ -47,6 +47,16 @@ public class NomineeController {
                                 nomineesPage.getTotalPages(),
                                 nomineesPage.getTotalElements())),
                 HttpStatus.OK);
+    }
 
+    @RequestMapping(path = "/nominees", method = RequestMethod.POST)
+    public ResponseEntity<NomineeDTO> createNominee(@Valid @RequestBody NewNomineeCommand aCommand) {
+
+        Nominee nominee = nomineeApplicationService.newNominee(aCommand);
+
+        return new ResponseEntity<NomineeDTO>(
+                new NomineeDTO(nominee),
+                HttpStatus.OK
+        );
     }
 }

@@ -1,29 +1,49 @@
 package id.rojak.election.resource;
 
+import id.rojak.election.resource.dto.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.sql.SQLDataException;
+import java.sql.SQLException;
 
 /**
  * Created by inagi on 7/4/17.
  */
 @ControllerAdvice
-public class    ErrorHandler {
+public class ErrorHandler {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    private void processValidateionError(IllegalArgumentException e) {
+    private ResponseEntity<ErrorMessage> processValidationError(Exception e) {
         log.info("Illegal Argument Exception -> 400 BAD REQUEST because of {} ", e.getMessage());
+        return new ResponseEntity<ErrorMessage>(
+                new ErrorMessage(
+                        400,
+                        "Bad Request!",
+                        e.getClass().getName(),
+                        e.getLocalizedMessage()),
+                HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({SQLException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    private void internalServerError(Exception e) {
+    private ResponseEntity<ErrorMessage> processSqlException(Exception e) {
         log.info("Internal Server Error Exception -> {}", e.getLocalizedMessage());
+        return new ResponseEntity<ErrorMessage>(
+                new ErrorMessage(
+                        500,
+                        "Internal Server Error!",
+                        e.getClass().getName(),
+                        e.getLocalizedMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }
