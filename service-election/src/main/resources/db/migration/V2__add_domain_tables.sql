@@ -19,13 +19,13 @@ CREATE TABLE `tbl_elections` (
     `id` bigint(20) NOT NULL auto_increment,
     `election_id` varchar(36) NOT NULL,
     `name` varchar(250) NOT NULL,
-    `city_id` int NOT NULL,
-    `province_id` int NOT NULL,
+    `city_id` bigint(20) unsigned NOT NULL,
     `type` varchar(20) NOT NULL,
     `election_date` datetime NOT NULL,
     `election_campaign_start_date` datetime NOT NULL,
     `election_campaign_end_date` datetime NOT NULL,
     KEY `k_election_id` (`election_id`),
+    CONSTRAINT `fk_election_city_id` FOREIGN KEY (`city_id`) REFERENCES `tbl_cities` (`id`),
     PRIMARY KEY (`id`)
 );
 
@@ -51,4 +51,5 @@ CREATE TABLE `tbl_candidates` (
     CONSTRAINT `fk_election_id` FOREIGN KEY (`election_id`) REFERENCES `tbl_elections` (`election_id`),
     PRIMARY KEY (`id`)
 );
+
 

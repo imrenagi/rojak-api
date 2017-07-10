@@ -74,6 +74,10 @@ public class ElectionTest {
                 sdf.parse("15/01/2017"),
                 sdf.parse("01/01/2017"),
                 sdf.parse("14/01/2017"),
+                new City("Padang",
+                        new Location(10.0, 10.0),
+                        new Province("Sumatera Barat", "sumbar",
+                                new Country("Indonesia", "ID"))),
                 ElectionType.GOVERNOR);
     }
 

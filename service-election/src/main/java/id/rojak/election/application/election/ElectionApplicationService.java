@@ -2,9 +2,7 @@ package id.rojak.election.application.election;
 
 import com.netflix.discovery.converters.Auto;
 import id.rojak.election.domain.model.candidate.*;
-import id.rojak.election.domain.model.election.Election;
-import id.rojak.election.domain.model.election.ElectionId;
-import id.rojak.election.domain.model.election.ElectionRepository;
+import id.rojak.election.domain.model.election.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +22,27 @@ public class ElectionApplicationService {
     @Autowired
     private ElectionRepository electionRepository;
 
+    @Autowired
+    private CountryRepository countryRepository;
+
+    @Autowired
+    private ProvinceRepository provinceRepository;
+
+    @Autowired
+    private CityRepository cityRepository;
+
     @Transactional
     public List<Election> allElections() {
+        Country c = countryRepository.findOne(1L);
+        log.info("Country is {}-{} has {} provinces", c.name(), c.code(), c.provinces().size());
+
+
+        Province p = provinceRepository.findOne(1L);
+        log.info("Province {} has {} cities and the country is {}", p.name(), p.cities().size(), p.country().name());
+
+        City city = cityRepository.findOne(1L);
+        log.info("City {} is a part of {} province", city.name(), city.province().name());
+
         List<Election> elections = electionRepository().findAll();
 
         return elections;

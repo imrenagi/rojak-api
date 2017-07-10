@@ -11,4 +11,8 @@ public class IdentifiedValueObject extends IdentifiedDomainObject {
         super();
     }
 
+    protected long id() {
+        return this.id();
+    }
+
 }

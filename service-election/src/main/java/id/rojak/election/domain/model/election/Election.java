@@ -31,11 +31,9 @@ public class Election extends IdentifiedDomainObject {
     @Enumerated(EnumType.STRING)
     private ElectionType type;
 
-    @Column(name="city_id")
-    private Integer cityId = -1;
-
-    @Column(name="province_id")
-    private Integer provinceId = -1;
+    @ManyToOne
+    @JoinColumn(name="city_id", referencedColumnName = "id")
+    private City city;
 
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "election", orphanRemoval = true)
     private List<Candidate> candidates;
@@ -50,6 +48,7 @@ public class Election extends IdentifiedDomainObject {
             Date electionDate,
             Date electionCampaignStart,
             Date electionCampaignEnd,
+            City city,
             ElectionType type) {
         this();
 
@@ -60,6 +59,7 @@ public class Election extends IdentifiedDomainObject {
                 electionCampaignStart,
                 electionCampaignEnd
             ));
+        this.setCity(city);
         this.setType(type);
 
         //TODO handle other variable initialization
@@ -134,4 +134,13 @@ public class Election extends IdentifiedDomainObject {
         this.type = type;
     }
 
+    public City city() {
+        return this.city;
+    }
+
+    public void setCity(City city) {
+        this.assertArgumentNotNull(city, "City is required");
+
+        this.city = city;
+    }
 }

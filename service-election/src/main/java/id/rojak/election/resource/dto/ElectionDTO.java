@@ -15,8 +15,9 @@ public class ElectionDTO {
     private Long electionDate;
     private Long campaignStartDate;
     private Long campaignEndDate;
-    private int provinceId;
-    private int cityId;
+    private ElectionLocationDTO location;
+//    private int provinceId;
+//    private int cityId;
     private String electionType;
 
     public ElectionDTO(String id,
@@ -24,16 +25,16 @@ public class ElectionDTO {
                        Long electionDate,
                        Long campaignStartDate,
                        Long campaignEndDate,
-                       int provinceId,
-                       int cityId,
+                       String city,
+                       String province,
+                       String country,
                        String electionType) {
         this.id = id;
         this.name = name;
         this.electionDate = electionDate;
         this.campaignStartDate = campaignStartDate;
         this.campaignEndDate = campaignEndDate;
-        this.provinceId = provinceId;
-        this.cityId = cityId;
+        this.location = new ElectionLocationDTO(city, province, country);
         this.electionType = electionType;
     }
 
@@ -43,8 +44,9 @@ public class ElectionDTO {
                 anElection.electionDates().electionDate().getTime(),
                 anElection.electionDates().campaignStart().getTime(),
                 anElection.electionDates().campaignEnd().getTime(),
-                1,
-                1,
+                anElection.city().name(),
+                anElection.city().province().name(),
+                anElection.city().province().country().name(),
                 anElection.type().name());
     }
 
@@ -73,14 +75,9 @@ public class ElectionDTO {
         return campaignEndDate;
     }
 
-    @JsonProperty("province_id")
-    public int getProvinceId() {
-        return provinceId;
-    }
-
-    @JsonProperty("city_id")
-    public int getCityId() {
-        return cityId;
+    @JsonProperty("location")
+    public ElectionLocationDTO getLocation() {
+        return this.location;
     }
 
     @JsonProperty("election_type")
