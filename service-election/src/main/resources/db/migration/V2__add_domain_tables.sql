@@ -33,6 +33,7 @@ CREATE TABLE `tbl_candidates` (
     `id` bigint(20) NOT NULL auto_increment,
     `candidate_id` varchar(36) NOT NULL,
     `election_id` varchar(36) NOT NULL,
+    `election_id_id` bigint(20) NOT NULL,
     `candidate_number` int NOT NULL,
     `main_nominee_id` bigint(20) NOT NULL,
     `vice_nominee_id` bigint(20) NOT NULL,
@@ -48,7 +49,7 @@ CREATE TABLE `tbl_candidates` (
     UNIQUE KEY `k_election_candidate_number` (`election_id`, `candidate_number`),
     CONSTRAINT `fk_main_nominee_id` FOREIGN KEY (`main_nominee_id`) REFERENCES `tbl_nominees` (`id`),
     CONSTRAINT `fk_vice_nominee_id` FOREIGN KEY (`vice_nominee_id`) REFERENCES `tbl_nominees` (`id`),
-    CONSTRAINT `fk_election_id` FOREIGN KEY (`election_id`) REFERENCES `tbl_elections` (`election_id`),
+    CONSTRAINT `fk_election_id` FOREIGN KEY (`election_id_id`) REFERENCES `tbl_elections` (`id`),
     PRIMARY KEY (`id`)
 );
 

@@ -1,5 +1,6 @@
 package id.rojak.election.resource;
 
+import id.rojak.election.common.error.ResourceNotFoundException;
 import id.rojak.election.resource.dto.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,20 @@ public class ErrorHandler {
                         e.getClass().getName(),
                         e.getLocalizedMessage()),
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ResourceNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    private ResponseEntity<ErrorMessage> processNotFoundResource(Exception e) {
+        log.info("Resource not found {}", e.getMessage());
+
+        return new ResponseEntity<ErrorMessage>(
+                new ErrorMessage(
+                        404,
+                        "Not Found",
+                        e.getClass().getName(),
+                        e.getLocalizedMessage()),
+                HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({SQLException.class})

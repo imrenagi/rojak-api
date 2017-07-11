@@ -37,7 +37,7 @@ public class Candidate extends IdentifiedDomainObject {
     private String imageUrl;
 
     @ManyToOne
-    @JoinColumn(name="election_id", referencedColumnName = "election_id", insertable = false, updatable = false)
+    @JoinColumn(name="election_id_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Election election;
 
     @Embedded

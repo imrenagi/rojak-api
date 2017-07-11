@@ -11,7 +11,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ElectionId extends ValueObject {
 
-    @Column(name="election_id", insertable = false, updatable = false)
+    @Column(name="election_id")
     private String id;
 
     public ElectionId(String anId) {

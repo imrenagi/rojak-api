@@ -3,6 +3,7 @@ package id.rojak.election.resource.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -12,12 +13,12 @@ import java.util.Set;
 public class ElectionCollectionDTO {
 
     @JsonProperty("elections")
-    private Set<ElectionDTO> elections;
+    private List<ElectionDTO> elections;
 
     @JsonProperty("meta")
     private MetaDTO meta;
 
-    public ElectionCollectionDTO(Set<ElectionDTO> elections, MetaDTO meta) {
+    public ElectionCollectionDTO(List<ElectionDTO> elections, MetaDTO meta) {
         this.elections = elections;
         this.meta = meta;
     }
