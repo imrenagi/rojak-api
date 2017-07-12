@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by imrenagi on 7/7/17.
@@ -15,4 +16,11 @@ import java.util.List;
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 
     Page<Candidate> findByElectionId(ElectionId electionId, Pageable pageRequest);
+
+    Candidate findByElectionIdAndCandidateId(ElectionId electionId,
+                                             CandidateId candidateId);
+
+    default String nextId() {
+        return UUID.randomUUID().toString();
+    }
 }

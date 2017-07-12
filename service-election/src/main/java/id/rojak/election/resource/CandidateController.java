@@ -59,18 +59,26 @@ public class CandidateController {
 
     @RequestMapping(path = "/{election_id}/candidates/{candidate_id}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<String> getCandidateFromElection(
+    public ResponseEntity<CandidateDTO> getCandidateFromElection(
             @PathVariable("election_id") String anElectionId,
             @PathVariable("candidate_id") String aCandidateId) {
 
-        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+        Candidate candidate = this.candidateApplicationService.candidate(anElectionId, aCandidateId);
+
+        return new ResponseEntity<CandidateDTO>(
+                new CandidateDTO(candidate), HttpStatus.OK);
     }
 
     @RequestMapping(path = "/{election_id}/candidates", method = RequestMethod.POST)
-    public ResponseEntity<String> newCandidateForElection(@PathVariable("election_id") String anElectionId,
+    public ResponseEntity<CandidateDTO> newCandidateForElection(@PathVariable("election_id") String anElectionId,
                                                           @Valid @RequestBody NewCandidateCommand aCommand) {
 
-        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+        aCommand.setElectionId(anElectionId);
+
+        Candidate candidate = this.candidateApplicationService.newCandidate(aCommand);
+
+        return new ResponseEntity<CandidateDTO>(
+                new CandidateDTO(candidate), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/{election_id}/candidates/{candidate_id}", method = RequestMethod.PUT)

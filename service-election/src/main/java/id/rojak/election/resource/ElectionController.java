@@ -87,9 +87,7 @@ public class ElectionController {
     public ResponseEntity<String> updateElection(@PathVariable("election_id") String anElectionId,
                                                  @Valid @RequestBody ElectionDetailChangeCommand aCommand) {
 
-        if (!anElectionId.equals(aCommand.getElectionId())) {
-            throw new IllegalArgumentException("Can't change the election Id");
-        }
+        aCommand.setElectionId(anElectionId);
 
         this.electionApplicationService.changeElectionDetail(aCommand);
 

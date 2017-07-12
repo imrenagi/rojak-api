@@ -3,6 +3,7 @@ package id.rojak.election.domain.model.candidate;
 import id.rojak.election.common.domain.model.IdentifiedDomainObject;
 import id.rojak.election.domain.model.election.Election;
 import id.rojak.election.domain.model.election.ElectionId;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -26,18 +27,18 @@ public class Candidate extends IdentifiedDomainObject {
     private String tagLine;
 
     @ManyToOne
-    @JoinColumn(name="main_nominee_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name="main_nominee_id", referencedColumnName = "id")
     private Nominee mainCandidate;
 
     @ManyToOne
-    @JoinColumn(name="vice_nominee_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name="vice_nominee_id", referencedColumnName = "id")
     private Nominee viceCandidate;
 
     @Column(name = "image_url")
     private String imageUrl;
 
     @ManyToOne
-    @JoinColumn(name="election_id_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name="election_id_id", referencedColumnName = "id")
     private Election election;
 
     @Embedded
@@ -172,6 +173,12 @@ public class Candidate extends IdentifiedDomainObject {
         this.imageUrl = imageUrl;
     }
 
+    public void setElection(Election election) {
+        this.assertArgumentNotNull(election, "Election is required");
+
+        this.election = election;
+    }
+
     public CandidateId candidateId() { return this.candidateId; }
 
     public ElectionId electionId() { return this.electionId; }
@@ -190,6 +197,6 @@ public class Candidate extends IdentifiedDomainObject {
 
     public String imageuRL() { return this.imageUrl; }
 
-
+    public Election election() { return this.election; }
 
 }

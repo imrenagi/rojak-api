@@ -27,7 +27,7 @@ public class Nominee extends IdentifiedDomainObject {
     @Column(name = "photo_url")
     private String photoUrl;
 
-    @OneToMany(cascade = {CascadeType.REMOVE}, mappedBy = "mainCandidate", orphanRemoval = true)
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "mainCandidate", orphanRemoval = true)
     private List<Candidate> asMainCandidates;
 
     protected Nominee() {
