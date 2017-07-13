@@ -16,6 +16,7 @@
         <module>service-account</module>
         <module>service-auth</module>
         <module>service-election</module>
+        <module>service-analytics</module>
     </modules>
 
 

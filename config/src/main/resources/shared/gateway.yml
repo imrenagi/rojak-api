@@ -35,5 +35,11 @@ zuul:
       stripPrefix: false
       sensitiveHeaders:
 
+    service-analytics:
+      path: /analytics/**
+      serviceId: service-analytics
+      stripPrefix: false
+      sensitiveHeaders:
+
 server:
   port: 4000

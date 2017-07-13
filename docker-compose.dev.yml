@@ -30,10 +30,10 @@ services:
     ports:
       - 7000:7000
 
-#  service-analytics:
-#    build: service-analytics
-#    ports:
-#      - 8000:8000
+  service-analytics:
+    build: service-analytics
+    ports:
+      - 8000:8000
 
   monitoring:
     build: monitoring
