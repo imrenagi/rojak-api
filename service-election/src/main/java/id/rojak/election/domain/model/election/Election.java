@@ -1,28 +1,25 @@
 package id.rojak.election.domain.model.election;
 
+import id.rojak.election.common.domain.model.DomainEvent;
 import id.rojak.election.common.domain.model.DomainEventPublisher;
 import id.rojak.election.common.domain.model.IdentifiedDomainObject;
-
 import id.rojak.election.domain.model.candidate.Candidate;
 
-
 import javax.persistence.*;
-
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by inagi on 7/3/17.
  */
 @Entity
-@Table(name="tbl_elections")
+@Table(name = "tbl_elections")
 public class Election extends IdentifiedDomainObject {
 
     @Embedded
     private ElectionId electionId;
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
     @Embedded
@@ -32,7 +29,7 @@ public class Election extends IdentifiedDomainObject {
     private ElectionType type;
 
     @ManyToOne
-    @JoinColumn(name="city_id", referencedColumnName = "id")
+    @JoinColumn(name = "city_id", referencedColumnName = "id")
     private City city;
 
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "election", orphanRemoval = true)
@@ -58,7 +55,7 @@ public class Election extends IdentifiedDomainObject {
                 electionDate,
                 electionCampaignStart,
                 electionCampaignEnd
-            ));
+        ));
         this.setCity(city);
         this.setType(type);
 
@@ -69,14 +66,27 @@ public class Election extends IdentifiedDomainObject {
                 .publish(new ElectionCreated());
     }
 
-    public Candidate addCandidate() {
-        //TODO implement later
-        return null;
+    public void addCandidate(Candidate candidate) {
+        this.assertArgumentNotNull(candidate, "Candidate must not be null");
+
+        this.candidates().add(candidate);
+
+        DomainEventPublisher
+                .instance()
+                .publish(new CandidateAdded(this.electionId(),
+                        candidate.candidateId()));
     }
 
-    public void removeCandidate() {
-        //TODO implement later
-        //remove candidate and call domain event
+    public void removeCandidate(Candidate candidate) {
+        this.assertArgumentNotNull(candidate, "Candidate must not be null");
+
+        this.candidates().remove(candidate);
+
+        DomainEventPublisher
+                .instance()
+                .publish(new CandidateRemoved(
+                        this.electionId(),
+                        candidate.candidateId()));
     }
 
     public ElectionDate electionDates() {
@@ -95,7 +105,9 @@ public class Election extends IdentifiedDomainObject {
         return this.electionId;
     }
 
-    public List<Candidate> candidates() { return this.candidates; }
+    public List<Candidate> candidates() {
+        return this.candidates;
+    }
 
     @Override
     public boolean equals(Object obj) {

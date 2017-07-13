@@ -63,33 +63,25 @@ public class CandidateApplicationService {
     @Transactional
     public Candidate newCandidate(NewCandidateCommand aCommand) {
 
-        Election election = this.electionRepository.findByElectionId(
-                new ElectionId(aCommand.getElectionId()));
+        Election election = this.election(
+                aCommand.getElectionId());
 
-        if (election == null) {
-            throw new ResourceNotFoundException(
-                    String.format("Election %s is not found", aCommand.getElectionId()));
+        Nominee mainCandidate = this.nominee(
+                aCommand.getMainCandidateId());
+
+        Nominee viceCandidate = this.nominee(
+                aCommand.getViceCandidateId());
+
+        //TODO this snippet can be in domain service instead
+        if (mainCandidate.isParticipatedIn(election)
+                || viceCandidate.isParticipatedIn(election)) {
+            throw new IllegalArgumentException(String.format(
+                    "Nominee/s has/have been participating in %s", election.name()));
         }
-
-        Nominee mainCandidate = nomineeRepository
-                .findByNomineeId(new NomineeId(aCommand.getMainCandidateId()));
-
-        Nominee viceCandidate = nomineeRepository
-                .findByNomineeId(new NomineeId(aCommand.getViceCandidateId()));
-
-        if (mainCandidate == null) {
-            throw new ResourceNotFoundException(
-                    String.format("Main Candidate is not found"));
-        }
-
-        if (viceCandidate == null) {
-            throw new ResourceNotFoundException(
-                    String.format("Vice Candidate is not found"));
-        }
+        //TODO add new key to candidate, candidate number
+        //create domain service
 
         //TODO validate candidate number
-        //TODO check duplication of candidate in the same election
-        //TODO One nominee should only be participated as one candidate
 
         Candidate candidate = new Candidate(
                 new CandidateId(this.candidateRepository.nextId()),
@@ -104,14 +96,46 @@ public class CandidateApplicationService {
                         aCommand.getFacebookUrl()));
         candidate.setElection(election);
 
-        candidate = this.candidateRepository.save(candidate);
+        election.addCandidate(candidate);
 
         return candidate;
     }
 
     @Transactional
     public void removeCandidate(RemoveCandidateCommand aCommand) {
-        //TODO implement!
+
+        Election election = this.election(aCommand.getElectionId());
+
+        Candidate candidate = this.candidate(aCommand.getElectionId(),
+                aCommand.getCandidateId());
+
+        election.removeCandidate(candidate);
+    }
+
+    @Transactional
+    private Election election(String anElectionId) {
+        Election election = this.electionRepository.findByElectionId(
+                new ElectionId(anElectionId));
+
+        if (election == null) {
+            throw new ResourceNotFoundException(
+                    String.format("Election %s is not found", anElectionId));
+        }
+
+        return election;
+    }
+
+    @Transactional
+    private Nominee nominee(String aNomineeId) {
+        Nominee nominee = nomineeRepository
+                .findByNomineeId(new NomineeId(aNomineeId));
+
+        if (nominee == null) {
+            throw new ResourceNotFoundException(
+                    String.format("Nominee  is not found"));
+        }
+
+        return nominee;
     }
 
 }

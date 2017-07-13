@@ -1,6 +1,7 @@
 package id.rojak.election.domain.model.candidate;
 
 import id.rojak.election.common.domain.model.IdentifiedDomainObject;
+import id.rojak.election.domain.model.election.Election;
 
 import javax.persistence.*;
 import java.util.List;
@@ -65,6 +66,24 @@ public class Nominee extends IdentifiedDomainObject {
         this.setFullName(aName);
 
         //TODO publish domain event
+    }
+
+    public boolean isParticipatedIn(Election election) {
+
+        boolean isParticipated = false;
+
+        for(Candidate candidate : election.candidates()) {
+
+            if (candidate.mainCandidate().equals(this)
+                    || candidate.viceCandidate().equals(this)) {
+
+                isParticipated = true;
+                break;
+            }
+        }
+
+        return isParticipated;
+
     }
 
     public void setPhotoUrl(String photoUrl) {

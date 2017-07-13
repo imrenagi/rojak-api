@@ -16,6 +16,7 @@ public class CandidateDTO {
     private String name;
     private NomineeSmallDTO mainCandidate;
     private NomineeSmallDTO viceCandidate;
+    private String webUrl;
     private String imageUrl;
     private String twitterId;
     private String facebookUrl;
@@ -30,7 +31,9 @@ public class CandidateDTO {
                 candidate.viceCandidate().fullName().asFormattedName();
         this.mainCandidate = new NomineeSmallDTO(candidate.mainCandidate());
         this.viceCandidate = new NomineeSmallDTO(candidate.viceCandidate());
+
         this.imageUrl = candidate.imageuRL();
+        this.webUrl = candidate.socialMediaInformation().webUrl();
         this.twitterId = candidate.socialMediaInformation().twitterId();
         this.facebookUrl = candidate.socialMediaInformation().facebookUrl();
         this.instagramId = candidate.socialMediaInformation().instagramId();
@@ -91,5 +94,15 @@ public class CandidateDTO {
     @JsonProperty("statistic_summary")
     public StatisticSummaryDTO getStatisticSummary() {
         return statisticSummary;
+    }
+
+    @JsonProperty("web_url")
+    public String getWebUrl() {
+        return webUrl;
+    }
+
+    @JsonProperty("web_url")
+    public void setWebUrl(String webUrl) {
+        this.webUrl = webUrl;
     }
 }

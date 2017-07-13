@@ -20,6 +20,9 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
     Candidate findByElectionIdAndCandidateId(ElectionId electionId,
                                              CandidateId candidateId);
 
+    void deleteByElectionIdAndCandidateId(ElectionId electionId,
+                                           CandidateId candidateId);
+
     default String nextId() {
         return UUID.randomUUID().toString();
     }

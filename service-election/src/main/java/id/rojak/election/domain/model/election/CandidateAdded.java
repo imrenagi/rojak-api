@@ -2,6 +2,7 @@ package id.rojak.election.domain.model.election;
 
 import id.rojak.election.common.domain.model.DomainEvent;
 import id.rojak.election.domain.model.candidate.Candidate;
+import id.rojak.election.domain.model.candidate.CandidateId;
 
 import java.util.Date;
 
@@ -10,22 +11,19 @@ import java.util.Date;
  */
 public class CandidateAdded implements DomainEvent {
 
-    private Candidate candidate;
+    private CandidateId candidateId;
     private int eventVersion;
     private Date occuredOn;
     private ElectionId electionId;
-    private String username;
 
-    public CandidateAdded(Candidate candidate,
-                          ElectionId electionId,
-                          String username) {
+    public CandidateAdded(ElectionId electionId,
+                          CandidateId candidateId) {
         super();
 
-        this.candidate = candidate;
+        this.candidateId = candidateId;
         this.eventVersion = 1;
         this.occuredOn = new Date();
         this.electionId = electionId;
-        this.username = username;
     }
 
     @Override
@@ -42,11 +40,6 @@ public class CandidateAdded implements DomainEvent {
         return this.electionId;
     }
 
-    public String userName() {
-        return this.username;
-    }
+    public CandidateId candidateId() { return this.candidateId; }
 
-    public Candidate candidate() {
-        return this.candidate;
-    }
 }

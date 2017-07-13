@@ -109,10 +109,14 @@ public class Candidate extends IdentifiedDomainObject {
 
     @Override
     public boolean equals(Object anObject) {
+        boolean equalObject = false;
 
-        //TODO override this method
+        if (anObject != null && anObject.getClass() == this.getClass()) {
+            Candidate typedObject = (Candidate) anObject;
+            equalObject = typedObject.candidateId().equals(this.candidateId());
+        }
 
-        return super.equals(anObject);
+        return equalObject;
     }
 
     public void setCandidateId(CandidateId candidateId) {

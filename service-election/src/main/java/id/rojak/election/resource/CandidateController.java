@@ -1,9 +1,6 @@
 package id.rojak.election.resource;
 
-import id.rojak.election.application.candidate.CandidateApplicationService;
-import id.rojak.election.application.candidate.NewCandidateCommand;
-import id.rojak.election.application.candidate.UpdateCandidateDetailCommand;
-import id.rojak.election.application.candidate.UpdateCandidateSocialMediaCommand;
+import id.rojak.election.application.candidate.*;
 import id.rojak.election.domain.model.candidate.Candidate;
 import id.rojak.election.resource.dto.CandidateCollectionDTO;
 import id.rojak.election.resource.dto.CandidateDTO;
@@ -14,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -99,12 +97,17 @@ public class CandidateController {
         return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @RequestMapping(path = "/{election_id}/candidates/{candidate_id}", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/{election_id}/candidates/{candidate_id}",
+            method = RequestMethod.DELETE,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> deleteCandidateOfAnElection(
             @PathVariable("election_id") String anElectionId,
             @PathVariable("candidate_id") String candidateId) {
 
-        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+        this.candidateApplicationService.removeCandidate(
+                new RemoveCandidateCommand(anElectionId, candidateId));
+
+        return new ResponseEntity<String>("", HttpStatus.OK);
     }
 
     @RequestMapping(path = "/{election_id}/candidates/{candidate_id}/statistics", method = RequestMethod.GET)
