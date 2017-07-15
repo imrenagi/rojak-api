@@ -1,8 +1,10 @@
 package id.rojak.analytics.domain.model.media;
 
 import id.rojak.analytics.common.domain.model.IdentifiedDomainObject;
+import id.rojak.analytics.domain.model.news.News;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by imrenagi on 7/14/17.
@@ -30,6 +32,9 @@ public class Media extends IdentifiedDomainObject {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name="postal_info_id")
     private PostalAddress postalAddress;
+
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "media", orphanRemoval = true)
+    private List<News> news;
 
     protected Media() {
 
@@ -110,5 +115,11 @@ public class Media extends IdentifiedDomainObject {
     private boolean isValidUrl(String url) {
         //TODO implement this later
         return true;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        //TODO implement this
+        return super.equals(obj);
     }
 }

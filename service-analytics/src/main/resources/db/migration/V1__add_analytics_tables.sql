@@ -33,6 +33,21 @@ CREATE TABLE `tbl_medias` (
     PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `tbl_news` (
+    `id` bigint(20) NOT NULL auto_increment,
+    `title` varchar(255) NOT NULL,
+    `url` varchar(255) NOT NULL,
+    `content` text NOT NULL,
+    `media_id` varchar(36) NOT NULL,
+    `media_id_id` bigint(20) NOT NULL,
+    `timestamp` datetime NOT NULL,
+    `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    KEY `k_media_id` (`media_id`),
+	  KEY `k_media_id_id` (`media_id_id`),
+    CONSTRAINT `fk_media_id` FOREIGN KEY (`media_id_id`) REFERENCES `tbl_medias` (`id`),
+    PRIMARY KEY (`id`)
+);
+
 -- CREATE TABLE `tbl_supported_candidate_of_media` (
 --     `id` bigint(20) NOT NULL auto_increment,
 --     `media_id_id` bigint(20) NOT NULL,
@@ -43,21 +58,7 @@ CREATE TABLE `tbl_medias` (
 --     PRIMARY KEY (`id`)
 -- );
 --
--- CREATE TABLE `tbl_news` (
---     `id` bigint(20) NOT NULL auto_increment,
---     `title` varchar(255) NOT NULL,
---     `url` varchar(255) NOT NULL,
---     `content` text NOT NULL,
---     `election_id` varchar(36) NOT NULL,
---     `media_id_id` bigint(20) NOT NULL,
--- --     `media_id` varchar(36) NOT NULL,
---     `timestamp` datetime NOT NULL,
---     `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
---     KEY `k_election_id` (`election_id`),
---     UNIQUE KEY (`uk_election_media`) (`election_id`, `media_id_id`)
---     CONSTRAINT `fk_media_id` FOREIGN KEY (`media_id_id`) REFERENCES `tbl_medias` (`id`),
---     PRIMARY KEY (`id`)
--- );
+
 --
 -- CREATE TABLE `tbl_news_sentiment` (
 --     `id` bigint(20) NOT NULL auto_increment,

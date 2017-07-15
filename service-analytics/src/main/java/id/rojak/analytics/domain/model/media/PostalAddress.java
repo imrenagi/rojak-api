@@ -85,4 +85,10 @@ public class PostalAddress extends IdentifiedValueObject {
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        //TODO implement this
+        return super.equals(obj);
+    }
 }

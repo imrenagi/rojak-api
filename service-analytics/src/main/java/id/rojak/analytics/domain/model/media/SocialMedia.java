@@ -58,4 +58,10 @@ public class SocialMedia extends IdentifiedValueObject {
     public void setInstagramId(String instagramId) {
         this.instagramId = instagramId;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        //TODO implement this
+        return super.equals(obj);
+    }
 }
