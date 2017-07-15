@@ -1,4 +1,4 @@
-package id.rojak.analytics;
+package id.rojak.analytics.application;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
