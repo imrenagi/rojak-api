@@ -19,11 +19,11 @@ public class News extends IdentifiedDomainObject {
     private String url;
     private String content;
 
-//    @Embedded
-//    private NewsId newsId;
-
     @Embedded
     private MediaId mediaId;
+
+    @Embedded
+    private ElectionId electionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "media_id_id", referencedColumnName = "id")
@@ -37,26 +37,21 @@ public class News extends IdentifiedDomainObject {
     protected News() {}
 
     public News(
-//                NewsId newsId,
                 String title,
                 String url,
                 String content,
                 MediaId mediaId,
+                ElectionId electionId,
                 Date timestamp) {
         this();
 
-//        this.setNewsId(newsId);
         this.setTitle(title);
         this.setUrl(url);
         this.setContent(content);
         this.setMediaId(mediaId);
+        this.setElectionId(electionId);
         this.setTimestamp(timestamp);
-
     }
-
-//    public NewsId newsId() {
-//        return this.newsId;
-//    }
 
     public String title() {
         return this.title;
@@ -82,11 +77,15 @@ public class News extends IdentifiedDomainObject {
         return this.timestamp;
     }
 
-//    public void setNewsId(NewsId newsId) {
-//        this.assertArgumentNotNull(newsId, "News Id is required");
-//
-//        this.newsId = newsId;
-//    }
+    public ElectionId electionId() {
+        return this.electionId;
+    }
+
+    public void setElectionId(ElectionId electionId) {
+        this.assertArgumentNotNull(electionId, "Election ID is required");
+
+        this.electionId = electionId;
+    }
 
     public void setTitle(String title) {
         this.assertArgumentNotNull(title, "Title is required");
