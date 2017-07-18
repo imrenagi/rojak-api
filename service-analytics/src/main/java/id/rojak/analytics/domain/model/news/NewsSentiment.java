@@ -21,6 +21,7 @@ public class NewsSentiment extends IdentifiedDomainObject {
     @Embedded
     private CandidateId candidateId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "sentiment_type")
     private SentimentType sentimentType;
 
