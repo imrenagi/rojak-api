@@ -1,26 +1,41 @@
-package id.rojak.analytics.application.media;
+package id.rojak.analytics.resource.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * Created by imrenagi on 7/18/17.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UpdateMediaCommand {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class MediaDTO {
 
-    @NotNull
+    private String id;
     private String name;
-
-    @NotNull
     private String webUrl;
-
-    private String mobileWebUrl;
     private String logoUrl;
+    private String candidateId;
 
-    public UpdateMediaCommand() {
+
+    public MediaDTO(String id,
+                    String name,
+                    String webUrl,
+                    String logoUrl) {
+        this.id = id;
+        this.name = name;
+        this.webUrl = webUrl;
+        this.logoUrl = logoUrl;
+    }
+
+    @JsonProperty("id")
+    public String getId() {
+        return id;
+    }
+
+    @JsonProperty("id")
+    public void setId(String id) {
+        this.id = id;
     }
 
     @JsonProperty("name")
@@ -43,16 +58,6 @@ public class UpdateMediaCommand {
         this.webUrl = webUrl;
     }
 
-    @JsonProperty("mobile_web_url")
-    public String getMobileWebUrl() {
-        return mobileWebUrl;
-    }
-
-    @JsonProperty("mobile_web_url")
-    public void setMobileWebUrl(String mobileWebUrl) {
-        this.mobileWebUrl = mobileWebUrl;
-    }
-
     @JsonProperty("logo_url")
     public String getLogoUrl() {
         return logoUrl;
@@ -61,5 +66,15 @@ public class UpdateMediaCommand {
     @JsonProperty("logo_url")
     public void setLogoUrl(String logoUrl) {
         this.logoUrl = logoUrl;
+    }
+
+    @JsonProperty("candidate_id")
+    public String getCandidateId() {
+        return candidateId;
+    }
+
+    @JsonProperty("candidate_id")
+    public void setCandidateId(String candidateId) {
+        this.candidateId = candidateId;
     }
 }

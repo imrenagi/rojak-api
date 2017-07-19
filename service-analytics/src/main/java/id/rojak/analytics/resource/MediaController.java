@@ -1,5 +1,6 @@
 package id.rojak.analytics.resource;
 
+import id.rojak.analytics.application.media.MediaApplicationService;
 import id.rojak.analytics.application.media.NewMediaCommand;
 import id.rojak.analytics.application.media.UpdateMediaCommand;
 import id.rojak.analytics.domain.model.candidate.CandidateId;
@@ -11,15 +12,22 @@ import id.rojak.analytics.domain.model.news.News;
 import id.rojak.analytics.domain.model.news.NewsRepository;
 import id.rojak.analytics.domain.model.news.NewsSentimentRepository;
 import id.rojak.analytics.domain.model.news.SentimentAggregate;
+import id.rojak.analytics.resource.dto.MediaCollectionDTO;
+import id.rojak.analytics.resource.dto.MediaDTO;
+import id.rojak.analytics.resource.dto.MetaDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by imrenagi on 7/14/17.
@@ -38,45 +46,46 @@ public class MediaController {
     @Autowired
     NewsSentimentRepository sentimentRepository;
 
+    @Autowired
+    MediaApplicationService mediaApplicationService;
+
     @RequestMapping(path = "/medias", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<String> getAllMedias() {
+    public ResponseEntity<MediaCollectionDTO> getAllMedias(
+            @RequestParam(value="page", defaultValue = "0") Integer page,
+            @RequestParam(value="limit", defaultValue="10") Integer size) {
 
-        List<SentimentAggregate> res = sentimentRepository.sentimentsGroupBySentimentAndMedia(
-                new ElectionId("dkijakarta"),
-                new CandidateId("ahok"),
-                new MediaId("kompas"));
+        Pageable pageRequest = new PageRequest(page, size);
 
-        log.info(String.format("The number of aggregate %d", res.size()));
-        if (res != null) {
-            for (SentimentAggregate agg : res) {
-                log.info(String.format("Sentiment %s = %d",
-                        agg.getSentimentType().name(),
-                        agg.getCount()));
-            }
-        }
+        Page<Media> medias = this.mediaApplicationService
+                .allMedias(pageRequest);
 
-//        Media media = mediaRepository.findByMediaId(new MediaId("kompascom"));
-//
-//        if (media != null) {
-//            log.info(String.format("Get the media Id %s ", media.name()));
-//            log.info(String.format("Get the media social media %s", media.socialMedia().facebookUrl()));
-//        }
-//
-//        List<News> allNews = newsRepository.findByMediaId(new MediaId("kompascom"));
-//
-//        if (allNews != null) {
-//            for (News news : allNews) {
-//                log.info(String.format("Get the news %s from media %s", news.title(), news.media().name()));
-//            }
-//        }
+        List<MediaDTO> mediaDTOs = medias.getContent().stream()
+                .map(media -> new MediaDTO(media.mediaId().id(),
+                        media.name(),
+                        media.websiteUrl(),
+                        media.websiteUrl()) //TODO change this with logo url
+                ).collect(Collectors.toList());
 
-        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(
+            new MediaCollectionDTO(mediaDTOs,
+                    new MetaDTO(page,
+                            medias.getTotalPages(),
+                            medias.getTotalElements())), HttpStatus.OK);
+
     }
 
     @RequestMapping(path = "/medias", method = RequestMethod.POST)
-    public ResponseEntity<String> createNewMedia(@Valid @RequestBody NewMediaCommand command) {
-        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+    public ResponseEntity<MediaDTO> createNewMedia(@Valid @RequestBody NewMediaCommand command) {
+
+        Media media = this.mediaApplicationService.newMedia(command);
+
+        MediaDTO mediaDTO = new MediaDTO(media.mediaId().id(),
+                media.name(),
+                media.websiteUrl(),
+                media.websiteUrl()); //TODO change this with url logo
+
+        return new ResponseEntity<>(mediaDTO, HttpStatus.OK);
     }
 
     @RequestMapping(path = "/medias/{media_id}", method = RequestMethod.PUT)
@@ -85,10 +94,16 @@ public class MediaController {
     }
 
     @RequestMapping(path = "/medias/{media_id}", method = RequestMethod.GET)
-    public ResponseEntity<String> mediaDetail(@PathVariable("media_id") String aMediaId) {
-        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+    public ResponseEntity<MediaDTO> mediaDetail(@PathVariable("media_id") String aMediaId) {
+
+        Media media = this.mediaApplicationService.media(aMediaId);
+
+        MediaDTO mediaDTO = new MediaDTO(media.mediaId().id(),
+                media.name(),
+                media.websiteUrl(),
+                media.websiteUrl()); //TODO change this with url logo
+
+        return new ResponseEntity<>(mediaDTO, HttpStatus.OK);
     }
-
-
 
 }

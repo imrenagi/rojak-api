@@ -49,6 +49,7 @@ public class Media extends IdentifiedDomainObject {
         this();
 
         this.setMediaId(mediaId);
+        this.setName(name);
         this.setWebsiteUrl(websiteUrl);
         this.setMobileWebsiteUrl(mobileWebsiteUrl);
         this.setSocialMedia(socialMedia);
