@@ -16,13 +16,23 @@ import java.util.List;
 @Repository
 public interface NewsSentimentRepository extends JpaRepository<NewsSentiment, Long> {
 
-    @Query("SELECT new id.rojak.analytics.domain.model.news.SentimentAggregate(electionId, candidateId, mediaId, " +
+    @Query("SELECT new id.rojak.analytics.domain.model.news.SentimentCount(electionId, candidateId, mediaId, " +
             "sentimentType, COUNT(sentimentType)) " +
             "FROM NewsSentiment " +
             "WHERE electionId = :electionId AND candidateId = :candidateId AND mediaId = :mediaId " +
             "GROUP BY 3, 4")
-    List<SentimentAggregate> sentimentsGroupBySentimentAndMedia(
+    List<SentimentCount> sentimentsGroupedByMediaAndSentiment(
             @Param("electionId") ElectionId electionId,
             @Param("candidateId") CandidateId candidateId,
             @Param("mediaId") MediaId mediaId);
+
+    @Query("SELECT new id.rojak.analytics.domain.model.news.SentimentCount(electionId, candidateId, " +
+            "cast(createdAt as date), sentimentType, COUNT(sentimentType)) " +
+            "FROM NewsSentiment " +
+            "WHERE electionId = :electionId AND candidateId = :candidateId " +
+            "GROUP BY 3, 4)")
+    List<SentimentCount> sentimentsGroupedByDateAndSentiment(
+            @Param("electionId") ElectionId electionId,
+            @Param("candidateId") CandidateId candidateId);
+
 }

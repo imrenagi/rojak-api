@@ -2,10 +2,17 @@ package id.rojak.analytics.resource;
 
 import id.rojak.analytics.application.news.NewNewsCommand;
 import id.rojak.analytics.application.news.NewsApplicationService;
+import id.rojak.analytics.domain.model.candidate.CandidateId;
+import id.rojak.analytics.domain.model.election.ElectionId;
+import id.rojak.analytics.domain.model.media.MediaId;
 import id.rojak.analytics.domain.model.news.News;
+import id.rojak.analytics.domain.model.news.NewsSentimentRepository;
+import id.rojak.analytics.domain.model.news.SentimentCount;
 import id.rojak.analytics.resource.dto.MetaDTO;
 import id.rojak.analytics.resource.dto.NewsCollectionDTO;
 import id.rojak.analytics.resource.dto.NewsDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,8 +31,13 @@ import java.util.stream.Collectors;
 @RestController
 public class NewsController {
 
+    private static final Logger log = LoggerFactory.getLogger(MediaController.class);
+
     @Autowired
     private NewsApplicationService newsApplicationService;
+
+    @Autowired
+    private NewsSentimentRepository newsSentimentRepository;
 
     @RequestMapping(path = "/medias/{media_id}/elections/{election_id}/news" , method = RequestMethod.GET)
     public ResponseEntity<NewsCollectionDTO> newsFromMedia(
@@ -33,6 +45,25 @@ public class NewsController {
             @PathVariable("election_id") String anElectionId,
             @RequestParam(value="page", defaultValue = "0") Integer page,
             @RequestParam(value="limit", defaultValue="10") Integer size) {
+
+        List<SentimentCount> sentiments = this.newsSentimentRepository.sentimentsGroupedByDateAndSentiment(new ElectionId("dkijakarta"),
+                new CandidateId("anies"));
+
+        for (SentimentCount sentiment : sentiments) {
+            log.info("Sentiment for {} is {} = {}", sentiment.getCandidateId(), sentiment.getSentimentType().toString(),
+                    sentiment.getCount());
+        }
+
+        log.info("===========");
+
+        List<SentimentCount> sentiments2 = this.newsSentimentRepository.sentimentsGroupedByMediaAndSentiment(new ElectionId("dkijakarta"),
+                new CandidateId("anies"), new MediaId("kompascom"));
+
+        for (SentimentCount sentiment : sentiments2) {
+            log.info("Sentiment for {} is {} = {}", sentiment.getCandidateId(), sentiment.getSentimentType().toString(),
+                    sentiment.getCount());
+        }
+
 
         Page<News> news = this.newsApplicationService.allNewsBy(aMediaId, anElectionId,
                 new PageRequest(page, size));
