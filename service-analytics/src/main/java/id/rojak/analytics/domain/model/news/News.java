@@ -6,7 +6,9 @@ import id.rojak.analytics.domain.model.media.Media;
 import id.rojak.analytics.domain.model.media.MediaId;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by imrenagi on 7/14/17.
@@ -34,6 +36,9 @@ public class News extends IdentifiedDomainObject {
     @Column(name="created_at")
     private Date createdAt;
 
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "news", orphanRemoval = true)
+    private List<NewsSentiment> sentiments;
+
     protected News() {}
 
     public News(
@@ -51,6 +56,20 @@ public class News extends IdentifiedDomainObject {
         this.setMediaId(mediaId);
         this.setElectionId(electionId);
         this.setTimestamp(timestamp);
+
+        this.createdAt = new Date();
+    }
+
+    public void addSentiment(NewsSentiment aSentiment) {
+        this.assertArgumentNotNull(aSentiment, "Sentiment is required and can't be null");
+
+        if (this.sentiments == null) {
+            this.sentiments = new ArrayList<>();
+        }
+
+        this.sentiments.add(aSentiment);
+
+        //TODO publish event if necessary
     }
 
     public String title() {
@@ -79,6 +98,10 @@ public class News extends IdentifiedDomainObject {
 
     public ElectionId electionId() {
         return this.electionId;
+    }
+
+    public List<NewsSentiment> sentiments() {
+        return this.sentiments;
     }
 
     public void setElectionId(ElectionId electionId) {
@@ -140,4 +163,10 @@ public class News extends IdentifiedDomainObject {
     }
 
 
+    public void insertTo(Media media) {
+        this.assertArgumentNotNull(media, "Media can't be null!");
+
+        this.setMedia(media);
+        media.addNews(this);
+    }
 }

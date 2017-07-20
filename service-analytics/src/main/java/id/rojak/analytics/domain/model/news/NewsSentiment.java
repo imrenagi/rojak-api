@@ -41,6 +41,7 @@ public class NewsSentiment extends IdentifiedDomainObject {
     public NewsSentiment(MediaId mediaId,
                          ElectionId electionId,
                          CandidateId candidateId,
+                         Date newsTimestamp,
                          SentimentType sentimentType) {
         this();
 
@@ -48,7 +49,22 @@ public class NewsSentiment extends IdentifiedDomainObject {
         this.setElectionId(electionId);
         this.setCandidateId(candidateId);
         this.setSentimentType(sentimentType);
+        this.setCreatedAt(newsTimestamp);
 
+    }
+
+    public Date newsCreatedAt() {
+        return this.createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.assertArgumentNotNull(createdAt, "Date of creation of news is required");
+
+        if (new Date().before(createdAt)) {
+            throw new IllegalArgumentException("Can't create sentiment for future news");
+        }
+
+        this.createdAt = createdAt;
     }
 
     public void setElectionId(ElectionId electionId) {
@@ -103,5 +119,12 @@ public class NewsSentiment extends IdentifiedDomainObject {
 
     public News news() {
         return this.news;
+    }
+
+    public void insertTo(News news) {
+        this.assertArgumentNotNull(news, "News can't be null!");
+
+        this.setNews(news);
+        news.addSentiment(this);
     }
 }

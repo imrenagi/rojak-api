@@ -15,6 +15,8 @@ import java.util.UUID;
 @Repository
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 
+    List<Candidate> findByElectionId(ElectionId electionId);
+
     Page<Candidate> findByElectionId(ElectionId electionId, Pageable pageRequest);
 
     Candidate findByElectionIdAndCandidateId(ElectionId electionId,

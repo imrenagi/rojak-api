@@ -4,6 +4,7 @@ import id.rojak.analytics.common.domain.model.IdentifiedDomainObject;
 import id.rojak.analytics.domain.model.news.News;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,6 +56,16 @@ public class Media extends IdentifiedDomainObject {
         this.setSocialMedia(socialMedia);
         this.setPostalAddress(postalAddress);
 
+    }
+
+    public void addNews(News news) {
+        this.assertArgumentNotNull(news, "News is required. Can't be null!");
+
+        if (this.news == null) {
+            this.news = new ArrayList<>();
+        }
+
+        this.news.add(news);
     }
 
     public MediaId mediaId() {
