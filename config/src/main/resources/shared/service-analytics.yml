@@ -1,0 +1,29 @@
+security:
+  oauth2:
+    client:
+      clientId: service-analytics
+      clientSecret: ${SERVICE_ANALYTICS_PASSWORD}
+      accessTokenUri: http://service-auth:5000/uaa/oauth/token
+      grant-type: client_credentials
+      scope: server
+
+spring:
+  datasource:
+    url: jdbc:mysql://service-analytics-db/analytics
+    username: ${SERVICE_ANALYTICS_DB_USER}
+    password: ${SERVICE_ANALYTICS_DB_PASSWORD}
+    driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 5
+
+flyway:
+  url: jdbc:mysql://service-analytics-db:3306/analytics
+  user: ${SERVICE_ANALYTICS_DB_USER}
+  password: ${SERVICE_ANALYTICS_DB_PASSWORD}
+  locations: classpath:db/migration
+  enabled: true
+
+server:
+  context-path: /analytics
+  port: 8000

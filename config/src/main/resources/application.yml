@@ -12,4 +12,5 @@ server:
 
 security:
   user:
+    name: user
     password: ${CONFIG_SERVICE_PASSWORD}
