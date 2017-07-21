@@ -7,6 +7,7 @@ import id.rojak.analytics.domain.model.election.ElectionId;
 import id.rojak.analytics.domain.model.media.MediaId;
 import id.rojak.analytics.domain.model.news.News;
 import id.rojak.analytics.domain.model.news.NewsSentimentRepository;
+import id.rojak.analytics.domain.model.news.NewsSentimentService;
 import id.rojak.analytics.domain.model.news.SentimentCount;
 import id.rojak.analytics.resource.dto.MetaDTO;
 import id.rojak.analytics.resource.dto.NewsCollectionDTO;
@@ -31,13 +32,16 @@ import java.util.stream.Collectors;
 @RestController
 public class NewsController {
 
-    private static final Logger log = LoggerFactory.getLogger(MediaController.class);
+    private static final Logger log = LoggerFactory.getLogger(NewsController.class);
 
     @Autowired
     private NewsApplicationService newsApplicationService;
 
     @Autowired
     private NewsSentimentRepository newsSentimentRepository;
+
+    @Autowired
+    private NewsSentimentService newsSentimentService;
 
     @RequestMapping(path = "/medias/{media_id}/elections/{election_id}/news" , method = RequestMethod.GET)
     public ResponseEntity<NewsCollectionDTO> newsFromMedia(
@@ -57,13 +61,12 @@ public class NewsController {
         log.info("===========");
 
         List<SentimentCount> sentiments2 = this.newsSentimentRepository.sentimentsGroupedByMediaAndSentiment(new ElectionId("dkijakarta"),
-                new CandidateId("anies"), new MediaId("kompascom"));
+                new CandidateId("anies"));
 
         for (SentimentCount sentiment : sentiments2) {
             log.info("Sentiment for {} is {} = {}", sentiment.getCandidateId(), sentiment.getSentimentType().toString(),
                     sentiment.getCount());
         }
-
 
         Page<News> news = this.newsApplicationService.allNewsBy(aMediaId, anElectionId,
                 new PageRequest(page, size));

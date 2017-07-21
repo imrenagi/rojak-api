@@ -15,7 +15,9 @@ public class MediaDTO {
     private String name;
     private String webUrl;
     private String logoUrl;
+
     private String candidateId;
+    private MediaNewsCountDTO totalNews;
 
 
     public MediaDTO(String id,
@@ -26,6 +28,16 @@ public class MediaDTO {
         this.name = name;
         this.webUrl = webUrl;
         this.logoUrl = logoUrl;
+    }
+
+    public MediaDTO(String id,
+                    String name,
+                    String webUrl,
+                    String logoUrl,
+                    MediaNewsCountDTO totalNews) {
+        this(id, name, webUrl, logoUrl);
+
+        this.setTotalNews(totalNews);
     }
 
     @JsonProperty("id")
@@ -76,5 +88,15 @@ public class MediaDTO {
     @JsonProperty("candidate_id")
     public void setCandidateId(String candidateId) {
         this.candidateId = candidateId;
+    }
+
+    @JsonProperty("total_news")
+    public MediaNewsCountDTO getTotalNews() {
+        return totalNews;
+    }
+
+    @JsonProperty("total_news")
+    public void setTotalNews(MediaNewsCountDTO totalNews) {
+        this.totalNews = totalNews;
     }
 }

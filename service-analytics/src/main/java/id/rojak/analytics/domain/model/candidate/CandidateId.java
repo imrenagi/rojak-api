@@ -39,6 +39,15 @@ public class CandidateId extends ValueObject {
         return equalObjects;
     }
 
+    @Override
+    public int hashCode() {
+        int hashCodeValue =
+                + (57853 * 31)
+                        + this.id().hashCode();
+
+        return hashCodeValue;
+    }
+
     protected CandidateId() {
         super();
     }

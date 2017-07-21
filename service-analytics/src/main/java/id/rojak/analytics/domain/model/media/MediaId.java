@@ -46,4 +46,15 @@ public class MediaId extends ValueObject {
         }
         return equalObjects;
     }
+
+    @Override
+    public int hashCode() {
+        int hashCodeValue =
+                + (2785 * 5)
+                        + this.id().hashCode();
+
+        return hashCodeValue;
+    }
+
+
 }
