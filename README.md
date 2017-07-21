@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.org/imrenagi/rojak-api.svg?branch=master)](https://travis-ci.org/imrenagi/rojak-api)  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/imrenagi/rojak-api.svg?branch=master)](https://travis-ci.org/imrenagi/rojak-api) [![codecov](https://codecov.io/gh/imrenagi/rojak-api/branch/master/graph/badge.svg)](https://codecov.io/gh/imrenagi/rojak-api) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Microservice Skeleton
 
@@ -229,7 +229,26 @@ Let's see our system behavior under load: A service calls another service and it
 
 ### Before you start
 * Install docker and docker compose
-* Export environment variables: `MSW_CONFIG_SERVICE_PASSWORD`, `MSW_ROOT_PASSWORD`,  `MSW_DB_USER`, `MSW_DB_PASSWORD`, `MSW_SERVICE_ACCOUNT_PASSOWRD`, `MSW_DB_TEST_PASSWORD`.
+* Export environment variables:
+```bash
+export MSW_ROOT_PASSWORD=
+export MSW_DB_USER=
+export MSW_DB_PASSWORD=
+export MSW_DB_TEST_PASSWORD=
+
+export MSW_CONFIG_SERVICE_PASSWORD=config
+export MSW_SERVICE_ACCOUNT_PASSWORD=service-account
+export MSW_SERVICE_NOTIFICATION_PASSWORD=service-password
+export MSW_SERVICE_ELECTION_PASSWORD=service-election
+export MSW_SERVICE_ANALYTICS_PASSWORD=service-analytics
+```
+* Setup a local MySQL database for testing purpose and create run this command:
+```
+CREATE DATABASE account_test;
+CREATE DATABASE auth_test;
+CREATE DATABASE election_test;
+CREATE DATABASE analytics_test;
+```
 
 ### Production
 In production mode, all images will be pulled from docker hub. 
