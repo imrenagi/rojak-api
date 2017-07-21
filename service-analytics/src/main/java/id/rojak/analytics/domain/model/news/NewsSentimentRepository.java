@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,5 +34,30 @@ public interface NewsSentimentRepository extends JpaRepository<NewsSentiment, Lo
     List<SentimentCount> sentimentsGroupedByDateAndSentiment(
             @Param("electionId") ElectionId electionId,
             @Param("candidateId") CandidateId candidateId);
+
+    @Query("SELECT new id.rojak.analytics.domain.model.news.SentimentCount(electionId, candidateId, " +
+            "cast(createdAt as date), sentimentType, COUNT(sentimentType)) " +
+            "FROM NewsSentiment " +
+            "WHERE electionId = :electionId AND candidateId = :candidateId " +
+            "AND createdAt >= :startDate and createdAt <= :endDate " +
+            "GROUP BY 3, 4)")
+    List<SentimentCount> sentimentsGroupedByDateAndSentiment(
+            @Param("electionId") ElectionId electionId,
+            @Param("candidateId") CandidateId candidateId,
+            @Param("startDate") Date startDate,
+            @Param("endDate") Date endDate);
+
+    @Query("SELECT new id.rojak.analytics.domain.model.news.SentimentCount(electionId, candidateId, " +
+            "cast(createdAt as date), sentimentType, COUNT(sentimentType)) " +
+            "FROM NewsSentiment " +
+            "WHERE electionId = :electionId AND candidateId = :candidateId AND sentimentType = :sentimentType " +
+            "AND createdAt >= :startDate and createdAt <= :endDate " +
+            "GROUP BY 3, 4)")
+    List<SentimentCount> sentimentsGroupedByDateAndSentiment(
+            @Param("electionId") ElectionId electionId,
+            @Param("candidateId") CandidateId candidateId,
+            @Param("sentimentType") SentimentType sentimentType,
+            @Param("startDate") Date startDate,
+            @Param("endDate") Date endDate);
 
 }

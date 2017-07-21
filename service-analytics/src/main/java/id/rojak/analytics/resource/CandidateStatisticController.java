@@ -1,13 +1,26 @@
 package id.rojak.analytics.resource;
 
 import id.rojak.analytics.application.statistic.CandidateStatisticApplicationService;
+import id.rojak.analytics.common.chart.Chart;
+import id.rojak.analytics.common.date.DateHelper;
+import id.rojak.analytics.domain.model.candidate.CandidateId;
+import id.rojak.analytics.domain.model.election.ElectionId;
 import id.rojak.analytics.domain.model.media.Media;
+import id.rojak.analytics.domain.model.news.NewsSentimentRepository;
+import id.rojak.analytics.domain.model.news.SentimentCount;
+import id.rojak.analytics.domain.model.news.SentimentType;
 import id.rojak.analytics.domain.model.sentiments.MediaNewsCount;
 import id.rojak.analytics.domain.model.sentiments.MediaSentimentGroup;
 import id.rojak.analytics.resource.dto.CandidateMediaDTO;
 import id.rojak.analytics.resource.dto.CandidateStatSummaryDTO;
 import id.rojak.analytics.resource.dto.MediaDTO;
 import id.rojak.analytics.resource.dto.MediaNewsCountDTO;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +29,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -26,15 +43,23 @@ import java.util.stream.Collectors;
 @RestController
 public class CandidateStatisticController {
 
+    private final Logger log = LoggerFactory.getLogger(CandidateStatisticController.class);
+
     @Autowired
     private CandidateStatisticApplicationService candidateStatisticApplicationService;
 
+    @Autowired
+    private NewsSentimentRepository newsSentimentRepository;
+
     @RequestMapping(path = "/elections/{election_id}/candidates/{candidate_id}/statistics",
             method = RequestMethod.GET)
-    public ResponseEntity<String> candidateAccumulativeStatisticOvertime(
+    public ResponseEntity<Chart> candidateNewsPerDayStatistic(
             @PathVariable("election_id") String anElectionId,
             @PathVariable("candidate_id") String aCandidateId) {
-        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+
+        Chart chart = this.candidateStatisticApplicationService.statisticPerDay(anElectionId, aCandidateId);
+
+        return new ResponseEntity<>(chart, HttpStatus.OK);
     }
 
     @RequestMapping(path = "/elections/{election_id}/candidates/{candidate_id}/medias",

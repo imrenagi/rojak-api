@@ -2,16 +2,18 @@ package id.rojak.analytics.resource;
 
 import id.rojak.analytics.application.news.NewNewsCommand;
 import id.rojak.analytics.application.news.NewsApplicationService;
+import id.rojak.analytics.common.date.DateHelper;
 import id.rojak.analytics.domain.model.candidate.CandidateId;
 import id.rojak.analytics.domain.model.election.ElectionId;
 import id.rojak.analytics.domain.model.media.MediaId;
-import id.rojak.analytics.domain.model.news.News;
-import id.rojak.analytics.domain.model.news.NewsSentimentRepository;
-import id.rojak.analytics.domain.model.news.NewsSentimentService;
-import id.rojak.analytics.domain.model.news.SentimentCount;
+import id.rojak.analytics.domain.model.news.*;
 import id.rojak.analytics.resource.dto.MetaDTO;
 import id.rojak.analytics.resource.dto.NewsCollectionDTO;
 import id.rojak.analytics.resource.dto.NewsDTO;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,36 +42,12 @@ public class NewsController {
     @Autowired
     private NewsApplicationService newsApplicationService;
 
-    @Autowired
-    private NewsSentimentRepository newsSentimentRepository;
-
-    @Autowired
-    private NewsSentimentService newsSentimentService;
-
     @RequestMapping(path = "/medias/{media_id}/elections/{election_id}/news" , method = RequestMethod.GET)
     public ResponseEntity<NewsCollectionDTO> newsFromMedia(
             @PathVariable("media_id") String aMediaId,
             @PathVariable("election_id") String anElectionId,
             @RequestParam(value="page", defaultValue = "0") Integer page,
             @RequestParam(value="limit", defaultValue="10") Integer size) {
-
-        List<SentimentCount> sentiments = this.newsSentimentRepository.sentimentsGroupedByDateAndSentiment(new ElectionId("dkijakarta"),
-                new CandidateId("anies"));
-
-        for (SentimentCount sentiment : sentiments) {
-            log.info("Sentiment for {} is {} = {}", sentiment.getCandidateId(), sentiment.getSentimentType().toString(),
-                    sentiment.getCount());
-        }
-
-        log.info("===========");
-
-        List<SentimentCount> sentiments2 = this.newsSentimentRepository.sentimentsGroupedByMediaAndSentiment(new ElectionId("dkijakarta"),
-                new CandidateId("anies"));
-
-        for (SentimentCount sentiment : sentiments2) {
-            log.info("Sentiment for {} is {} = {}", sentiment.getCandidateId(), sentiment.getSentimentType().toString(),
-                    sentiment.getCount());
-        }
 
         Page<News> news = this.newsApplicationService.allNewsBy(aMediaId, anElectionId,
                 new PageRequest(page, size));
