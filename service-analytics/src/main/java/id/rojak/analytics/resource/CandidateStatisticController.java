@@ -1,13 +1,9 @@
 package id.rojak.analytics.resource;
 
 import id.rojak.analytics.application.statistic.CandidateStatisticApplicationService;
-import id.rojak.analytics.common.chart.Chart;
 import id.rojak.analytics.common.date.DateHelper;
-import id.rojak.analytics.domain.model.candidate.CandidateId;
-import id.rojak.analytics.domain.model.election.ElectionId;
 import id.rojak.analytics.domain.model.media.Media;
 import id.rojak.analytics.domain.model.news.NewsSentimentRepository;
-import id.rojak.analytics.domain.model.news.SentimentCount;
 import id.rojak.analytics.domain.model.news.SentimentType;
 import id.rojak.analytics.domain.model.sentiments.MediaNewsCount;
 import id.rojak.analytics.domain.model.sentiments.MediaSentimentGroup;
@@ -15,10 +11,9 @@ import id.rojak.analytics.resource.dto.CandidateMediaDTO;
 import id.rojak.analytics.resource.dto.CandidateStatSummaryDTO;
 import id.rojak.analytics.resource.dto.MediaDTO;
 import id.rojak.analytics.resource.dto.MediaNewsCountDTO;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
+import id.rojak.analytics.resource.dto.chart.ChartDTO;
+import id.rojak.analytics.resource.dto.chart.Series;
+import id.rojak.analytics.resource.dto.chart.XAxis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -53,13 +46,42 @@ public class CandidateStatisticController {
 
     @RequestMapping(path = "/elections/{election_id}/candidates/{candidate_id}/statistics",
             method = RequestMethod.GET)
-    public ResponseEntity<Chart> candidateNewsPerDayStatistic(
+    public ResponseEntity<ChartDTO> candidateNewsPerDayStatistic(
             @PathVariable("election_id") String anElectionId,
             @PathVariable("candidate_id") String aCandidateId) {
 
-        Chart chart = this.candidateStatisticApplicationService.statisticPerDay(anElectionId, aCandidateId);
+        Date startDate = DateHelper.nMonthAgoOf(1, new Date());
+        Date endDate = new Date();
 
-        return new ResponseEntity<>(chart, HttpStatus.OK);
+        List<Date> dateSeries = DateHelper.daysBetween(startDate, endDate);
+
+        Series<Long> positiveSeries = new Series<>(
+                "# Positive News",
+                this.candidateStatisticApplicationService
+                        .sentimentsOverTime(anElectionId, aCandidateId,
+                                SentimentType.POSITIVE, startDate, endDate, dateSeries));
+
+        Series<Long> negativeSeries = new Series<>(
+                "# Negative News",
+                this.candidateStatisticApplicationService
+                        .sentimentsOverTime(anElectionId, aCandidateId,
+                                SentimentType.NEGATIVE, startDate, endDate, dateSeries));
+
+        Series<Long> neutralSeries = new Series<>(
+                "# Neutral News",
+                this.candidateStatisticApplicationService
+                        .sentimentsOverTime(anElectionId, aCandidateId,
+                                SentimentType.NEUTRAL, startDate, endDate, dateSeries));
+
+        ChartDTO chartDTO = new ChartDTO(
+                new XAxis<>(dateSeries),
+                new ArrayList<Series>() {{
+                    add(positiveSeries);
+                    add(negativeSeries);
+                    add(neutralSeries);
+                }});
+
+        return new ResponseEntity<>(chartDTO, HttpStatus.OK);
     }
 
     @RequestMapping(path = "/elections/{election_id}/candidates/{candidate_id}/medias",

@@ -1,4 +1,4 @@
-package id.rojak.analytics.common.chart;
+package id.rojak.analytics.resource.dto.chart;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by inagi on 7/21/17.
  */
-public class Chart {
+public class ChartDTO {
 
     @JsonProperty("xAxis")
     private XAxis xAxis;
@@ -15,7 +15,7 @@ public class Chart {
     @JsonProperty("series")
     private List<Series> series;
 
-    public Chart(XAxis xAxis, List<Series> series) {
+    public ChartDTO(XAxis xAxis, List<Series> series) {
         this.xAxis = xAxis;
         this.series = series;
     }

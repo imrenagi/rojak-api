@@ -1,4 +1,4 @@
-package id.rojak.analytics.common.chart;
+package id.rojak.analytics.resource.dto.chart;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

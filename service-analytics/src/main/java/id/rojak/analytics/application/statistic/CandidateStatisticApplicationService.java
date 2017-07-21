@@ -1,8 +1,8 @@
 package id.rojak.analytics.application.statistic;
 
-import id.rojak.analytics.common.chart.Chart;
-import id.rojak.analytics.common.chart.Series;
-import id.rojak.analytics.common.chart.XAxis;
+import id.rojak.analytics.resource.dto.chart.ChartDTO;
+import id.rojak.analytics.resource.dto.chart.Series;
+import id.rojak.analytics.resource.dto.chart.XAxis;
 import id.rojak.analytics.common.date.DateHelper;
 import id.rojak.analytics.domain.model.candidate.CandidateId;
 import id.rojak.analytics.domain.model.election.ElectionId;
@@ -77,6 +77,19 @@ public class CandidateStatisticApplicationService {
         }
     }
 
+    public List<Long> sentimentsOverTime(String electionId, String candidateId,
+                                         SentimentType sentimentType,
+                                         Date startDate,
+                                         Date endDate,
+                                         List<Date> dateSeries) {
+
+        List<SentimentCount> sentiments = this.newsSentimentRepository
+                .sentimentsGroupedByDateAndSentiment(new ElectionId(electionId),
+                        new CandidateId(candidateId),
+                        sentimentType, startDate, endDate);
+
+        return this.fillGapBetweenEmpty(dateSeries, sentiments);
+    }
 
     public List<Long> fillGapBetweenEmpty(List<Date> dateSeries, List<SentimentCount> sentimentCounts) {
 
@@ -94,58 +107,6 @@ public class CandidateStatisticApplicationService {
         }
 
         return values;
-    }
-
-
-    public Chart statisticPerDay(String anElectionId, String aCandidateId) {
-
-        Date startDate = DateHelper.nMonthAgoOf(2, new Date());
-        Date endDate = new Date();
-
-        List<Date> dateSeries = DateHelper.daysBetween(startDate, endDate);
-
-        Series<Long> positiveSeries = new Series<>(
-                "#Positive News",
-                this.sentimentsOverTime(anElectionId, aCandidateId,
-                        SentimentType.POSITIVE, startDate, endDate, dateSeries));
-
-        Series<Long> negativeSeries = new Series<>(
-                "#Negative News",
-                this.sentimentsOverTime(anElectionId, aCandidateId,
-                        SentimentType.NEGATIVE, startDate, endDate, dateSeries));
-
-        Series<Long> neutralSeries = new Series<>(
-                "#Neutral News",
-                this.sentimentsOverTime(anElectionId, aCandidateId,
-                        SentimentType.NEUTRAL, startDate, endDate, dateSeries));
-
-        Chart chart = new Chart(
-                new XAxis<>(dateSeries),
-                new ArrayList<Series>() {{
-                    add(positiveSeries);
-                    add(negativeSeries);
-                    add(neutralSeries);
-                }});
-
-        return chart;
-    }
-
-    private List<Long> sentimentsOverTime(String electionId, String candidateId,
-                                         SentimentType sentimentType,
-                                         Date startDate,
-                                         Date endDate,
-                                         List<Date> dateSeries) {
-
-        List<SentimentCount> sentiments = this.newsSentimentRepository
-                .sentimentsGroupedByDateAndSentiment(new ElectionId(electionId),
-                        new CandidateId(candidateId),
-                        sentimentType, startDate, endDate);
-
-        for (SentimentCount sentiment : sentiments) {
-            log.info("{} : {}", sentiment.getSentimentType().toString(), sentiment.getCount() );
-        }
-
-        return this.fillGapBetweenEmpty(dateSeries, sentiments);
     }
 
 //        List<Integer> values = new ArrayList<>();
