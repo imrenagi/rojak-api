@@ -13,6 +13,7 @@ before_install:
   - mysql -e 'CREATE DATABASE account_test;'
   - mysql -e 'CREATE DATABASE auth_test;'
   - mysql -e 'CREATE DATABASE election_test;'
+  - mysql -e 'CREATE DATABASE analytics_test;'
   - chmod a+x compile.sh
 
 after_success:
