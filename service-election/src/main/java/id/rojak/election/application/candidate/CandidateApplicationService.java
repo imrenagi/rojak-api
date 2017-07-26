@@ -1,11 +1,13 @@
 package id.rojak.election.application.candidate;
 
+import id.rojak.election.client.AnalyticsServiceClient;
 import id.rojak.election.common.error.ResourceNotFoundException;
 import id.rojak.election.domain.model.candidate.*;
 import id.rojak.election.domain.model.election.Election;
 import id.rojak.election.domain.model.election.ElectionId;
 import id.rojak.election.domain.model.election.ElectionRepository;
 import id.rojak.election.resource.ElectionController;
+import id.rojak.election.resource.dto.StatisticSummaryDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class CandidateApplicationService {
     @Autowired
     private ElectionCandidateService electionCandidateService;
 
+    @Autowired
+    private AnalyticsServiceClient analyticsService;
+
     @Transactional
     public Page<Candidate> allCandidates(String anElectionId, Pageable pageRequest) {
 
@@ -42,6 +47,12 @@ public class CandidateApplicationService {
                         pageRequest);
 
         return result;
+    }
+
+    public StatisticSummaryDTO summaryStatisticOf(String anElectionId, String candidateid) {
+
+        return analyticsService.candidateSummaryStatistic(anElectionId, candidateid);
+
     }
 
     @Transactional

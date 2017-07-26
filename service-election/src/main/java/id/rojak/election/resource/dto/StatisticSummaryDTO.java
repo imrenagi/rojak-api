@@ -9,11 +9,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StatisticSummaryDTO {
 
-    @JsonProperty("positive_news_count")
+    @JsonProperty("positive_media")
     private int positiveCount;
-    @JsonProperty("negative_news_count")
+    @JsonProperty("negative_media")
     private int negativeCount;
-    @JsonProperty("neutral_news_count")
+    @JsonProperty("neutral_media")
     private int neutralCount;
 
     public StatisticSummaryDTO() {
@@ -27,6 +27,5 @@ public class StatisticSummaryDTO {
         this.negativeCount = negativeCount;
         this.neutralCount = neutralCount;
     }
-
-
+    
 }
