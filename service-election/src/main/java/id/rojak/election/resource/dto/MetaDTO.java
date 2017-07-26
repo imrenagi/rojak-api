@@ -27,7 +27,7 @@ public class MetaDTO {
         return this.currentPage;
     }
 
-    @JsonProperty("total_page")
+    @JsonProperty("total_pages")
     public int getTotalPage() {
         return totalPage;
     }
