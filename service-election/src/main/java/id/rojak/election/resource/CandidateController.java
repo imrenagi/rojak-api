@@ -41,8 +41,16 @@ public class CandidateController {
                             anElectionId,
                             new PageRequest(page, size));
 
-        List<CandidateDTO> candidates = candidatesPage.map(candidate -> new CandidateDTO(candidate))
-                                    .getContent();
+        List<CandidateDTO> candidates = candidatesPage
+                .map(candidate -> {
+                    CandidateDTO dto = new CandidateDTO(candidate);
+                    dto.setStatisticSummary(
+                            this.candidateApplicationService.summaryStatisticOf(anElectionId,
+                                    candidate.candidateId().id())
+                    );
+                    return dto;
+                })
+                .getContent();
 
         return new ResponseEntity<>(
                 new CandidateCollectionDTO(
