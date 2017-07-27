@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +70,29 @@ public class NewsSentimentService {
         }
 
         return mediaMap;
+    }
+
+    public Map<CandidateId, List<SentimentCount>> groupSentimentsByCandidateId(List<SentimentCount> sentiments) {
+
+        Map<CandidateId, List<SentimentCount>> candidateMap = new HashMap<>();
+
+        for (SentimentCount sentiment : sentiments) {
+
+            if (candidateMap.containsKey(sentiment.getCandidateId())) {
+
+                List<SentimentCount> candidateSentiments = candidateMap.get(
+                        sentiment.getCandidateId());
+                candidateSentiments.add(sentiment);
+
+            } else {
+
+                List<SentimentCount> candidateSentiments = new ArrayList<>();
+                candidateSentiments.add(sentiment);
+                candidateMap.put(sentiment.getCandidateId(), candidateSentiments);
+            }
+        }
+
+        return candidateMap;
     }
 
     private MediaSentimentGroup groupBySentimentType(CandidateId candidateId,

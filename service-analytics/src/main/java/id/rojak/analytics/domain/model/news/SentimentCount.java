@@ -4,13 +4,14 @@ import id.rojak.analytics.domain.model.ValueObject;
 import id.rojak.analytics.domain.model.candidate.CandidateId;
 import id.rojak.analytics.domain.model.election.ElectionId;
 import id.rojak.analytics.domain.model.media.MediaId;
+import id.rojak.analytics.domain.model.sentiments.ChartPoint;
 
 import java.util.Date;
 
 /**
  * Created by inagi on 7/20/17.
  */
-public class SentimentCount extends ValueObject {
+public class SentimentCount extends ValueObject implements ChartPoint<Date, Long> {
 
     private ElectionId electionId;
     private CandidateId candidateId;
@@ -73,5 +74,15 @@ public class SentimentCount extends ValueObject {
 
     public Long getCount() {
         return count;
+    }
+
+    @Override
+    public Date xValue() {
+        return getDate();
+    }
+
+    @Override
+    public Long yValue() {
+        return getCount();
     }
 }
