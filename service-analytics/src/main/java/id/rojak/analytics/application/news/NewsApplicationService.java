@@ -1,11 +1,13 @@
 package id.rojak.analytics.application.news;
 
+import id.rojak.analytics.clients.ElectionServiceClient;
 import id.rojak.analytics.domain.model.candidate.CandidateId;
 import id.rojak.analytics.domain.model.election.ElectionId;
 import id.rojak.analytics.domain.model.media.Media;
 import id.rojak.analytics.domain.model.media.MediaId;
 import id.rojak.analytics.domain.model.media.MediaRepository;
 import id.rojak.analytics.domain.model.news.*;
+import id.rojak.analytics.resource.dto.ElectionDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +30,9 @@ public class NewsApplicationService {
 
     @Autowired
     private MediaRepository mediaRepository;
+
+    @Autowired
+    private ElectionServiceClient electionServiceClient;
 
     @Transactional
     public Page<News> allNewsBy(String mediaId,
@@ -63,7 +68,13 @@ public class NewsApplicationService {
                            String mediaId,
                            NewNewsCommand aCommand) {
 
-        //TODO check electionId
+        ElectionDTO election = this.electionServiceClient
+                .election(electionId);
+
+        if (election == null) {
+            throw new IllegalArgumentException(
+                    String.format("Election with id %s is not found!", electionId));
+        }
 
         Media media = this.mediaRepository.findByMediaId(new MediaId(mediaId));
 
@@ -105,7 +116,13 @@ public class NewsApplicationService {
                                  String newsId,
                                  InsertSentimentCommand command) {
 
-        //TODO check electionId
+        ElectionDTO election = this.electionServiceClient
+                .election(electionId);
+
+        if (election == null) {
+            throw new IllegalArgumentException(
+                    String.format("Election with id %s is not found!", electionId));
+        }
 
         Media media = this.mediaRepository
                 .findByMediaId(new MediaId(mediaId));
@@ -119,7 +136,16 @@ public class NewsApplicationService {
         News news = this.newsRepository
                 .findByNewsId(new NewsId(newsId));
 
-        //TODO check whether news is part of the media and election.
+        if (news == null) {
+            throw new IllegalArgumentException(String.format(
+                    "News id %s is not exist",
+                    newsId));
+        }
+
+        if (!news.media().mediaId().equals(media.mediaId())) {
+            throw new IllegalArgumentException(
+                    String.format("Invalid media Id for news %s", news.newsId().id()));
+        }
 
         for (CandidateSentimentCommand sentiment : command.sentiments()) {
 

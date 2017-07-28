@@ -8,10 +8,7 @@ import id.rojak.analytics.resource.dto.chart.Series;
 import id.rojak.analytics.resource.dto.chart.XAxis;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -73,7 +70,11 @@ public class MediaStatisticController {
     }
 
     @RequestMapping(path = "/elections/{election_id}/medias", method = RequestMethod.GET)
-    public ResponseEntity<String> mediaOfAnElection(@PathVariable("election_id") String anElectionId) {
+    public ResponseEntity<String> mediaOfAnElection(
+            @PathVariable("election_id") String anElectionId,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "10") Integer size) {
+
         return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
     }
 
