@@ -54,8 +54,6 @@ public class NewsController {
         Page<News> news = this.newsApplicationService.allNewsBy(aMediaId, anElectionId,
                 new PageRequest(page, size));
 
-        List<String> dummy = new ArrayList<>();
-
         List<NewsDTO> newsDTO = news.getContent().stream()
                 .map((News aNews) -> {
                     return new NewsDTO(

@@ -2,12 +2,10 @@ package id.rojak.analytics.resource;
 
 import id.rojak.analytics.application.statistic.MediaStatisticApplicationService;
 import id.rojak.analytics.common.date.DateHelper;
-import id.rojak.analytics.domain.model.news.SentimentType;
 import id.rojak.analytics.resource.dto.MediaStatisticDTO;
 import id.rojak.analytics.resource.dto.chart.ChartDTO;
 import id.rojak.analytics.resource.dto.chart.Series;
 import id.rojak.analytics.resource.dto.chart.XAxis;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,12 +23,13 @@ import java.util.List;
 @RestController
 public class MediaStatisticController {
 
-    @Resource(name="mediaStatisticApplicationService")
+    @Resource(name = "mediaStatisticApplicationService")
     private MediaStatisticApplicationService mediaStatisticApplicationService;
 
-    @RequestMapping(path = "/medias/{media_id}/elections/{election_id}/statistics", method = RequestMethod.GET)
-    public ResponseEntity<MediaStatisticDTO> mediaStatisticInElection(@PathVariable("media_id") String aMediaId,
-                                                                      @PathVariable("election_id") String anElectionId) {
+    @RequestMapping(path = "/elections/{election_id}/medias/{media_id}/statistics", method = RequestMethod.GET)
+    public ResponseEntity<MediaStatisticDTO> mediaStatisticInElection(
+            @PathVariable("media_id") String aMediaId,
+            @PathVariable("election_id") String anElectionId) {
 
         Date startDate = DateHelper.nMonthAgoOf(1, new Date());
         Date endDate = new Date();
@@ -73,9 +72,15 @@ public class MediaStatisticController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/medias/{media_id}/elections/{election_id}/candidates", method = RequestMethod.GET)
-    public ResponseEntity<String> candidateSupportedBy(@PathVariable("media_id") String aMediaId,
-                                                     @PathVariable("election_id") String anElectionId) {
+    @RequestMapping(path = "/elections/{election_id}/medias", method = RequestMethod.GET)
+    public ResponseEntity<String> mediaOfAnElection(@PathVariable("election_id") String anElectionId) {
         return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
     }
+
+    @RequestMapping(path = "/elections/{election_id}/medias/{media_id}/candidates", method = RequestMethod.GET)
+    public ResponseEntity<String> candidateSupportedBy(@PathVariable("media_id") String aMediaId,
+                                                       @PathVariable("election_id") String anElectionId) {
+        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+    }
+
 }
