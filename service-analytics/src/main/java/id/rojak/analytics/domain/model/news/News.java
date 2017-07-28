@@ -22,6 +22,9 @@ public class News extends IdentifiedDomainObject {
     private String content;
 
     @Embedded
+    private NewsId newsId;
+
+    @Embedded
     private MediaId mediaId;
 
     @Embedded
@@ -41,7 +44,7 @@ public class News extends IdentifiedDomainObject {
 
     protected News() {}
 
-    public News(
+    public News(NewsId newsId,
                 String title,
                 String url,
                 String content,
@@ -50,6 +53,7 @@ public class News extends IdentifiedDomainObject {
                 Date timestamp) {
         this();
 
+        this.setNewsId(newsId);
         this.setTitle(title);
         this.setUrl(url);
         this.setContent(content);
@@ -100,6 +104,10 @@ public class News extends IdentifiedDomainObject {
         return this.electionId;
     }
 
+    public NewsId newsId() {
+        return this.newsId;
+    }
+
     public List<NewsSentiment> sentiments() {
         return this.sentiments;
     }
@@ -130,6 +138,12 @@ public class News extends IdentifiedDomainObject {
         this.assertArgumentNotEmpty(content, "Content may not be empty");
 
         this.content = content;
+    }
+
+    public void setNewsId(NewsId newsId) {
+        this.assertArgumentNotNull(newsId, "News Id is required");
+
+        this.newsId = newsId;
     }
 
     public void setMediaId(MediaId mediaId) {

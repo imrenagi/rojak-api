@@ -59,6 +59,7 @@ public class NewsController {
         List<NewsDTO> newsDTO = news.getContent().stream()
                 .map((News aNews) -> {
                     return new NewsDTO(
+                            aNews.newsId().id(),
                             aNews.title(),
                             aNews.url(),
                             aNews.content(),
@@ -85,6 +86,7 @@ public class NewsController {
         News aNews = this.newsApplicationService.insertNews(anElectionId, aMediaId, command);
 
         return new ResponseEntity<>(new NewsDTO(
+                aNews.newsId().id(),
                 aNews.title(),
                 aNews.url(),
                 aNews.content(),

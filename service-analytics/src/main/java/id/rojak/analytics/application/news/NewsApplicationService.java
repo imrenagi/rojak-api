@@ -5,10 +5,7 @@ import id.rojak.analytics.domain.model.election.ElectionId;
 import id.rojak.analytics.domain.model.media.Media;
 import id.rojak.analytics.domain.model.media.MediaId;
 import id.rojak.analytics.domain.model.media.MediaRepository;
-import id.rojak.analytics.domain.model.news.News;
-import id.rojak.analytics.domain.model.news.NewsRepository;
-import id.rojak.analytics.domain.model.news.NewsSentiment;
-import id.rojak.analytics.domain.model.news.SentimentType;
+import id.rojak.analytics.domain.model.news.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,7 +53,9 @@ public class NewsApplicationService {
                     mediaId));
         }
 
-        News news = new News(aCommand.getTitle(),
+        News news = new News(
+                new NewsId(this.newsRepository.nextId()),
+                aCommand.getTitle(),
                 aCommand.getUrl(),
                 aCommand.getContent(),
                 new MediaId(mediaId),
