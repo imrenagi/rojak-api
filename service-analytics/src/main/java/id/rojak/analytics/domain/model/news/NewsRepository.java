@@ -22,10 +22,21 @@ public interface NewsRepository extends JpaRepository<News, Long> {
                                           ElectionId electionId,
                                           Pageable pageRequest);
 
-//    Page<News> findByMediaIdAndElectionIdAndTimestampBetween(
-//            MediaId mediaId,
-//            ElectionId electionId,
-//            Date fromDate, Date toDate);
+    Page<News> findByElectionIdAndTimestampBetween(
+            ElectionId electionId,
+            Date fromDate, Date toDate,
+            Pageable pageRequest);
+
+    Page<News> findByTimestampBetween(
+            Date fromDate, Date toDate,
+            Pageable pageRequest);
+
+    Page<News> findByTimestampBetweenAndElectionId(
+            Date fromDate, Date toDate,
+            ElectionId electionId,
+            Pageable pageRequest);
+
+    News findByNewsId(NewsId newsId);
 
     default String nextId() {
         return UUID.randomUUID().toString();

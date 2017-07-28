@@ -5,7 +5,7 @@ import id.rojak.analytics.domain.model.election.ElectionId;
 import id.rojak.analytics.domain.model.media.MediaId;
 import id.rojak.analytics.domain.model.sentiments.MediaSentimentGroup;
 import id.rojak.analytics.domain.model.sentiments.MediaNewsCount;
-import id.rojak.analytics.domain.model.sentiments.SentimentClassifier;
+import id.rojak.analytics.application.statistic.SentimentClassifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
