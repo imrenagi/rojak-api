@@ -10,12 +10,22 @@ public enum SentimentType {
         public boolean isPositive() {
             return true;
         }
+
+        @Override
+        public String text() {
+            return "Positive";
+        }
     },
 
     NEUTRAL {
         @Override
         public boolean isNeutral() {
             return true;
+        }
+
+        @Override
+        public String text() {
+            return "Neutral";
         }
     },
 
@@ -24,12 +34,22 @@ public enum SentimentType {
         public boolean isNegative() {
             return true;
         }
+
+        @Override
+        public String text() {
+            return "Negative";
+        }
     },
 
     UNKNOWN {
         @Override
         public boolean isUnknown() {
             return true;
+        }
+
+        @Override
+        public String text() {
+            return "Unknown";
         }
     };
 
@@ -41,6 +61,8 @@ public enum SentimentType {
 
     public boolean isUnknown() { return false; }
 
-
+    public String text() {
+        return "Unknown";
+    }
 
 }

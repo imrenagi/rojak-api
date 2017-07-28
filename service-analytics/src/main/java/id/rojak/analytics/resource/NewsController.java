@@ -1,5 +1,6 @@
 package id.rojak.analytics.resource;
 
+import id.rojak.analytics.application.news.InsertSentimentCommand;
 import id.rojak.analytics.application.news.NewNewsCommand;
 import id.rojak.analytics.application.news.NewsApplicationService;
 import id.rojak.analytics.common.date.DateHelper;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -55,13 +57,16 @@ public class NewsController {
         List<String> dummy = new ArrayList<>();
 
         List<NewsDTO> newsDTO = news.getContent().stream()
-                .map(aNews -> new NewsDTO(
-                        aNews.title(),
-                        aNews.url(),
-                        aNews.content(),
-                        aNews.timestamp().getTime(),
-                        dummy //TODO change this
-                )).collect(Collectors.toList());
+                .map((News aNews) -> {
+                    return new NewsDTO(
+                            aNews.title(),
+                            aNews.url(),
+                            aNews.content(),
+                            aNews.timestamp().getTime(),
+                            aNews.sentiments().stream()
+                                    .map(newsSentiment -> newsSentiment.shortText())
+                                    .collect(Collectors.toList()));
+                }).collect(Collectors.toList());
 
         return new ResponseEntity<>(new NewsCollectionDTO(
                 newsDTO,
@@ -84,7 +89,31 @@ public class NewsController {
                 aNews.url(),
                 aNews.content(),
                 aNews.timestamp().getTime(),
-                null
+                aNews.sentiments().stream()
+                        .map(newsSentiment -> newsSentiment.shortText())
+                        .collect(Collectors.toList())
                 ), HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/medias/{media_id}/elections/{election_id}/news/{news_id}",
+            method = RequestMethod.POST)
+    public ResponseEntity<String> insertSentimentFor(
+                    @PathVariable("election_id") String electionId,
+            @PathVariable("media_id") String mediaId,
+            @PathVariable("news_id") String newsId,
+            @Valid @RequestBody InsertSentimentCommand command) {
+
+        return new ResponseEntity<String>("",HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+    @RequestMapping(path = "/medias/{media_id}/elections/{election_id}/news/raw",
+        method = RequestMethod.GET)
+    public ResponseEntity<String> getNewsWithDateRange(
+            @PathVariable("election_id") String electionId,
+            @PathVariable("media_id") String mediaId,
+            @RequestParam(value="start_date") Date startDate,
+            @RequestParam(value="end_date") Date endDate) {
+        return new ResponseEntity<String>("",HttpStatus.NOT_IMPLEMENTED);
     }
 }

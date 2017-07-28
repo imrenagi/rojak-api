@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * Created by inagi on 7/26/17.
  */
-@Service
+@Service("mediaStatisticApplicationService")
 public class MediaStatisticApplicationService extends StatisticApplicationService {
 
     private final Logger log = LoggerFactory.getLogger(MediaStatisticApplicationService.class);

@@ -13,6 +13,7 @@ import id.rojak.analytics.domain.model.sentiments.MediaSentimentGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,8 @@ import java.util.*;
 /**
  * Created by inagi on 7/20/17.
  */
-@Service
+@Primary
+@Service("candidateStatisticApplicationService")
 public class CandidateStatisticApplicationService extends StatisticApplicationService {
 
     private final Logger log = LoggerFactory.getLogger(CandidateStatisticApplicationService.class);

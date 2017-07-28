@@ -31,7 +31,7 @@ public class News extends IdentifiedDomainObject {
     @JoinColumn(name = "media_id_id", referencedColumnName = "id")
     private Media media;
 
-    private Date timestamp;
+    private Date timestamp; //date of the news from the media
 
     @Column(name="created_at")
     private Date createdAt;

@@ -127,4 +127,8 @@ public class NewsSentiment extends IdentifiedDomainObject {
         this.setNews(news);
         news.addSentiment(this);
     }
+
+    public String shortText() {
+        return String.format("%s %s", this.type().text(), this.candidateId().id());
+    }
 }

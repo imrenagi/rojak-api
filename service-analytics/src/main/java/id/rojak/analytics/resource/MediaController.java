@@ -33,15 +33,6 @@ public class MediaController {
     private static final Logger log = LoggerFactory.getLogger(MediaController.class);
 
     @Autowired
-    MediaRepository mediaRepository;
-
-    @Autowired
-    NewsRepository newsRepository;
-
-    @Autowired
-    NewsSentimentRepository sentimentRepository;
-
-    @Autowired
     MediaApplicationService mediaApplicationService;
 
     @RequestMapping(path = "/medias", method = RequestMethod.GET)
@@ -59,7 +50,7 @@ public class MediaController {
                 .map(media -> new MediaDTO(media.mediaId().id(),
                         media.name(),
                         media.websiteUrl(),
-                        media.websiteUrl()) //TODO change this with logo url
+                        media.logo())
                 ).collect(Collectors.toList());
 
         return new ResponseEntity<>(
@@ -78,7 +69,7 @@ public class MediaController {
         MediaDTO mediaDTO = new MediaDTO(media.mediaId().id(),
                 media.name(),
                 media.websiteUrl(),
-                media.websiteUrl()); //TODO change this with url logo
+                media.logo());
 
         return new ResponseEntity<>(mediaDTO, HttpStatus.OK);
     }
@@ -96,7 +87,7 @@ public class MediaController {
         MediaDTO mediaDTO = new MediaDTO(media.mediaId().id(),
                 media.name(),
                 media.websiteUrl(),
-                media.websiteUrl()); //TODO change this with url logo
+                media.logo());
 
         return new ResponseEntity<>(mediaDTO, HttpStatus.OK);
     }

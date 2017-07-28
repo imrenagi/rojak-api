@@ -22,6 +22,7 @@ CREATE TABLE `tbl_medias` (
     `name` varchar(50) NOT NULL,
     `website_url` varchar(255) NOT NULL,
     `mobile_website_url` varchar(255),
+    `logo_url` varchar(255),
     `social_media_id` bigint(20),
     `postal_info_id` bigint(20),
     `created_at` datetime DEFAULT CURRENT_TIMESTAMP ,

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import java.util.List;
 @RestController
 public class MediaStatisticController {
 
-    @Autowired
+    @Resource(name="mediaStatisticApplicationService")
     private MediaStatisticApplicationService mediaStatisticApplicationService;
 
     @RequestMapping(path = "/medias/{media_id}/elections/{election_id}/statistics", method = RequestMethod.GET)
