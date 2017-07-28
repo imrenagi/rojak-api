@@ -1,5 +1,6 @@
-package id.rojak.analytics.domain.model.sentiments;
+package id.rojak.analytics.application.statistic;
 
+import id.rojak.analytics.application.statistic.SentimentClassifier;
 import id.rojak.analytics.domain.model.news.SentimentType;
 import org.springframework.stereotype.Service;
 

@@ -11,6 +11,8 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class NewsDTO {
 
+    @JsonProperty("id")
+    private String id;
     @JsonProperty("title")
     private String title;
     @JsonProperty("url")
@@ -22,15 +24,19 @@ public class NewsDTO {
     @JsonProperty("sentiments")
     private List<String> sentiments;
 
-    protected NewsDTO() {};
+    protected NewsDTO() {
+    }
 
-    public NewsDTO(String title,
-                   String url,
-                   String content,
-                   Long timestamp,
-                   List<String> sentiments) {
+    public NewsDTO(
+            String id,
+            String title,
+            String url,
+            String content,
+            Long timestamp,
+            List<String> sentiments) {
         this();
 
+        this.id = id;
         this.title = title;
         this.url = url;
         this.content = content;

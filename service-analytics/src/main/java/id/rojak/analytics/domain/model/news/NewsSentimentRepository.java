@@ -60,4 +60,18 @@ public interface NewsSentimentRepository extends JpaRepository<NewsSentiment, Lo
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate);
 
+    @Query("SELECT new id.rojak.analytics.domain.model.news.SentimentCount(electionId, candidateId, " +
+            "mediaId, cast(createdAt as date), sentimentType, COUNT(sentimentType)) " +
+            "FROM NewsSentiment " +
+            "WHERE electionId = :electionId AND mediaId = :mediaId AND sentimentType = :sentimentType " +
+            "AND createdAt >= :startDate and createdAt <= :endDate " +
+            "GROUP BY 2, 4, 5 " +
+            "ORDER BY 4")
+    List<SentimentCount> sentimentsIn(
+            @Param("electionId") ElectionId electionId,
+            @Param("mediaId") MediaId mediaId,
+            @Param("sentimentType") SentimentType sentimentType,
+            @Param("startDate") Date startDate,
+            @Param("endDate") Date endDate);
+
 }

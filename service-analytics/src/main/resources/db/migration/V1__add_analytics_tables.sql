@@ -22,6 +22,7 @@ CREATE TABLE `tbl_medias` (
     `name` varchar(50) NOT NULL,
     `website_url` varchar(255) NOT NULL,
     `mobile_website_url` varchar(255),
+    `logo_url` varchar(255),
     `social_media_id` bigint(20),
     `postal_info_id` bigint(20),
     `created_at` datetime DEFAULT CURRENT_TIMESTAMP ,
@@ -35,6 +36,7 @@ CREATE TABLE `tbl_medias` (
 
 CREATE TABLE `tbl_news` (
     `id` bigint(20) NOT NULL auto_increment,
+    `news_id` varchar(36) NOT NULL,
     `title` varchar(255) NOT NULL,
     `url` varchar(255) NOT NULL,
     `content` text NOT NULL,
@@ -45,8 +47,9 @@ CREATE TABLE `tbl_news` (
     `timestamp` datetime NOT NULL,
     `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     KEY `k_media_id` (`media_id`),
+    KEY `k_news_id` (`news_id`),
     KEY `k_election_id` (`election_id`),
-	  KEY `k_media_id_id` (`media_id_id`),
+	KEY `k_media_id_id` (`media_id_id`),
     CONSTRAINT `fk_media_id` FOREIGN KEY (`media_id_id`) REFERENCES `tbl_medias` (`id`),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

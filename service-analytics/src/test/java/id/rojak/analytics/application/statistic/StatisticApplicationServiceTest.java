@@ -15,23 +15,21 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by inagi on 7/21/17.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AnalyticsApplication.class)
-public class CandidateStatisticApplicationServiceTest {
+public class StatisticApplicationServiceTest {
 
     @Autowired
-    private CandidateStatisticApplicationService service;
+    private StatisticApplicationService service;
 
     @Test
     public void shouldReturnEmptyList() {
         List<Date> date = new ArrayList<>();
 
-        List<Long> output = service.fillGapBetweenEmpty(date, new ArrayList<>());
+        List<Long> output = service.fillEmptyGapFor(date, new ArrayList<>());
 
         Assert.assertEquals(0, output.size());
     }
@@ -41,7 +39,7 @@ public class CandidateStatisticApplicationServiceTest {
 
         List<Date> dates = this.dateFixtures();
 
-        List<Long> output = service.fillGapBetweenEmpty(dates, new ArrayList<>());
+        List<Long> output = service.fillEmptyGapFor(dates, new ArrayList<>());
 
         Assert.assertEquals(dates.size(), output.size());
     }
@@ -51,7 +49,7 @@ public class CandidateStatisticApplicationServiceTest {
 
         List<Date> dates = this.dateFixtures();
 
-        List<Long> output = service.fillGapBetweenEmpty(dates, new ArrayList<>());
+        List<Long> output = service.fillEmptyGapFor(dates, new ArrayList<>());
 
         Assert.assertEquals(dates.size(), output.size());
         Assert.assertEquals(output.get(0), new Long(0));
@@ -64,7 +62,7 @@ public class CandidateStatisticApplicationServiceTest {
 
         List<Date> dates = this.dateFixtures();
 
-        List<Long> output = service.fillGapBetweenEmpty(dates,
+        List<Long> output = service.fillEmptyGapFor(dates,
                 this.sentimentCountsFixtures());
 
         Assert.assertEquals(dates.size(), output.size());
@@ -93,7 +91,7 @@ public class CandidateStatisticApplicationServiceTest {
         sentimentCounts.add(this.sentimentCountWithDate(
                 new GregorianCalendar(2017, Calendar.JANUARY , 5).getTime(), 5L));
 
-        List<Long> output = service.fillGapBetweenEmpty(dates, sentimentCounts);
+        List<Long> output = service.fillEmptyGapFor(dates, sentimentCounts);
 
         Assert.assertEquals(dates.size(), output.size());
         Assert.assertEquals(new Long(1), output.get(0));
