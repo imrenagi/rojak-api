@@ -31,8 +31,17 @@ public class NomineeApplicationService {
     @Transactional
     public Nominee newNominee(NewNomineeCommand aCommand) {
 
-        Nominee nominee = new Nominee(
-                new NomineeId(this.nomineeRepository.nextId()),
+        Nominee nominee =
+                this.nomineeRepository
+                        .findByNomineeId(new NomineeId(aCommand.getId()));
+
+        if (nominee != null) {
+            throw new IllegalArgumentException(
+                    String.format("Nominee with id %s is exist", aCommand.getId()));
+        }
+
+        Nominee newNominee = new Nominee(
+                new NomineeId(aCommand.getId()),
                 new FullName(
                         aCommand.getFirstName(),
                         aCommand.getMiddleName(),
@@ -45,9 +54,9 @@ public class NomineeApplicationService {
                         aCommand.getInstagramId(),
                         aCommand.getFacebookUrl()));
 
-        nominee = this.nomineeRepository.save(nominee);
+        newNominee = this.nomineeRepository.save(newNominee);
 
-        return nominee;
+        return newNominee;
     }
 
 }

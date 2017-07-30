@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 public class NewNomineeCommand {
 
     @NotNull
+    private String id;
+    @NotNull
     private String firstName;
     @NotNull
     private String middleName;
@@ -23,16 +25,18 @@ public class NewNomineeCommand {
     private String instagramId;
     private String facebookUrl;
 
-    public NewNomineeCommand(String firstName,
-                             String middleName,
-                             String lastName,
-                             String imageUrl,
-                             String nickName,
-                             String webUrl,
-                             String twitterId,
-                             String instagramId,
-                             String facebookUrl) {
-        this(firstName, lastName, nickName);
+    public NewNomineeCommand(
+            String id,
+            String firstName,
+            String middleName,
+            String lastName,
+            String imageUrl,
+            String nickName,
+            String webUrl,
+            String twitterId,
+            String instagramId,
+            String facebookUrl) {
+        this(id, firstName, lastName, nickName);
 
         this.middleName = middleName;
         this.imageUrl = imageUrl;
@@ -42,20 +46,41 @@ public class NewNomineeCommand {
         this.facebookUrl = facebookUrl;
     }
 
-    public NewNomineeCommand(String firstName,
-                             String lastName,
-                             String nickName) {
+    public NewNomineeCommand(
+            String id,
+            String firstName,
+            String lastName,
+            String nickName) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.nickName = nickName;
     }
 
-    protected NewNomineeCommand() {}
+    protected NewNomineeCommand() {
+    }
 
+    @JsonProperty("id")
+    public String getId() {
+        return id;
+    }
+
+    @JsonProperty("id")
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
 
     @JsonProperty("first_name")
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
     }
 
     @JsonProperty("middle_name")
@@ -63,9 +88,17 @@ public class NewNomineeCommand {
         this.middleName = middleName;
     }
 
+    public String getLastName() {
+        return lastName;
+    }
+
     @JsonProperty("last_name")
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     @JsonProperty("image_url")
@@ -73,9 +106,17 @@ public class NewNomineeCommand {
         this.imageUrl = imageUrl;
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
     @JsonProperty("nick_name")
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getWebUrl() {
+        return webUrl;
     }
 
     @JsonProperty("web_url")
@@ -83,9 +124,17 @@ public class NewNomineeCommand {
         this.webUrl = webUrl;
     }
 
+    public String getTwitterId() {
+        return twitterId;
+    }
+
     @JsonProperty("twitter_id")
     public void setTwitterId(String twitterId) {
         this.twitterId = twitterId;
+    }
+
+    public String getInstagramId() {
+        return instagramId;
     }
 
     @JsonProperty("instagram_id")
@@ -93,44 +142,12 @@ public class NewNomineeCommand {
         this.instagramId = instagramId;
     }
 
+    public String getFacebookUrl() {
+        return facebookUrl;
+    }
+
     @JsonProperty("facebook_url")
     public void setFacebookUrl(String facebookUrl) {
         this.facebookUrl = facebookUrl;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public String getWebUrl() {
-        return webUrl;
-    }
-
-    public String getTwitterId() {
-        return twitterId;
-    }
-
-    public String getInstagramId() {
-        return instagramId;
-    }
-
-    public String getFacebookUrl() {
-        return facebookUrl;
     }
 }
