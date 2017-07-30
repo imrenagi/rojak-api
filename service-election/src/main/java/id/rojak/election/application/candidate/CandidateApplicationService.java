@@ -94,8 +94,18 @@ public class CandidateApplicationService {
 
         //TODO validate candidate number
 
+        Candidate existingCandidate =
+                this.candidateRepository
+                        .findByCandidateId(new CandidateId(aCommand.getId()));
+
+        if (existingCandidate != null) {
+            throw new IllegalArgumentException(
+                    String.format("Candidate with id %s is exist",
+                            aCommand.getId()));
+        }
+
         Candidate candidate = new Candidate(
-                new CandidateId(this.candidateRepository.nextId()),
+                new CandidateId(aCommand.getId()),
                 new ElectionId(aCommand.getElectionId()),
                 aCommand.getCandidateNumber(),
                 mainCandidate,
