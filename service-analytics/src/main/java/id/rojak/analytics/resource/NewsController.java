@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -86,6 +87,7 @@ public class NewsController {
         ), HttpStatus.OK);
     }
 
+    @PreAuthorize("#oauth2.hasScope('spider')")
     @RequestMapping(path = "/medias/{media_id}/elections/{election_id}/news/{news_id}",
             method = RequestMethod.POST)
     public ResponseEntity<NewsDTO> insertSentimentFor(
@@ -114,6 +116,7 @@ public class NewsController {
 
     }
 
+    @PreAuthorize("#oauth2.hasScope('spider')")
     @RequestMapping(path = "/elections/{election_id}/news",
             method = RequestMethod.GET)
     public ResponseEntity<NewsCollectionDTO> getNewsWithDateRange(
