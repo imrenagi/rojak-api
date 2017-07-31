@@ -12,6 +12,8 @@ import id.rojak.analytics.domain.model.news.NewsSentimentRepository;
 import id.rojak.analytics.domain.model.news.NewsSentimentService;
 import id.rojak.analytics.domain.model.news.SentimentCount;
 import id.rojak.analytics.domain.model.news.SentimentType;
+import id.rojak.analytics.domain.model.sentiments.CandidateNewsCount;
+import id.rojak.analytics.domain.model.sentiments.MediaNewsCount;
 import id.rojak.analytics.resource.dto.CandidateDTO;
 import id.rojak.analytics.resource.dto.chart.Series;
 import org.slf4j.Logger;
@@ -148,11 +150,71 @@ public class MediaStatisticApplicationService extends StatisticApplicationServic
         return candidateCounts;
     }
 
-    public CandidateId topCandidateFor(String electionId, String mediaId) {
+    public CandidateId topCandidateFor(String electionId, String aMediaId) {
 
         //TODO add cache checking later
         //TODO change this later
-        return new CandidateId("okeoce");
+//        List<SentimentCount> sentiments =
+//                this.newsSentimentRepository
+//                        .sentimentsGroupByMediaAndCandidateAndType(
+//                                new ElectionId(electionId));
+//
+//        Map<MediaId, Map<CandidateId, CandidateNewsCount>> mediaMap =
+//                new HashMap<>();
+//
+//        for (SentimentCount sentiment : sentiments) {
+//            MediaId mediaId = sentiment.getMediaId();
+//            CandidateId candidateId = sentiment.getCandidateId();
+//
+//            Map<CandidateId, CandidateNewsCount> map = null;
+//            if (mediaMap.containsKey(mediaId)) {
+//                map = mediaMap.get(mediaId);
+//            } else {
+//                map = new HashMap<>();
+//            }
+//
+//            CandidateNewsCount newsCount = null;
+//            if (map.containsKey(candidateId)) {
+//                newsCount = map.get(candidateId);
+//            } else {
+//                newsCount = new CandidateNewsCount(candidateId);
+//            }
+//
+//            newsCount.insert(sentiment.getSentimentType(),
+//                    sentiment.getCount());
+//
+//            map.put(candidateId, newsCount);
+//            mediaMap.put(mediaId, map);
+//
+//        }
+
+        List<SentimentCount> sentiments =
+                this.newsSentimentRepository
+                        .sentimentsGroupByMediaAndCandidateAndType(
+                                new ElectionId(electionId),
+                                new MediaId(aMediaId));
+
+        Map<CandidateId, CandidateNewsCount> candidateMap =
+                new HashMap<>();
+
+        for (SentimentCount sentiment : sentiments) {
+            CandidateId candidateId = sentiment.getCandidateId();
+
+            CandidateNewsCount newsCount = null;
+            if (candidateMap.containsKey(candidateId)) {
+                newsCount = candidateMap.get(candidateId);
+            } else {
+                newsCount = new CandidateNewsCount(candidateId);
+            }
+
+            newsCount.insert(sentiment.getSentimentType(), sentiment.getCount());
+
+            candidateMap.put(candidateId, newsCount);
+        }
+
+        TopCandidateCalculator calculator = new BasicTopCandidateCalculator();
+
+        return calculator.topCandidateFrom(candidateMap.values());
     }
 
     public Candidate candidate(String electionId, String candidateId) {
