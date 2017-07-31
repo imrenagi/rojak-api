@@ -117,7 +117,7 @@ public class CandidateStatisticController {
                 return new MediaDTO(media.mediaId().id(),
                         media.name(),
                         media.websiteUrl(),
-                        media.websiteUrl(), //todo change with logo url
+                        media.logo(),
                         new MediaNewsCountDTO(newsCount.totalPositiveNews(),
                                 newsCount.totalNegativeNews(),
                                 newsCount.totalNeutralNews()));
