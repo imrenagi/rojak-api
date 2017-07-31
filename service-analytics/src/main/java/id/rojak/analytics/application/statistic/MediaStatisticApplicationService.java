@@ -1,14 +1,18 @@
 package id.rojak.analytics.application.statistic;
 
+import id.rojak.analytics.clients.ElectionServiceClient;
 import id.rojak.analytics.common.date.DateHelper;
+import id.rojak.analytics.domain.model.candidate.Candidate;
 import id.rojak.analytics.domain.model.candidate.CandidateId;
 import id.rojak.analytics.domain.model.election.ElectionId;
+import id.rojak.analytics.domain.model.media.Media;
 import id.rojak.analytics.domain.model.media.MediaId;
 import id.rojak.analytics.domain.model.media.MediaRepository;
 import id.rojak.analytics.domain.model.news.NewsSentimentRepository;
 import id.rojak.analytics.domain.model.news.NewsSentimentService;
 import id.rojak.analytics.domain.model.news.SentimentCount;
 import id.rojak.analytics.domain.model.news.SentimentType;
+import id.rojak.analytics.resource.dto.CandidateDTO;
 import id.rojak.analytics.resource.dto.chart.Series;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +35,9 @@ public class MediaStatisticApplicationService extends StatisticApplicationServic
 
     @Autowired
     private NewsSentimentRepository newsSentimentRepository;
+
+    @Autowired
+    private ElectionServiceClient electionServiceClient;
 
     @Autowired
     private MediaRepository mediaRepository;
@@ -140,5 +147,22 @@ public class MediaStatisticApplicationService extends StatisticApplicationServic
 
         return candidateCounts;
     }
+
+    public CandidateId topCandidateFor(String electionId, String mediaId) {
+
+        //TODO add cache checking later
+        //TODO change this later
+        return new CandidateId("okeoce");
+    }
+
+    public Candidate candidate(String electionId, String candidateId) {
+
+        //TODO add cache checking later
+        return this.electionServiceClient
+                .candidate(electionId, candidateId);
+    }
+
+
+
 
 }

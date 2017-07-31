@@ -1,5 +1,7 @@
 package id.rojak.analytics.clients;
 
+import id.rojak.analytics.domain.model.candidate.Candidate;
+import id.rojak.analytics.resource.dto.CandidateDTO;
 import id.rojak.analytics.resource.dto.ElectionDTO;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.MediaType;
@@ -19,6 +21,12 @@ public interface ElectionServiceClient {
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     ElectionDTO election(@PathVariable("election_id") String anElectionId);
 
+    @RequestMapping(method = RequestMethod.GET,
+        value = "/elections/{election_id}/candidates/{candidate_id}",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    Candidate candidate(@PathVariable("election_id") String anElectionId,
+                        @PathVariable("candidate_id") String candidateId);
+
 }
 
 @Component
@@ -26,6 +34,11 @@ class ElectionServiceClientFallback implements ElectionServiceClient {
 
     @Override
     public ElectionDTO election(String anElectionId) {
+        return null;
+    }
+
+    @Override
+    public Candidate candidate(String anElectionId, String candidateId) {
         return null;
     }
 }

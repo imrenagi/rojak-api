@@ -29,27 +29,6 @@ public interface NewsSentimentRepository extends JpaRepository<NewsSentiment, Lo
     @Query("SELECT new id.rojak.analytics.domain.model.news.SentimentCount(electionId, candidateId, " +
             "cast(createdAt as date), sentimentType, COUNT(sentimentType)) " +
             "FROM NewsSentiment " +
-            "WHERE electionId = :electionId AND candidateId = :candidateId " +
-            "GROUP BY 3, 4)")
-    List<SentimentCount> sentimentsGroupedByDateAndSentiment(
-            @Param("electionId") ElectionId electionId,
-            @Param("candidateId") CandidateId candidateId);
-
-    @Query("SELECT new id.rojak.analytics.domain.model.news.SentimentCount(electionId, candidateId, " +
-            "cast(createdAt as date), sentimentType, COUNT(sentimentType)) " +
-            "FROM NewsSentiment " +
-            "WHERE electionId = :electionId AND candidateId = :candidateId " +
-            "AND createdAt >= :startDate and createdAt <= :endDate " +
-            "GROUP BY 3, 4)")
-    List<SentimentCount> sentimentsGroupedByDateAndSentiment(
-            @Param("electionId") ElectionId electionId,
-            @Param("candidateId") CandidateId candidateId,
-            @Param("startDate") Date startDate,
-            @Param("endDate") Date endDate);
-
-    @Query("SELECT new id.rojak.analytics.domain.model.news.SentimentCount(electionId, candidateId, " +
-            "cast(createdAt as date), sentimentType, COUNT(sentimentType)) " +
-            "FROM NewsSentiment " +
             "WHERE electionId = :electionId AND candidateId = :candidateId AND sentimentType = :sentimentType " +
             "AND createdAt >= :startDate and createdAt <= :endDate " +
             "GROUP BY 3, 4)")
@@ -73,5 +52,13 @@ public interface NewsSentimentRepository extends JpaRepository<NewsSentiment, Lo
             @Param("sentimentType") SentimentType sentimentType,
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate);
+
+    @Query("SELECT new id.rojak.analytics.domain.model.news.SentimentCount(electionId, candidateId, " +
+            "mediaId, sentimentType, COUNT(sentimentType)) " +
+            "FROM NewsSentiment " +
+            "WHERE electionId = :electionId " +
+            "GROUP BY 2, 3, 4 ")
+    List<SentimentCount> sentimentsGroupByMediaAndCandidateAndType(
+            @Param("electionId") ElectionId electionId);
 
 }
