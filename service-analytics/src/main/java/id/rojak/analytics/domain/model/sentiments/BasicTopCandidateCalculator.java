@@ -1,8 +1,6 @@
-package id.rojak.analytics.application.statistic;
+package id.rojak.analytics.domain.model.sentiments;
 
 import id.rojak.analytics.domain.model.candidate.CandidateId;
-import id.rojak.analytics.domain.model.sentiments.CandidateNewsCount;
-import id.rojak.analytics.domain.model.sentiments.NewsSentimentCount;
 
 import java.util.Collection;
 import java.util.PriorityQueue;

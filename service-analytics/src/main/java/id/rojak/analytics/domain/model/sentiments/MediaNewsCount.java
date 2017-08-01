@@ -11,7 +11,6 @@ import id.rojak.analytics.domain.model.news.SentimentType;
 public class MediaNewsCount extends NewsSentimentCount {
 
     private MediaId mediaId;
-    private Media media;
 
     public MediaNewsCount(MediaId mediaId,
                           Long positiveNews,
@@ -27,11 +26,5 @@ public class MediaNewsCount extends NewsSentimentCount {
 
     public MediaId mediaId() {
         return mediaId;
-    }
-
-    public Media media() { return media; }
-
-    public void setMedia(Media media) {
-        this.media = media;
     }
 }

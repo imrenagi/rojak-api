@@ -13,11 +13,14 @@ import id.rojak.analytics.resource.dto.chart.XAxis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,28 +39,35 @@ public class MediaStatisticController {
 
     @RequestMapping(path = "/elections/{election_id}/medias/{media_id}/statistics", method = RequestMethod.GET)
     public ResponseEntity<MediaStatisticDTO> mediaStatisticInElection(
+            @RequestParam(value = "start_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(value = "end_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @PathVariable("media_id") String aMediaId,
             @PathVariable("election_id") String anElectionId) {
 
-        Date startDate = DateHelper.nMonthAgoOf(1, new Date());
-        Date endDate = new Date();
+        Date fromDate = Date
+                .from(startDate.atStartOfDay(ZoneId.systemDefault())
+                        .toInstant());
 
-        List<Date> date = DateHelper.daysBetween(startDate, endDate);
+        Date toDate = Date
+                .from(endDate.atStartOfDay(ZoneId.systemDefault())
+                        .toInstant());
+
+        List<Date> date = DateHelper.daysBetween(fromDate, toDate);
 
         List<Series> positiveSeries = this.mediaStatisticApplicationService
                 .positiveSentimentSeriesFor(anElectionId,
                         aMediaId,
-                        startDate, endDate);
+                        fromDate, toDate);
 
         List<Series> negativeSeries = this.mediaStatisticApplicationService
                 .negativeSentimentSeriesFor(anElectionId,
                         aMediaId,
-                        startDate, endDate);
+                        fromDate, toDate);
 
         List<Series> neutralSeries = this.mediaStatisticApplicationService
                 .neutralSentimentSeriesFor(anElectionId,
                         aMediaId,
-                        startDate, endDate);
+                        fromDate, toDate);
 
         ChartDTO positiveSentimentsChart = new ChartDTO(
                 new XAxis(date),
@@ -99,6 +109,7 @@ public class MediaStatisticController {
                                     this.mediaStatisticApplicationService
                                             .candidate(anElectionId, candidateId.id());
 
+                            //TODO refactor this
                             if (candidate != null) {
                                 return new MediaDTO(
                                         media.mediaId().id(),
