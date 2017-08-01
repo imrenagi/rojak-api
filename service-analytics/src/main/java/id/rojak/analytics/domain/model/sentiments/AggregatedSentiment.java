@@ -1,9 +1,10 @@
-package id.rojak.analytics.domain.model.news;
+package id.rojak.analytics.domain.model.sentiments;
 
 import id.rojak.analytics.domain.model.ValueObject;
 import id.rojak.analytics.domain.model.candidate.CandidateId;
 import id.rojak.analytics.domain.model.election.ElectionId;
 import id.rojak.analytics.domain.model.media.MediaId;
+import id.rojak.analytics.domain.model.news.SentimentType;
 import id.rojak.analytics.domain.model.sentiments.ChartPoint;
 
 import java.util.Date;
@@ -11,7 +12,7 @@ import java.util.Date;
 /**
  * Created by inagi on 7/20/17.
  */
-public class SentimentCount extends ValueObject implements ChartPoint<Date, Long> {
+public class AggregatedSentiment extends ValueObject implements ChartPoint<Date, Long> {
 
     private ElectionId electionId;
     private CandidateId candidateId;
@@ -20,12 +21,12 @@ public class SentimentCount extends ValueObject implements ChartPoint<Date, Long
     private SentimentType sentimentType;
     private Long count;
 
-    public SentimentCount(ElectionId electionId,
-                          CandidateId candidateId,
-                          MediaId mediaId,
-                          Date date,
-                          SentimentType sentimentType,
-                          Long count) {
+    public AggregatedSentiment(ElectionId electionId,
+                               CandidateId candidateId,
+                               MediaId mediaId,
+                               Date date,
+                               SentimentType sentimentType,
+                               Long count) {
         super();
 
         this.electionId = electionId;
@@ -36,19 +37,19 @@ public class SentimentCount extends ValueObject implements ChartPoint<Date, Long
         this.date = date;
     }
 
-    public SentimentCount(ElectionId electionId,
-                          CandidateId candidateId,
-                          Date date,
-                          SentimentType sentimentType,
-                          Long count) {
+    public AggregatedSentiment(ElectionId electionId,
+                               CandidateId candidateId,
+                               Date date,
+                               SentimentType sentimentType,
+                               Long count) {
         this(electionId, candidateId, null, date, sentimentType, count);
     }
 
-    public SentimentCount(ElectionId electionId,
-                          CandidateId candidateId,
-                          MediaId mediaId,
-                          SentimentType sentimentType,
-                          Long count) {
+    public AggregatedSentiment(ElectionId electionId,
+                               CandidateId candidateId,
+                               MediaId mediaId,
+                               SentimentType sentimentType,
+                               Long count) {
         this(electionId, candidateId, mediaId, null, sentimentType, count);
     }
 

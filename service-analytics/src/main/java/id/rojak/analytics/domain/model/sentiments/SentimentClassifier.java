@@ -1,4 +1,4 @@
-package id.rojak.analytics.application.statistic;
+package id.rojak.analytics.domain.model.sentiments;
 
 import id.rojak.analytics.domain.model.news.SentimentType;
 

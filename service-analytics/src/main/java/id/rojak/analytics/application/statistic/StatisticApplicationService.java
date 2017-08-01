@@ -1,7 +1,6 @@
 package id.rojak.analytics.application.statistic;
 
 import id.rojak.analytics.common.date.DateHelper;
-import id.rojak.analytics.domain.model.news.SentimentCount;
 import id.rojak.analytics.domain.model.sentiments.ChartPoint;
 
 import java.util.ArrayList;
@@ -14,8 +13,8 @@ import java.util.List;
  */
 public class StatisticApplicationService {
 
-    public List<Long> fillEmptyGapFor(List<Date> dateSeries,
-                                      List<? extends ChartPoint<Date, Long>> dataSeries) {
+    public List<Long> fillEmptyGapFor(List<? extends ChartPoint<Date, Long>> dataSeries,
+                                      List<Date> dateSeries) {
 
         List<Long> values =
                 new ArrayList<>(Collections.nCopies(dateSeries.size(), 0L));

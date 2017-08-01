@@ -26,7 +26,7 @@ public class DateHelperTest {
                 new GregorianCalendar(2017, Calendar.JANUARY, 1).getTime(),
                 new GregorianCalendar(2017, Calendar.JANUARY, 10).getTime());
 
-        Assert.assertEquals(10, dates.size());
+        Assert.assertEquals(9, dates.size());
 
     }
 
@@ -63,10 +63,6 @@ public class DateHelperTest {
         Assert.assertEquals(
                 new GregorianCalendar(2017, Calendar.JANUARY, 9).getTime(),
                 dates.get(8));
-        Assert.assertEquals(
-                new GregorianCalendar(2017, Calendar.JANUARY, 10).getTime(),
-                dates.get(9));
-
     }
 
     @Test
@@ -84,18 +80,8 @@ public class DateHelperTest {
                 new GregorianCalendar(2017, Calendar.JANUARY, 1).getTime(),
                 new GregorianCalendar(2017, Calendar.JANUARY, 1).getTime());
 
-        Assert.assertEquals(1, dates.size());
+        Assert.assertEquals(0, dates.size());
     }
 
-    @Test
-    public void shouldReturnCorrectDateInNMonthAgo() {
-
-        Date now = new GregorianCalendar(2017, Calendar.JANUARY, 1).getTime();
-
-        Date nMonthAgo = DateHelper.nMonthAgoOf(2, now);
-
-        Assert.assertEquals(new GregorianCalendar(2016, Calendar.NOVEMBER, 1).getTime(), nMonthAgo);
-
-    }
 
 }

@@ -31,8 +31,6 @@ import java.util.stream.Collectors;
 @RestController
 public class NewsController {
 
-    private static final Logger log = LoggerFactory.getLogger(NewsController.class);
-
     @Autowired
     private NewsApplicationService newsApplicationService;
 
@@ -130,10 +128,10 @@ public class NewsController {
 
         Page<News> news = this.newsApplicationService
                 .allNewsBy(electionId,
-                        Date.from(startDate.atStartOfDay(
-                                ZoneId.systemDefault()).toInstant()),
-                        Date.from(endDate.atStartOfDay(
-                                ZoneId.systemDefault()).toInstant()),
+                        Date.from(startDate.atStartOfDay(ZoneId.systemDefault())
+                                        .toInstant()),
+                        Date.from(endDate.atStartOfDay(ZoneId.systemDefault())
+                                        .toInstant()),
                         new PageRequest(page, size));
 
         List<NewsDTO> newsDTO = news.getContent().stream()
@@ -144,7 +142,7 @@ public class NewsController {
                             aNews.url(),
                             aNews.content(),
                             aNews.timestamp().getTime(),
-                            null);
+                            null); //TODO check this
                 }).collect(Collectors.toList());
 
         return new ResponseEntity<>(new NewsCollectionDTO(
