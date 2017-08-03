@@ -47,7 +47,7 @@ public class UserController {
 
         log.info("{} has been created", user.username());
 
-        return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
+        return new ResponseEntity<>(new UserDTO(user), HttpStatus.CREATED);
     }
 
 }

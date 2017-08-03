@@ -23,7 +23,7 @@ public class IdentityApplicationService {
         if (user != null) {
             throw new IllegalArgumentException("User " +
                 aCommand.getUsername() +
-                    "is already exist");
+                    " is already exist");
         }
 
         user = new User(
