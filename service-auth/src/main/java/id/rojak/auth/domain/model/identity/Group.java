@@ -1,5 +1,6 @@
 package id.rojak.auth.domain.model.identity;
 
+import id.rojak.auth.common.domain.model.DomainEventPublisher;
 import id.rojak.auth.common.domain.model.IdentifiedDomainObject;
 import id.rojak.auth.domain.model.access.Role;
 
@@ -27,6 +28,10 @@ public class Group extends IdentifiedDomainObject {
     @Column(name="name")
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name="role_id", referencedColumnName = "id")
+    private Role role;
+
     public Group(String aName, String aDescription) {
         this();
 
@@ -38,6 +43,20 @@ public class Group extends IdentifiedDomainObject {
         super();
 
         this.setGroupMembers(new HashSet<GroupMember>(0));
+    }
+
+    public void addGroup(Group aGroup, GroupMemberService aGroupMemberService) {
+        this.assertArgumentNotNull(aGroup, "Group must not be null.");
+//        this.assertArgumentFalse(aGroupMemberService.isMemberGroup(aGroup, this.toGroupMember()), "Group recurrsion.");
+
+//        if (this.groupMembers().add(aGroup.toGroupMember()) && !this.isInternalGroup()) {
+//            DomainEventPublisher
+//                    .instance()
+//                    .publish(new GroupGroupAdded(
+//                            this.tenantId(),
+//                            this.name(),
+//                            aGroup.name()));
+//        }
     }
 
     public void addUser(User aUser) {
@@ -74,6 +93,20 @@ public class Group extends IdentifiedDomainObject {
 
     public String name() {
         return this.name;
+    }
+
+    public void removeGroup(Group aGroup) {
+        this.assertArgumentNotNull(aGroup, "Group must not be null.");
+
+        // not a nested remove, only direct member
+//        if (this.groupMembers().remove(aGroup.toGroupMember()) && !this.isInternalGroup()) {
+//            DomainEventPublisher
+//                    .instance()
+//                    .publish(new GroupGroupRemoved(
+//                            this.tenantId(),
+//                            this.name(),
+//                            aGroup.name()));
+//        }
     }
 
     public void removeUser(User aUser) {
@@ -150,6 +183,15 @@ public class Group extends IdentifiedDomainObject {
         }
 
         this.name = aName;
+    }
+
+    protected GroupMember toGroupMember() {
+        GroupMember groupMember =
+                new GroupMember(
+                        this.name(),
+                        GroupMemberType.Group);
+
+        return groupMember;
     }
 
 }

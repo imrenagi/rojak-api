@@ -20,9 +20,18 @@ public class GroupMember extends IdentifiedValueObject {
     @JoinColumn(name="group_id", referencedColumnName = "id")
     private Group group;
 
+    @Enumerated(EnumType.STRING)
+    private GroupMemberType type;
+
     public String name() {
         return this.name;
     }
+
+    public GroupMemberType type() {
+        return this.type;
+    }
+
+    public Group group() { return this.group; }
 
     @Override
     public boolean equals(Object anObject) {
@@ -30,7 +39,9 @@ public class GroupMember extends IdentifiedValueObject {
 
         if (anObject != null && this.getClass() == anObject.getClass()) {
             GroupMember typedObject = (GroupMember) anObject;
-            equalObjects = this.name().equals(typedObject.name());
+            equalObjects =
+                            this.name().equals(typedObject.name()) &&
+                            this.type().equals(typedObject.type());
         }
 
         return equalObjects;
@@ -47,13 +58,14 @@ public class GroupMember extends IdentifiedValueObject {
 
     @Override
     public String toString() {
-        return "GroupMember [name=" + name + "]";
+        return "GroupMember [name=" + name + ", type=" + type + "]";
     }
 
-    protected GroupMember(String aName) {
+    protected GroupMember(String aName, GroupMemberType aType) {
         this();
 
         this.setName(aName);
+        this.setType(aType);
     }
 
     protected GroupMember() {
@@ -65,6 +77,12 @@ public class GroupMember extends IdentifiedValueObject {
         this.assertArgumentLength(aName, 1, 100, "Member name must be 100 characters or less.");
 
         this.name = aName;
+    }
+
+    protected void setType(GroupMemberType aType) {
+        this.assertArgumentNotNull(aType, "The type must be provided.");
+
+        this.type = aType;
     }
 
 }

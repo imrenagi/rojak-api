@@ -10,6 +10,7 @@ CREATE TABLE `tbl_group` (
     `id` bigint(20) NOT NULL auto_increment,
     `name` varchar(100) NOT NULL,
     `description` varchar(250) NOT NULL,
+    `supports_nesting` tinyint(1) NOT NULL,
     `role_id` bigint(20) NOT NULL,
     UNIQUE KEY `k_group_name` (`name`),
     CONSTRAINT `fk_role_id_tbl_group` FOREIGN KEY (`role_id`) REFERENCES `tbl_role` (`id`),
@@ -41,6 +42,7 @@ CREATE TABLE `tbl_group_member` (
     `id` bigint(20) NOT NULL auto_increment,
     `name` varchar(100) NOT NULL,
     `group_id` bigint(20) NOT NULL,
+    `type` varchar(5) NOT NULL,
     KEY `k_group_id` (`group_id`),
     CONSTRAINT `fk_tbl_group_member_tbl_group` FOREIGN KEY (`group_id`) REFERENCES `tbl_group` (`id`),
     PRIMARY KEY (`id`)

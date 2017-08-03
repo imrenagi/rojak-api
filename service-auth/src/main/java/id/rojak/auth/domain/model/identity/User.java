@@ -2,8 +2,6 @@ package id.rojak.auth.domain.model.identity;
 
 import id.rojak.auth.common.domain.model.IdentifiedDomainObject;
 import id.rojak.auth.domain.model.DomainRegistry;
-import id.rojak.auth.infrastructure.service.EncryptionService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 
@@ -19,10 +17,10 @@ public class User extends IdentifiedDomainObject {
     @Embedded
     private Enablement enablement;
 
-    @Column(name="username")
+    @Column(name = "username")
     private String username;
 
-    @Column(name="password")
+    @Column(name = "password")
     private String password;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
@@ -208,9 +206,12 @@ public class User extends IdentifiedDomainObject {
         this.setPassword(this.asEncryptedValue(aChangedPassword));
     }
 
+
     protected GroupMember toGroupMember() {
         GroupMember groupMember =
-                new GroupMember(this.username());
+                new GroupMember(
+                        this.username(),
+                        GroupMemberType.User);
 
         return groupMember;
     }

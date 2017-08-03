@@ -39,7 +39,7 @@ public class JdbcServerSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/users/testing");
+        web.ignoring().antMatchers("/users");
     }
 
     @Override
