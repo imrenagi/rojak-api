@@ -23,11 +23,8 @@ public class MysqlUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            System.out.println("Cant found username " + username);
             throw new UsernameNotFoundException("Username " + user + " is not found");
         }
-
-        System.out.println("PASSSSSSS -------> " + user.password());
         return new UserInfo(user);
 
     }

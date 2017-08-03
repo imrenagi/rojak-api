@@ -20,16 +20,6 @@ public class IdentityApplicationService {
     @Transactional
     public User testing(String username, String password) {
 
-//        String hash = "$2a$10$TY7zKY1IMuBbld3VZ.7xyOSVJRyezcfvF97u7oz/0Ibphs/Nt65ZC";
-//        String pass = "Dinaryati1234_";
-//
-//        EncryptionService encryptionService = new BcryptEncryptionService();
-//        System.out.println(encryptionService.matches(pass, hash));
-
-//        User aUser = this.userRepository.findByUsername("imrenagi");
-//
-//        System.out.println("Get user with : " + aUser.username());
-
         User user = new User(
                 username,
                 password,

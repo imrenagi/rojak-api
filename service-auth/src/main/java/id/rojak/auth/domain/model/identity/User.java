@@ -2,6 +2,8 @@ package id.rojak.auth.domain.model.identity;
 
 import id.rojak.auth.common.domain.model.IdentifiedDomainObject;
 import id.rojak.auth.domain.model.DomainRegistry;
+import id.rojak.auth.infrastructure.service.EncryptionService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 

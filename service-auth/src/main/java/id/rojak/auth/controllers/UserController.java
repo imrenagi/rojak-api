@@ -26,10 +26,6 @@ public class UserController {
     @Autowired
     private IdentityApplicationService identityApplicationService;
 
-//    @Autowired
-//    private UserService userService;
-//
-
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     public Principal getUser(Principal principal) {
         return principal;
@@ -51,17 +47,6 @@ public class UserController {
         log.info("{} has been created", user.username());
 
         return new ResponseEntity<String>("test", HttpStatus.OK);
-    }
-
-
-    @RequestMapping(value = "/oke", method = RequestMethod.GET)
-    public ResponseEntity<String> testing2() {
-
-
-
-        log.info("XXX has been createdSSSSS");
-
-        return new ResponseEntity<String>("test2", HttpStatus.OK);
     }
 
 }

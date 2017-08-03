@@ -16,6 +16,27 @@ CREATE TABLE `tbl_group` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `tbl_permissions` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `name` varchar(50) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `k_permission_name` (`name`),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `tbl_role_permissions` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `role_id` bigint(20) NOT NULL,
+  `permission_id` bigint(20) NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_role_id_to_id` FOREIGN KEY (`role_id`) REFERENCES `tbl_role` (`id`),
+  CONSTRAINT `fk_permission_id_to_id` FOREIGN KEY (`permission_id`) REFERENCES `tbl_permissions` (`id`),
+  PRIMARY KEY (`id`)
+)  ENGINE=InnoDB;
+
 CREATE TABLE `tbl_group_member` (
     `id` bigint(20) NOT NULL auto_increment,
     `name` varchar(100) NOT NULL,
