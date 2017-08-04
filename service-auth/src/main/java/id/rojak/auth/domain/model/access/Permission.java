@@ -46,11 +46,19 @@ public class Permission extends IdentifiedDomainObject {
         //TODO send domain item if necessary
     }
 
+    public String name() {
+        return this.name;
+    }
+
+    public String description() {
+        return this.description;
+    }
+
     public void setName(String name) {
         this.assertArgumentNotNull(name, "Name is required!");
         this.assertArgumentNotEmpty(name, "Name can't be empty");
 
-        this.name = name.toUpperCase();
+        this.name = name.trim().replaceAll("\\s+", "_").toUpperCase();
     }
 
     public void setDescription(String description) {

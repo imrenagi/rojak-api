@@ -21,6 +21,8 @@ public class Role extends IdentifiedDomainObject {
 
     private static final long serialVersionUID = 1L;
 
+    private static final String ROLE_PREFIX = "ROLE_";
+
     @Column(name = "description")
     private String description;
 
@@ -142,7 +144,9 @@ public class Role extends IdentifiedDomainObject {
         this.assertArgumentNotEmpty(aName, "Role name must be provided.");
         this.assertArgumentLength(aName, 1, 250, "Role name must be 100 characters or less.");
 
-        this.name = aName;
+        String roleUpperCase = aName.trim().replaceAll("\\s+", "_").toUpperCase();
+
+        this.name = ROLE_PREFIX.concat(roleUpperCase);;
     }
 
 }
