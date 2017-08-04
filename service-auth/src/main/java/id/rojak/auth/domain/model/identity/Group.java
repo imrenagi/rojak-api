@@ -1,6 +1,5 @@
 package id.rojak.auth.domain.model.identity;
 
-import id.rojak.auth.common.domain.model.DomainEventPublisher;
 import id.rojak.auth.common.domain.model.IdentifiedDomainObject;
 import id.rojak.auth.domain.model.access.Role;
 
@@ -28,6 +27,9 @@ public class Group extends IdentifiedDomainObject {
     @Column(name="name")
     private String name;
 
+    @Column(name="supports_nesting")
+    private Boolean supportNesting;
+
     @ManyToOne
     @JoinColumn(name="role_id", referencedColumnName = "id")
     private Role role;
@@ -37,6 +39,16 @@ public class Group extends IdentifiedDomainObject {
 
         this.setDescription(aDescription);
         this.setName(aName);
+    }
+
+    public Group(String aName,
+                 String aDescription,
+                 Boolean supportNesting,
+                 Role aRole) {
+        this(aName, aDescription);
+
+        this.setRole(aRole);
+        this.setSupportNesting(supportNesting);
     }
 
     protected Group() {
@@ -194,4 +206,21 @@ public class Group extends IdentifiedDomainObject {
         return groupMember;
     }
 
+    public Role role() {
+        return this.role;
+    }
+
+    public void setRole(Role aRole) {
+        this.assertArgumentNotNull(aRole, "Role is required");
+
+        this.role = aRole;
+    }
+
+    public boolean isSupportNesting() {
+        return this.supportNesting;
+    }
+
+    public void setSupportNesting(Boolean supportNesting) {
+        this.supportNesting = supportNesting;
+    }
 }

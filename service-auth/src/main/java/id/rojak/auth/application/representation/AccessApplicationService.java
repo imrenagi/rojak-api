@@ -1,11 +1,14 @@
 package id.rojak.auth.application.representation;
 
+import id.rojak.auth.application.command.AssignRoleToGroupCommand;
 import id.rojak.auth.application.command.CreatePermissionCommand;
 import id.rojak.auth.application.command.CreateRoleCommand;
 import id.rojak.auth.domain.model.access.Permission;
 import id.rojak.auth.domain.model.access.PermissionRepository;
 import id.rojak.auth.domain.model.access.Role;
 import id.rojak.auth.domain.model.access.RoleRepository;
+import id.rojak.auth.domain.model.identity.Group;
+import id.rojak.auth.domain.model.identity.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +24,9 @@ public class AccessApplicationService {
 
     @Autowired
     private PermissionRepository permissionRepository;
+
+    @Autowired
+    private GroupRepository groupRepository;
 
     @Transactional
     public Role newRole(CreateRoleCommand command) {
@@ -64,6 +70,34 @@ public class AccessApplicationService {
         newPermission = this.permissionRepository.save(newPermission);
 
         return newPermission;
+    }
+
+    @Transactional
+    public void assignRoleToGroup(AssignRoleToGroupCommand command) {
+
+        Group group = this.groupRepository
+                .findByName(command.getGroup());
+
+        if (group == null) {
+            throw new IllegalArgumentException(
+                    "Group "
+                            + command.getGroup() +
+                            " doesn't exist");
+        }
+
+        Role role = this.roleRepository
+                .findByName(command.getRole());
+
+        if (role == null) {
+            throw new IllegalArgumentException(
+                    "Role "
+                            + command.getRole() +
+                            " doesn't exist");
+        }
+
+        role.assignTo(group);
+
+        this.groupRepository.save(group);
     }
 
 

@@ -1,12 +1,19 @@
 package id.rojak.auth.controllers;
 
+import id.rojak.auth.application.command.AssignRoleToGroupCommand;
+import id.rojak.auth.application.command.CreateGroupCommand;
 import id.rojak.auth.application.command.CreatePermissionCommand;
 import id.rojak.auth.application.command.CreateRoleCommand;
 import id.rojak.auth.application.representation.AccessApplicationService;
+import id.rojak.auth.application.representation.IdentityApplicationService;
+import id.rojak.auth.controllers.dto.GroupDTO;
 import id.rojak.auth.controllers.dto.PermissionDTO;
 import id.rojak.auth.controllers.dto.RoleDTO;
 import id.rojak.auth.domain.model.access.Permission;
 import id.rojak.auth.domain.model.access.Role;
+import id.rojak.auth.domain.model.identity.Group;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.xml.ws.Response;
 
 /**
  * Created by inagi on 8/3/17.
@@ -24,8 +32,13 @@ import javax.validation.Valid;
 @RestController
 public class AccessController {
 
+    private final static Logger log = LoggerFactory.getLogger(AccessController.class);
+
     @Autowired
     private AccessApplicationService accessApplicationService;
+
+    @Autowired
+    private IdentityApplicationService identityApplicationService;
 
     @RequestMapping(value = "/roles", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<RoleDTO> createNewRole(
@@ -46,5 +59,37 @@ public class AccessController {
 
         return new ResponseEntity<>(new PermissionDTO(), HttpStatus.CREATED);
     }
-    
+
+    @RequestMapping(value = "/groups", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<GroupDTO> createNewGroup(
+            @Valid @RequestBody CreateGroupCommand aCommand) {
+
+        log.info("Group Name : {} ", aCommand.getName());
+        log.info("Group Description : {} ", aCommand.getDescription());
+        log.info("Group Support Nesting : {}", aCommand.isSupportNesting());
+        log.info("Group Role : {}", aCommand.getRole());
+
+        Group group = this.identityApplicationService
+                .newGroup(aCommand);
+
+        return new ResponseEntity<GroupDTO>(new GroupDTO(), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/groups/assign_role", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<GroupDTO> assignRoleToGroup(
+            @Valid @RequestBody AssignRoleToGroupCommand command) {
+
+        log.info("Group Name : {} ", aCommand.getName());
+        log.info("Group Description : {} ", aCommand.getDescription());
+        log.info("Group Support Nesting : {}", aCommand.isSupportNesting());
+        log.info("Group Role : {}", aCommand.getRole());
+
+        this.accessApplicationService
+                .assignRoleToGroup(command);
+
+        return new ResponseEntity<GroupDTO>(new GroupDTO(), HttpStatus.OK);
+
+    }
+
 }

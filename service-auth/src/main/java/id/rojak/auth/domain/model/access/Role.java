@@ -149,4 +149,10 @@ public class Role extends IdentifiedDomainObject {
         this.name = ROLE_PREFIX.concat(roleUpperCase);;
     }
 
+    public void assignTo(Group group) {
+        this.assertArgumentNotNull(group, "Group should not be null!");
+
+        group.setRole(this);
+    }
+
 }

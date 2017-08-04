@@ -1,6 +1,9 @@
 package id.rojak.auth.application.representation;
 
+import id.rojak.auth.application.command.CreateGroupCommand;
 import id.rojak.auth.application.command.RegisterUserCommand;
+import id.rojak.auth.domain.model.access.Role;
+import id.rojak.auth.domain.model.access.RoleRepository;
 import id.rojak.auth.domain.model.identity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,12 @@ public class IdentityApplicationService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private GroupRepository groupRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Transactional
     public User newUser(RegisterUserCommand aCommand) {
@@ -48,6 +57,35 @@ public class IdentityApplicationService {
         user = this.userRepository.save(user);
 
         return user;
+    }
+
+    @Transactional
+    public Group newGroup(CreateGroupCommand aCommand) {
+
+        Group group = this.groupRepository
+                .findByName(aCommand.getName());
+
+        if (group != null) {
+            throw new IllegalArgumentException("Group " +
+                    aCommand.getName() +
+                    " is already exist");
+        }
+
+        Role role = this.roleRepository
+                .findByName(aCommand.getRole());
+
+        if (role == null) {
+            throw new IllegalArgumentException("Role doesn't exist");
+        }
+
+        group = new Group(aCommand.getName(),
+                aCommand.getDescription(),
+                aCommand.isSupportNesting(),
+                role);
+
+        group = this.groupRepository.save(group);
+
+        return group;
     }
 
 }
