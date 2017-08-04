@@ -79,4 +79,33 @@ public class Permission extends IdentifiedDomainObject {
 
         this.updatedDate = updatedDate;
     }
+
+    @Override
+    public boolean equals(Object anObject) {
+        boolean equalObjects = false;
+
+        if (anObject != null && this.getClass() == anObject.getClass()) {
+            Permission typedObject = (Permission) anObject;
+            equalObjects =
+                    this.name().equals(typedObject.name());
+        }
+
+        return equalObjects;
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCodeValue =
+                + (90118 * 223)
+                        + this.name().hashCode();
+
+        return hashCodeValue;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[Permission [name : %s] [description: %s]]",
+                this.name(),
+                this.description());
+    }
 }

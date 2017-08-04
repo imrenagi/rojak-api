@@ -1,5 +1,6 @@
 package id.rojak.auth.domain.model;
 
+import id.rojak.auth.domain.model.identity.GroupMemberService;
 import id.rojak.auth.domain.model.identity.PasswordService;
 import id.rojak.auth.infrastructure.service.EncryptionService;
 import id.rojak.auth.domain.model.identity.BasicPasswordService;
@@ -22,6 +23,10 @@ public class DomainRegistry implements ApplicationContextAware {
 
     public static EncryptionService encryptionService() {
         return (EncryptionService) applicationContext.getBean("bcryptEncryptionService");
+    }
+
+    public static GroupMemberService groupMemberService() {
+        return (GroupMemberService) applicationContext.getBean("groupMemberService");
     }
 
     @Override

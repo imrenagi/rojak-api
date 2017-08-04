@@ -1,16 +1,12 @@
 package id.rojak.auth.domain.model.access;
 
-import id.rojak.auth.common.domain.model.DomainEventPublisher;
 import id.rojak.auth.common.domain.model.IdentifiedDomainObject;
-import id.rojak.auth.common.domain.model.IdentifiedValueObject;
 import id.rojak.auth.domain.model.identity.Group;
-import id.rojak.auth.domain.model.identity.GroupMemberService;
 import id.rojak.auth.domain.model.identity.User;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.util.UUID;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by inagi on 8/1/17.
@@ -29,6 +25,11 @@ public class Role extends IdentifiedDomainObject {
     @Column(name = "name")
     private String name;
 
+    @JoinTable(name = "tbl_role_permissions",
+            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id"))
+    @ManyToMany
+    private Set<Permission> permissions;
 
     public Role(
             String aName,
@@ -36,8 +37,13 @@ public class Role extends IdentifiedDomainObject {
 
         this.setDescription(aDescription);
         this.setName(aName);
+        this.initPermissions();
 
 //        this.createInternalGroup(); //TODO need this?
+    }
+
+    private void initPermissions() {
+        this.setPermissions(new HashSet<>(0));
     }
 
     public void assignUser(User aUser) {
@@ -153,6 +159,28 @@ public class Role extends IdentifiedDomainObject {
         this.assertArgumentNotNull(group, "Group should not be null!");
 
         group.setRole(this);
+    }
+
+    public void addPermission(Permission permission) {
+        this.assertArgumentNotNull(permission, "Permission is required");
+
+        this.permissions.add(permission);
+    }
+
+    public void removePermission(Permission permission) {
+        this.assertArgumentNotNull(permission, "Permission is required");
+
+        this.permissions.remove(permission);
+    }
+
+    protected void setPermissions(Set<Permission> permissions) {
+        this.assertArgumentNotNull(permissions, "Permission is required");
+
+        this.permissions = permissions;
+    }
+
+    public Set<Permission> permissions() {
+        return this.permissions;
     }
 
 }

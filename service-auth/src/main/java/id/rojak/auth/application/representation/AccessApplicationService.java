@@ -1,5 +1,6 @@
 package id.rojak.auth.application.representation;
 
+import id.rojak.auth.application.command.AssignPermissionToRoleCommand;
 import id.rojak.auth.application.command.AssignRoleToGroupCommand;
 import id.rojak.auth.application.command.CreatePermissionCommand;
 import id.rojak.auth.application.command.CreateRoleCommand;
@@ -98,6 +99,35 @@ public class AccessApplicationService {
         role.assignTo(group);
 
         this.groupRepository.save(group);
+    }
+
+    @Transactional
+        public void assignPermissionToRole(AssignPermissionToRoleCommand command) {
+
+        Role role = this.roleRepository
+                .findByName(command.getRole());
+
+        if (role == null) {
+            throw new IllegalArgumentException(
+                    "Role "
+                            + command.getRole() +
+                            " doesn't exist");
+        }
+
+        for (String permissionName : command.getPermissions()) {
+
+            Permission permission = this.permissionRepository
+                    .findByName(permissionName);
+
+            if (permission == null) {
+                continue;
+            }
+
+            role.addPermission(permission);
+        }
+
+//        role = this.roleRepository.save(role);
+
     }
 
 

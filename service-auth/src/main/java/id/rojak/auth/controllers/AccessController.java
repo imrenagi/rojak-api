@@ -1,9 +1,6 @@
 package id.rojak.auth.controllers;
 
-import id.rojak.auth.application.command.AssignRoleToGroupCommand;
-import id.rojak.auth.application.command.CreateGroupCommand;
-import id.rojak.auth.application.command.CreatePermissionCommand;
-import id.rojak.auth.application.command.CreateRoleCommand;
+import id.rojak.auth.application.command.*;
 import id.rojak.auth.application.representation.AccessApplicationService;
 import id.rojak.auth.application.representation.IdentityApplicationService;
 import id.rojak.auth.controllers.dto.GroupDTO;
@@ -18,13 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.xml.ws.Response;
 
 /**
  * Created by inagi on 8/3/17.
@@ -50,6 +44,20 @@ public class AccessController {
         return new ResponseEntity<>(new RoleDTO(), HttpStatus.CREATED);
     }
 
+    @RequestMapping(value = "/roles/{role_id}/permissions",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<RoleDTO> assignPermissionsToGrop(
+            @PathVariable("role_id") String aRoleId,
+            @Valid @RequestBody AssignPermissionToRoleCommand aCommand) {
+
+        this.accessApplicationService
+                .assignPermissionToRole(aCommand);
+
+        return new ResponseEntity<>(new RoleDTO(), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('BASIC_READ')")
     @RequestMapping(value = "/permissions", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<PermissionDTO> createNewPermission(
             @Valid @RequestBody CreatePermissionCommand aCommand) {
@@ -70,9 +78,10 @@ public class AccessController {
         return new ResponseEntity<GroupDTO>(new GroupDTO(), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/groups/assign_role", method = RequestMethod.POST,
+    @RequestMapping(value = "/groups/{group_id}/roles", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<GroupDTO> assignRoleToGroup(
+            @PathVariable("group_id") String aGroupId,
             @Valid @RequestBody AssignRoleToGroupCommand command) {
 
         this.accessApplicationService

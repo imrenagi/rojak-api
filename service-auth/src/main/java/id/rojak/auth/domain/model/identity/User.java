@@ -2,8 +2,21 @@ package id.rojak.auth.domain.model.identity;
 
 import id.rojak.auth.common.domain.model.IdentifiedDomainObject;
 import id.rojak.auth.domain.model.DomainRegistry;
+import id.rojak.auth.domain.model.access.Permission;
+import id.rojak.auth.domain.model.access.Role;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by inagi on 8/1/17.
@@ -13,6 +26,8 @@ import javax.persistence.*;
 public class User extends IdentifiedDomainObject {
 
     private static final long serialVersionUID = 1L;
+
+    private final static Logger log = LoggerFactory.getLogger(User.class);
 
     @Embedded
     private Enablement enablement;
@@ -92,6 +107,8 @@ public class User extends IdentifiedDomainObject {
 //                        this.username(),
 //                        this.enablement()));
     }
+
+
 
     public boolean isEnabled() {
         return this.enablement().isEnablementEnabled();
