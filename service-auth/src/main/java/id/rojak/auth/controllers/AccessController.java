@@ -64,11 +64,6 @@ public class AccessController {
     public ResponseEntity<GroupDTO> createNewGroup(
             @Valid @RequestBody CreateGroupCommand aCommand) {
 
-        log.info("Group Name : {} ", aCommand.getName());
-        log.info("Group Description : {} ", aCommand.getDescription());
-        log.info("Group Support Nesting : {}", aCommand.isSupportNesting());
-        log.info("Group Role : {}", aCommand.getRole());
-
         Group group = this.identityApplicationService
                 .newGroup(aCommand);
 
@@ -79,11 +74,6 @@ public class AccessController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<GroupDTO> assignRoleToGroup(
             @Valid @RequestBody AssignRoleToGroupCommand command) {
-
-        log.info("Group Name : {} ", aCommand.getName());
-        log.info("Group Description : {} ", aCommand.getDescription());
-        log.info("Group Support Nesting : {}", aCommand.isSupportNesting());
-        log.info("Group Role : {}", aCommand.getRole());
 
         this.accessApplicationService
                 .assignRoleToGroup(command);
