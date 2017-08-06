@@ -19,6 +19,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by inagi on 8/3/17.
@@ -99,6 +101,23 @@ public class AccessController {
 
         this.identityApplicationService
                 .addUserToGroup(command);
+
+        return new ResponseEntity<GroupDTO>(new GroupDTO(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/groups/{group_id}/users/{user_id}", method = RequestMethod.DELETE
+            , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<GroupDTO> removeUsersFromGroup(
+            @PathVariable("group_id") String aGroupId,
+            @PathVariable("user_id") String aUserIds) {
+
+        String[] usernames = aUserIds.split(",");
+
+        this.identityApplicationService
+                .removeUserFromGroup(
+                        new RemoveUserFromGroupCommand(
+                                Arrays.asList(usernames),
+                                aGroupId));
 
         return new ResponseEntity<GroupDTO>(new GroupDTO(), HttpStatus.OK);
     }

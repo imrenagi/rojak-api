@@ -112,6 +112,13 @@ public class Group extends IdentifiedDomainObject {
         return this.groupMembers().add(groupMember);
     }
 
+    private boolean removeUserFromGroupMember(User user) {
+        GroupMember groupMember = user.toGroupMember();
+
+        groupMember.setGroup(this);
+        return this.groupMembers().remove(groupMember);
+    }
+
     public String description() {
         return this.description;
     }
@@ -152,7 +159,7 @@ public class Group extends IdentifiedDomainObject {
         this.assertArgumentNotNull(aUser, "User must not be null.");
 
         // not a nested remove, only direct member
-        if (this.groupMembers().remove(aUser.toGroupMember()) && !this.isInternalGroup()) {
+        if (this.removeUserFromGroupMember(aUser)) {
 //            DomainEventPublisher
 //                    .instance()
 //                    .publish(new GroupUserRemoved(

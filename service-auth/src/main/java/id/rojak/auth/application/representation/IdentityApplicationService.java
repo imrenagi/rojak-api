@@ -3,6 +3,7 @@ package id.rojak.auth.application.representation;
 import id.rojak.auth.application.command.AddUserToGroupCommand;
 import id.rojak.auth.application.command.CreateGroupCommand;
 import id.rojak.auth.application.command.RegisterUserCommand;
+import id.rojak.auth.application.command.RemoveUserFromGroupCommand;
 import id.rojak.auth.domain.model.access.Role;
 import id.rojak.auth.domain.model.access.RoleRepository;
 import id.rojak.auth.domain.model.identity.*;
@@ -115,5 +116,49 @@ public class IdentityApplicationService {
         }
 
     }
+
+    @Transactional
+    public void removeUserFromGroup(RemoveUserFromGroupCommand command) {
+
+        Group group = this.existingGroup(
+                new GroupId(command.getGroupId()));
+
+        for (String username : command.getUsers()) {
+            User user = this.existingUser(username);
+
+            if (user == null) continue;
+
+            group.removeUser(user);
+        }
+    }
+
+    private Group existingGroup(GroupId groupId) {
+
+        Group group = this.groupRepository
+                .findByGroupId(groupId);
+
+        if (group == null) {
+            throw new IllegalArgumentException(
+                    "Group "
+                            + groupId +
+                            " doesn't exist");
+        }
+
+        return group;
+    }
+
+    private User existingUser(String username) {
+
+        User user = this.userRepository
+                .findByUsername(username);
+
+        if (user == null) {
+            throw new IllegalArgumentException("User " +
+                    user + " doesn't exist");
+        }
+
+        return user;
+    }
+
 
 }

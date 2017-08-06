@@ -1,9 +1,6 @@
 package id.rojak.auth.application.representation;
 
-import id.rojak.auth.application.command.AssignPermissionToRoleCommand;
-import id.rojak.auth.application.command.AssignRoleToGroupCommand;
-import id.rojak.auth.application.command.CreatePermissionCommand;
-import id.rojak.auth.application.command.CreateRoleCommand;
+import id.rojak.auth.application.command.*;
 import id.rojak.auth.domain.model.access.Permission;
 import id.rojak.auth.domain.model.access.PermissionRepository;
 import id.rojak.auth.domain.model.access.Role;
@@ -103,7 +100,7 @@ public class AccessApplicationService {
     }
 
     @Transactional
-        public void assignPermissionToRole(AssignPermissionToRoleCommand command) {
+    public void assignPermissionToRole(AssignPermissionToRoleCommand command) {
 
         Role role = this.roleRepository
                 .findByName(command.getRole());
