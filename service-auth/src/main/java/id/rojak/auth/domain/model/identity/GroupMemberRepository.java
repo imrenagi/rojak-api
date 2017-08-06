@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by inagi on 8/1/17.
@@ -11,6 +12,7 @@ import java.io.Serializable;
 @Repository
 public interface GroupMemberRepository extends JpaRepository<GroupMember, Long>, Serializable {
 
-    GroupMember findByName(String name);
+//    GroupMember findByName(String name);
+    List<GroupMember> findByName(String name);
 
 }

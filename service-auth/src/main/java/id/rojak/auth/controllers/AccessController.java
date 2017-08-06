@@ -91,4 +91,16 @@ public class AccessController {
 
     }
 
+    @RequestMapping(value = "/groups/{group_id}/users", method = RequestMethod.POST
+            , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<GroupDTO> assignUsersToGroup(
+            @PathVariable("group_id") String aGroupId,
+            @Valid @RequestBody AddUserToGroupCommand command) {
+
+        this.identityApplicationService
+                .addUserToGroup(command);
+
+        return new ResponseEntity<GroupDTO>(new GroupDTO(), HttpStatus.OK);
+    }
+
 }

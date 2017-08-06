@@ -126,8 +126,6 @@ public class AccessApplicationService {
             role.addPermission(permission);
         }
 
-//        role = this.roleRepository.save(role);
-
     }
 
 

@@ -23,6 +23,14 @@ public class GroupMember extends IdentifiedValueObject {
     @Enumerated(EnumType.STRING)
     private GroupMemberType type;
 
+    public boolean isGroup() {
+        return type.isGroup();
+    }
+
+    public boolean isUser() {
+        return type.isUser();
+    }
+
     public String name() {
         return this.name;
     }
@@ -51,6 +59,7 @@ public class GroupMember extends IdentifiedValueObject {
     public int hashCode() {
         int hashCodeValue =
                 + (21941 * 197)
+                        + this.type().hashCode()
                         + this.name().hashCode();
 
         return hashCodeValue;
@@ -68,6 +77,14 @@ public class GroupMember extends IdentifiedValueObject {
         this.setType(aType);
     }
 
+//    protected GroupMember(String aName, Group aGroup, GroupMemberType aType) {
+//        this();
+//
+//        this.setName(aName);
+//        this.setType(aType);
+//        this.setGroup(aGroup);
+//    }
+
     protected GroupMember() {
         super();
     }
@@ -83,6 +100,13 @@ public class GroupMember extends IdentifiedValueObject {
         this.assertArgumentNotNull(aType, "The type must be provided.");
 
         this.type = aType;
+    }
+
+    protected void setGroup(Group aGroup) {
+        this.assertArgumentNotNull(aGroup, "Group must be provided");
+
+        this.group = aGroup;
+
     }
 
 }

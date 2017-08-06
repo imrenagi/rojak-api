@@ -44,6 +44,7 @@ CREATE TABLE `tbl_group_member` (
     `group_id` bigint(20) NOT NULL,
     `type` varchar(5) NOT NULL,
     KEY `k_group_id` (`group_id`),
+    KEY `k_name` (`name`),
     CONSTRAINT `fk_tbl_group_member_tbl_group` FOREIGN KEY (`group_id`) REFERENCES `tbl_group` (`id`),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;

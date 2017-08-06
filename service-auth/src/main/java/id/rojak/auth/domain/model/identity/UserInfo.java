@@ -14,7 +14,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by inagi on 8/1/17.
@@ -38,27 +40,26 @@ public class UserInfo extends User
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        log.info("BEFORE LOADING REPO " + username());
 
-        Group group =
+        List<Group> groups =
                 DomainRegistry
                         .groupMemberService()
                         .groupOf(this);
 
-        log.info("Get Group : {} ", group);
+        if (groups == null) return null;
 
-        if (group == null) return null;
+        List<Role> roles = groups.stream()
+                .map(group -> group.role())
+                .collect(Collectors.toList());
 
-        Role role = group.role();
-        log.info("Get Role : {} ", role);
-        log.info("Total permission in role : {}" , role.permissions().size());
         Set<GrantedAuthority> authorities = new HashSet<>();
 
-        for (Permission permission : role.permissions()) {
-            log.info("Permission {} ", permission);
-            authorities.add(new SimpleGrantedAuthority(permission.name()));
+        for (Role role : roles) {
+            for (Permission permission : role.permissions()) {
+                log.info("Permission {} ", permission);
+                authorities.add(new SimpleGrantedAuthority(permission.name()));
+            }
         }
-
         return authorities;
     }
 

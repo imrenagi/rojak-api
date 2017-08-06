@@ -2,6 +2,8 @@ package id.rojak.auth.domain.model.identity;
 
 import id.rojak.auth.common.domain.model.IdentifiedDomainObject;
 import id.rojak.auth.domain.model.access.Role;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -14,6 +16,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "tbl_group")
 public class Group extends IdentifiedDomainObject {
+
+    private static final Logger log = LoggerFactory.getLogger(Group.class);
 
     public static final String ROLE_GROUP_PREFIX = "ROLE-INTERNAL-GROUP: ";
     private static final long serialVersionUID = 1L;
@@ -75,14 +79,24 @@ public class Group extends IdentifiedDomainObject {
         this.assertArgumentNotNull(aUser, "User must not be null.");
         this.assertArgumentTrue(aUser.isEnabled(), "User is not enabled.");
 
-        if (this.groupMembers().add(aUser.toGroupMember()) && !this.isInternalGroup()) {
+        if (this.addUserToGroupMember(aUser)) {
+            log.info("Successfully add {} to {}", aUser.username(), this.name());
 //            DomainEventPublisher
 //                    .instance()
 //                    .publish(new GroupUserAdded(
 //                            this.tenantId(),
 //                            this.name(),
 //                            aUser.username()));
+        } else {
+            log.info("Failed add {} to {}", aUser.username(), this.name());
         }
+    }
+
+    private boolean addUserToGroupMember(User user) {
+        GroupMember groupMember = user.toGroupMember();
+
+        groupMember.setGroup(this);
+        return this.groupMembers().add(groupMember);
     }
 
     public String description() {

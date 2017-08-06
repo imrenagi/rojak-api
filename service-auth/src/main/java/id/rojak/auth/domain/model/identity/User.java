@@ -233,6 +233,7 @@ public class User extends IdentifiedDomainObject {
         return groupMember;
     }
 
+
     protected void setUsername(String aUsername) {
         this.assertArgumentNotEmpty(aUsername, "The username is required.");
         this.assertArgumentLength(aUsername, 3, 250, "The username must be 3 to 250 characters.");

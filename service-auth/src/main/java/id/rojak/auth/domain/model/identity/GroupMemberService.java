@@ -4,6 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Created by inagi on 8/1/17.
  */
@@ -16,20 +20,6 @@ public class GroupMemberService {
     private GroupRepository groupRepository;
     @Autowired
     private UserRepository userInfoRepository;
-
-
-    public GroupMemberService() {
-
-    }
-
-//    @Autowired
-//    public GroupMemberService(GroupMemberRepository groupMemberRepository,
-//                              GroupRepository groupRepository,
-//                              UserRepository userRepository) {
-//        this.groupMemberRepository = groupMemberRepository;
-//        this.groupRepository = groupRepository;
-//        this.userInfoRepository = userRepository;
-//    }
 
     @Transactional(readOnly = true)
     public boolean confirmUser(Group aGroup, User aUser) {
@@ -47,15 +37,17 @@ public class GroupMemberService {
     }
 
     @Transactional(readOnly = true)
-    public Group groupOf(User aUser) {
+    public List<Group> groupOf(User aUser) {
 
-        GroupMember groupMember =
+        List<GroupMember> groupMembers =
                 this.groupMemberRepository
                         .findByName(aUser.username());
 
-        if (groupMember == null) return null;
+        if (groupMembers == null) return null;
 
-        return groupMember.group();
+        return groupMembers.stream()
+                .map(groupMember -> groupMember.group())
+                .collect(Collectors.toList());
     }
 
 

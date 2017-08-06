@@ -1,5 +1,6 @@
 package id.rojak.auth.application.representation;
 
+import id.rojak.auth.application.command.AddUserToGroupCommand;
 import id.rojak.auth.application.command.CreateGroupCommand;
 import id.rojak.auth.application.command.RegisterUserCommand;
 import id.rojak.auth.domain.model.access.Role;
@@ -86,6 +87,30 @@ public class IdentityApplicationService {
         group = this.groupRepository.save(group);
 
         return group;
+    }
+
+    @Transactional
+    public void addUserToGroup(AddUserToGroupCommand aCommand) {
+
+        Group group = this.groupRepository
+                .findByName(aCommand.getGroup());
+
+        if (group == null) {
+            throw new IllegalArgumentException("Group " +
+                    aCommand.getGroup() +
+                    " doesn't exist exist");
+        }
+
+        for (String username : aCommand.getUsernames()) {
+
+            User user = this.userRepository
+                    .findByUsername(username);
+
+            if (user == null) continue;
+
+            group.addUser(user);
+        }
+
     }
 
 }
