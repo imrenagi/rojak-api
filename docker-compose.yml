@@ -87,34 +87,6 @@ services:
         max-size: "10m"
         max-file: "10"
 
-  service-account:
-    environment:
-      CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
-      SERVICE_ACCOUNT_DB_USER: $MSW_DB_USER
-      SERVICE_ACCOUNT_DB_PASSWORD: $MSW_DB_PASSWORD
-      SERVICE_ACCOUNT_PASSWORD: $MSW_SERVICE_ACCOUNT_PASSWORD
-    image: imrenagi/rojak-service-account:0.1.0
-    restart: always
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "10"
-
-  service-account-db:
-    image: mysql
-    container_name: rojak-account-db
-    environment:
-      - MYSQL_DATABASE=account
-      - MYSQL_ROOT_PASSWORD=$MSW_ROOT_PASSWORD
-      - MYSQL_USER=$MSW_DB_USER
-      - MYSQL_PASSWORD=$MSW_DB_PASSWORD
-    ports:
-      - "3308:3306"
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "10"
-
   service-election:
     environment:
       CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD

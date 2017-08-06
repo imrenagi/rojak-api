@@ -15,11 +15,6 @@ services:
   gateway:
     build: gateway
 
-  service-account:
-    build: service-account
-    ports:
-      - 6000:6000
-
   service-auth:
     build: service-auth
     ports:
