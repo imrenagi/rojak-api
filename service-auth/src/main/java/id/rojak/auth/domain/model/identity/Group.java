@@ -22,6 +22,9 @@ public class Group extends IdentifiedDomainObject {
     public static final String ROLE_GROUP_PREFIX = "ROLE-INTERNAL-GROUP: ";
     private static final long serialVersionUID = 1L;
 
+    @Embedded
+    private GroupId groupId;
+
     @Column(name="description")
     private String description;
 
@@ -53,6 +56,16 @@ public class Group extends IdentifiedDomainObject {
 
         this.setRole(aRole);
         this.setSupportNesting(supportNesting);
+    }
+
+    public Group(GroupId groupId,
+                 String aName,
+                 String aDescription,
+                 Boolean supportNesting,
+                 Role aRole) {
+        this(aName, aDescription, supportNesting, aRole);
+
+        this.setGroupId(groupId);
     }
 
     protected Group() {
@@ -236,5 +249,16 @@ public class Group extends IdentifiedDomainObject {
 
     public void setSupportNesting(Boolean supportNesting) {
         this.supportNesting = supportNesting;
+    }
+
+    public void setGroupId(GroupId groupId) {
+        this.assertArgumentNotNull(groupId, "Group Id is required");
+        this.assertArgumentNotEmpty(groupId.id(), "Group id must not be empty");
+
+        this.groupId = groupId;
+    }
+
+    public GroupId groupId() {
+        return this.groupId;
     }
 }

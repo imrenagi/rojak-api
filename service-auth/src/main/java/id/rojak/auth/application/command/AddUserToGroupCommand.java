@@ -9,22 +9,22 @@ import java.util.List;
  */
 public class AddUserToGroupCommand {
 
-    @JsonProperty("group")
-    private String group;
+    @JsonProperty("group_id")
+    private String groupId;
 
     @JsonProperty("users")
     private List<String> usernames;
 
-    public AddUserToGroupCommand(String group, List<String> usernames) {
-        this.group = group;
+    public AddUserToGroupCommand(String groupId, List<String> usernames) {
+        this.groupId = groupId;
         this.usernames = usernames;
     }
 
     public AddUserToGroupCommand() {
     }
 
-    public String getGroup() {
-        return group;
+    public String getGroupId() {
+        return groupId;
     }
 
     public List<String> getUsernames() {

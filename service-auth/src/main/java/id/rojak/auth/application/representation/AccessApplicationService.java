@@ -9,6 +9,7 @@ import id.rojak.auth.domain.model.access.PermissionRepository;
 import id.rojak.auth.domain.model.access.Role;
 import id.rojak.auth.domain.model.access.RoleRepository;
 import id.rojak.auth.domain.model.identity.Group;
+import id.rojak.auth.domain.model.identity.GroupId;
 import id.rojak.auth.domain.model.identity.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,12 +78,12 @@ public class AccessApplicationService {
     public void assignRoleToGroup(AssignRoleToGroupCommand command) {
 
         Group group = this.groupRepository
-                .findByName(command.getGroup());
+                .findByGroupId(new GroupId(command.getGroupId()));
 
         if (group == null) {
             throw new IllegalArgumentException(
                     "Group "
-                            + command.getGroup() +
+                            + command.getGroupId() +
                             " doesn't exist");
         }
 

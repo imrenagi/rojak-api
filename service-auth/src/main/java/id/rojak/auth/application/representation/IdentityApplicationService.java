@@ -79,7 +79,9 @@ public class IdentityApplicationService {
             throw new IllegalArgumentException("Role doesn't exist");
         }
 
-        group = new Group(aCommand.getName(),
+        group = new Group(
+                new GroupId(this.groupRepository.nextId()),
+                aCommand.getName(),
                 aCommand.getDescription(),
                 aCommand.isSupportNesting(),
                 role);
@@ -93,11 +95,12 @@ public class IdentityApplicationService {
     public void addUserToGroup(AddUserToGroupCommand aCommand) {
 
         Group group = this.groupRepository
-                .findByName(aCommand.getGroup());
+                .findByGroupId(
+                        new GroupId(aCommand.getGroupId()));
 
         if (group == null) {
             throw new IllegalArgumentException("Group " +
-                    aCommand.getGroup() +
+                    aCommand.getGroupId() +
                     " doesn't exist exist");
         }
 

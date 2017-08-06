@@ -8,10 +8,12 @@ CREATE TABLE `tbl_role` (
 
 CREATE TABLE `tbl_group` (
     `id` bigint(20) NOT NULL auto_increment,
+    `group_id` varchar(36) NOT NULL,
     `name` varchar(100) NOT NULL,
     `description` varchar(250) NOT NULL,
     `supports_nesting` tinyint(1) NOT NULL,
     `role_id` bigint(20) NOT NULL,
+    UNIQUE KEY `k_group_id` (`group_id`),
     UNIQUE KEY `k_group_name` (`name`),
     CONSTRAINT `fk_role_id_tbl_group` FOREIGN KEY (`role_id`) REFERENCES `tbl_role` (`id`),
     PRIMARY KEY (`id`)

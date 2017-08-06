@@ -7,26 +7,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class AssignRoleToGroupCommand {
 
-    @JsonProperty("role_name")
+    @JsonProperty("role")
     private String role;
 
-    @JsonProperty("group_name")
-    private String group;
+    @JsonProperty("group_id")
+    private String groupId;
 
     protected AssignRoleToGroupCommand() {
 
     }
 
-    public AssignRoleToGroupCommand(String role, String group) {
+    public AssignRoleToGroupCommand(String role, String groupId) {
         this.role = role;
-        this.group = group;
+        this.groupId = groupId;
     }
 
     public String getRole() {
         return role;
     }
 
-    public String getGroup() {
-        return group;
+    public String getGroupId() {
+        return groupId;
     }
 }

@@ -38,13 +38,20 @@ public class JdbcServerSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/users**");
+    }
+
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-//                .antMatchers("/roles**").permitAll()
+
 //                .antMatchers("/admin/**").hasAnyRole("ADMIN")
 //                .antMatchers("/permissions**").hasAuthority("BASIC_WRITE")
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .antMatchers("/users**").permitAll();
 
 
     }
