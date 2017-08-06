@@ -3,15 +3,15 @@ package id.rojak.auth.controllers;
 import id.rojak.auth.application.command.*;
 import id.rojak.auth.application.representation.AccessApplicationService;
 import id.rojak.auth.application.representation.IdentityApplicationService;
-import id.rojak.auth.controllers.dto.GroupDTO;
-import id.rojak.auth.controllers.dto.PermissionDTO;
-import id.rojak.auth.controllers.dto.RoleDTO;
+import id.rojak.auth.controllers.dto.*;
 import id.rojak.auth.domain.model.access.Permission;
 import id.rojak.auth.domain.model.access.Role;
 import id.rojak.auth.domain.model.identity.Group;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +19,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by inagi on 8/3/17.
@@ -86,6 +87,34 @@ public class AccessController {
                 .newPermission(aCommand);
 
         return new ResponseEntity<>(new PermissionDTO(), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<GroupCollectionDTO> allGroups(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "10") Integer size) {
+
+        Page<Group> groups = this.accessApplicationService
+                .allGroups(new PageRequest(page, size));
+
+        List<GroupDTO> groupDTO = groups.getContent()
+                .stream()
+                .map(group -> {
+                    return new GroupDTO(
+                            group.groupId().id(),
+                            group.name(),
+                            group.description(),
+                            group.isSupportNesting(),
+                            group.role().name());
+                })
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<GroupCollectionDTO>(
+                new GroupCollectionDTO(groupDTO,
+                        new MetaDTO(page,
+                                groups.getTotalPages(),
+                                groups.getTotalElements())),
+                HttpStatus.OK);
     }
 
     @RequestMapping(value = "/groups", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

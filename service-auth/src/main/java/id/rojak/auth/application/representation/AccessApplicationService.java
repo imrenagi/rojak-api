@@ -9,6 +9,8 @@ import id.rojak.auth.domain.model.identity.Group;
 import id.rojak.auth.domain.model.identity.GroupId;
 import id.rojak.auth.domain.model.identity.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -140,5 +142,10 @@ public class AccessApplicationService {
         return role;
     }
 
+    @Transactional(readOnly = true)
+    public Page<Group> allGroups(PageRequest pageRequest) {
 
+        return this.groupRepository
+                .findAll(pageRequest);
+    }
 }
