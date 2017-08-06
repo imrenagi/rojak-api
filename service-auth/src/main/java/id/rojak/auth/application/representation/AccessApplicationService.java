@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Created by inagi on 8/3/17.
  */
-@Service
+@Service("accessApplicationService")
 public class AccessApplicationService {
 
     @Autowired

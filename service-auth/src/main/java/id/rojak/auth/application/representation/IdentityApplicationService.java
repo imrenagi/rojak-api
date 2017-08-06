@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Created by inagi on 8/1/17.
  */
-@Service
+@Service("identityApplicationService")
 public class IdentityApplicationService {
 
     @Autowired

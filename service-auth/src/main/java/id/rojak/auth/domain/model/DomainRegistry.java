@@ -1,5 +1,8 @@
 package id.rojak.auth.domain.model;
 
+import id.rojak.auth.application.representation.AccessApplicationService;
+import id.rojak.auth.application.representation.IdentityApplicationService;
+import id.rojak.auth.common.domain.model.Identity;
 import id.rojak.auth.domain.model.identity.GroupMemberService;
 import id.rojak.auth.domain.model.identity.PasswordService;
 import id.rojak.auth.infrastructure.service.EncryptionService;
@@ -27,6 +30,14 @@ public class DomainRegistry implements ApplicationContextAware {
 
     public static GroupMemberService groupMemberService() {
         return (GroupMemberService) applicationContext.getBean("groupMemberService");
+    }
+
+    public static IdentityApplicationService identityApplicationService() {
+        return (IdentityApplicationService) applicationContext.getBean("identityApplicationService");
+    }
+
+    public static AccessApplicationService accessApplicationService() {
+        return (AccessApplicationService) applicationContext.getBean("accessApplicationService");
     }
 
     @Override
