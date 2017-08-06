@@ -84,15 +84,7 @@ public class AccessApplicationService {
                             " doesn't exist");
         }
 
-        Role role = this.roleRepository
-                .findByName(command.getRole());
-
-        if (role == null) {
-            throw new IllegalArgumentException(
-                    "Role "
-                            + command.getRole() +
-                            " doesn't exist");
-        }
+        Role role = this.existingRole(command.getRole());
 
         role.assignTo(group);
 
@@ -102,15 +94,7 @@ public class AccessApplicationService {
     @Transactional
     public void assignPermissionToRole(AssignPermissionToRoleCommand command) {
 
-        Role role = this.roleRepository
-                .findByName(command.getRole());
-
-        if (role == null) {
-            throw new IllegalArgumentException(
-                    "Role "
-                            + command.getRole() +
-                            " doesn't exist");
-        }
+        Role role = this.existingRole(command.getRole());
 
         for (String permissionName : command.getPermissions()) {
 
@@ -124,6 +108,36 @@ public class AccessApplicationService {
             role.addPermission(permission);
         }
 
+    }
+
+    @Transactional
+    public void revokePermissionFromRole(RevokePermissionFromRoleCommand command) {
+
+        Role role = this.existingRole(command.getRole());
+
+        for (String p : command.getPermissions()) {
+
+            Permission permission = this.permissionRepository
+                    .findByName(p);
+
+            if (permission == null) continue;
+
+            role.removePermission(permission);
+        }
+    }
+
+    private Role existingRole(String roleName) {
+        Role role = this.roleRepository
+                .findByName(roleName);
+
+        if (role == null) {
+            throw new IllegalArgumentException(
+                    "Role "
+                            + roleName +
+                            " doesn't exist");
+        }
+
+        return role;
     }
 
 

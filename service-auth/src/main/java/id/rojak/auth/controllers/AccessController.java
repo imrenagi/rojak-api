@@ -59,6 +59,24 @@ public class AccessController {
         return new ResponseEntity<>(new RoleDTO(), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/roles/{role_id}/permissions/{permission_id}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<RoleDTO> removePermissionsFromRole(
+            @PathVariable("role_id") String aRoleId,
+            @PathVariable("permission_id") String permissionIds) {
+
+        String[] pArr = permissionIds.split(",");
+
+        this.accessApplicationService
+                .revokePermissionFromRole(
+                        new RevokePermissionFromRoleCommand(
+                                Arrays.asList(pArr),
+                                aRoleId));
+
+        return new ResponseEntity<>(new RoleDTO(), HttpStatus.OK);
+    }
+
     @PreAuthorize("hasAuthority('BASIC_WRITE')")
     @RequestMapping(value = "/permissions", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<PermissionDTO> createNewPermission(
