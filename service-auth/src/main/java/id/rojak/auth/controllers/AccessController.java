@@ -47,6 +47,30 @@ public class AccessController {
         return new ResponseEntity<>(new RoleDTO(), HttpStatus.CREATED);
     }
 
+    @RequestMapping(value = "/roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<RoleCollectionDTO> allRoles(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "10") Integer size) {
+
+        Page<Role> roles = this.accessApplicationService
+                .allRoles(new PageRequest(page, size));
+
+        List<RoleDTO> roleDTO = roles.getContent()
+                .stream()
+                .map(role -> {
+                    return new RoleDTO(
+                            role.name(),
+                            role.description());
+                }).collect(Collectors.toList());
+
+        return new ResponseEntity<>(new RoleCollectionDTO(
+                roleDTO,
+                new MetaDTO(page,
+                        roles.getTotalPages(),
+                        roles.getTotalElements())
+        ), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/roles/{role_id}/permissions",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

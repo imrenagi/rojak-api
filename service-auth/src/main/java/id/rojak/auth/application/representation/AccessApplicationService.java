@@ -148,4 +148,10 @@ public class AccessApplicationService {
         return this.groupRepository
                 .findAll(pageRequest);
     }
+
+    public Page<Role> allRoles(PageRequest pageRequest) {
+
+        return this.roleRepository
+                .findAll(pageRequest);
+    }
 }
