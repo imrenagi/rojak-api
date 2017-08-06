@@ -57,7 +57,7 @@ public class AccessController {
         return new ResponseEntity<>(new RoleDTO(), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('BASIC_READ')")
+    @PreAuthorize("hasAuthority('BASIC_WRITE')")
     @RequestMapping(value = "/permissions", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<PermissionDTO> createNewPermission(
             @Valid @RequestBody CreatePermissionCommand aCommand) {
