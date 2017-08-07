@@ -1,18 +1,19 @@
 package id.rojak.auth.application.representation;
 
 import id.rojak.auth.application.command.*;
-import id.rojak.auth.domain.model.access.Permission;
-import id.rojak.auth.domain.model.access.PermissionRepository;
-import id.rojak.auth.domain.model.access.Role;
-import id.rojak.auth.domain.model.access.RoleRepository;
+import id.rojak.auth.domain.model.access.*;
 import id.rojak.auth.domain.model.identity.Group;
 import id.rojak.auth.domain.model.identity.GroupId;
 import id.rojak.auth.domain.model.identity.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by inagi on 8/3/17.
@@ -143,15 +144,37 @@ public class AccessApplicationService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Group> allGroups(PageRequest pageRequest) {
+    public Page<Group> allGroups(Pageable pageRequest) {
 
         return this.groupRepository
                 .findAll(pageRequest);
     }
 
-    public Page<Role> allRoles(PageRequest pageRequest) {
+    @Transactional(readOnly = true)
+    public Page<Role> allRoles(Pageable pageRequest) {
 
         return this.roleRepository
                 .findAll(pageRequest);
     }
+
+    @Transactional(readOnly = true)
+    public Page<Permission> allPermissions(Pageable pageRequest) {
+
+        return this.permissionRepository
+                .findAll(pageRequest);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Permission> allPermissionsInRole(String roleName) {
+
+        Role role = this.existingRole(roleName);
+
+        List<Permission> permissions = new ArrayList<>();
+        for (Permission p : role.permissions()) {
+            permissions.add(p);
+        }
+
+        return permissions;
+    }
+
 }

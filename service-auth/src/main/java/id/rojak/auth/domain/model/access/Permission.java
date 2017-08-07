@@ -1,6 +1,5 @@
 package id.rojak.auth.domain.model.access;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import id.rojak.auth.common.domain.model.IdentifiedDomainObject;
 
 import javax.persistence.Column;
@@ -12,25 +11,26 @@ import java.util.Date;
  * Created by inagi on 8/2/17.
  */
 @Entity
-@Table(name="tbl_permissions")
+@Table(name = "tbl_permissions")
 public class Permission extends IdentifiedDomainObject {
 
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
 
-    @Column(name="created_at",
+    @Column(name = "created_at",
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createdDate;
 
-    @Column(name="updatedAt",
+    @Column(name = "updatedAt",
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Date updatedDate;
 
-    protected Permission() {}
+    protected Permission() {
+    }
 
     public Permission(String aName,
                       String aDescription) {
@@ -54,6 +54,14 @@ public class Permission extends IdentifiedDomainObject {
         return this.description;
     }
 
+    public Date createdDate() {
+        return this.createdDate;
+    }
+
+    public Date updatedDate() {
+        return this.updatedDate;
+    }
+
     public void setName(String name) {
         this.assertArgumentNotNull(name, "Name is required!");
         this.assertArgumentNotEmpty(name, "Name can't be empty");
@@ -75,7 +83,7 @@ public class Permission extends IdentifiedDomainObject {
     }
 
     public void setUpdatedDate(Date updatedDate) {
-        this.assertArgumentNotNull(createdDate, "Update date is required");
+        this.assertArgumentNotNull(updatedDate, "Update date is required");
 
         this.updatedDate = updatedDate;
     }
@@ -96,7 +104,7 @@ public class Permission extends IdentifiedDomainObject {
     @Override
     public int hashCode() {
         int hashCodeValue =
-                + (90118 * 223)
+                +(90118 * 223)
                         + this.name().hashCode();
 
         return hashCodeValue;

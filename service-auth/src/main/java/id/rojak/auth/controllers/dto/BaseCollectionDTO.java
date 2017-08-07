@@ -15,4 +15,8 @@ public class BaseCollectionDTO {
     public BaseCollectionDTO(MetaDTO meta) {
         this.meta = meta;
     }
+
+    public BaseCollectionDTO() {
+
+    }
 }

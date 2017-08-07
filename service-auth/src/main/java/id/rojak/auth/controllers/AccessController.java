@@ -84,6 +84,33 @@ public class AccessController {
         return new ResponseEntity<>(new RoleDTO(), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/roles/{role_id}/permissions",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<PermissionCollectionDTO> allPermissionInRole(
+            @PathVariable("role_id") String aRoleId,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "10") Integer size) {
+
+        //TODO change this with correct repository
+        List<Permission> permissions = this.accessApplicationService
+                .allPermissionsInRole(aRoleId);
+
+        List<PermissionDTO> permissionDTO = permissions
+                .stream()
+                .map(permission -> {
+                    return new PermissionDTO(
+                            permission.name(),
+                            permission.description(),
+                            permission.createdDate(),
+                            permission.updatedDate());
+                }).collect(Collectors.toList());
+
+        return new ResponseEntity<PermissionCollectionDTO>(
+                new PermissionCollectionDTO(permissionDTO)
+                , HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/roles/{role_id}/permissions/{permission_id}",
             method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -111,6 +138,32 @@ public class AccessController {
                 .newPermission(aCommand);
 
         return new ResponseEntity<>(new PermissionDTO(), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/permissions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<PermissionCollectionDTO> allPermissions(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "10") Integer size) {
+
+        Page<Permission> permissions = this.accessApplicationService
+                .allPermissions(new PageRequest(page, size));
+
+        List<PermissionDTO> permissionDTO = permissions.getContent()
+                .stream()
+                .map(permission -> {
+                    return new PermissionDTO(
+                            permission.name(),
+                            permission.description(),
+                            permission.createdDate(),
+                            permission.updatedDate());
+                }).collect(Collectors.toList());
+
+        return new ResponseEntity<>(new PermissionCollectionDTO(
+                permissionDTO,
+                new MetaDTO(page,
+                        permissions.getTotalPages(),
+                        permissions.getTotalElements())
+        ), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
