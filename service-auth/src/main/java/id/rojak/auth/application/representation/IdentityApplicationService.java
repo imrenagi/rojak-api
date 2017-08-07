@@ -8,6 +8,8 @@ import id.rojak.auth.domain.model.access.Role;
 import id.rojak.auth.domain.model.access.RoleRepository;
 import id.rojak.auth.domain.model.identity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,9 @@ public class IdentityApplicationService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private GroupMemberRepository groupMemberRepository;
 
     @Transactional
     public User newUser(RegisterUserCommand aCommand) {
@@ -130,6 +135,15 @@ public class IdentityApplicationService {
 
             group.removeUser(user);
         }
+    }
+
+    @Transactional
+    public Page<GroupMember> allGroupMember(String groupId, Pageable pageable) {
+
+        Group group = this.existingGroup(new GroupId(groupId));
+
+        return this.groupMemberRepository
+                .findByGroup(group, pageable);
     }
 
     private Group existingGroup(GroupId groupId) {

@@ -7,6 +7,7 @@ import id.rojak.auth.controllers.dto.*;
 import id.rojak.auth.domain.model.access.Permission;
 import id.rojak.auth.domain.model.access.Role;
 import id.rojak.auth.domain.model.identity.Group;
+import id.rojak.auth.domain.model.identity.GroupMember;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -227,6 +228,36 @@ public class AccessController {
                 .addUserToGroup(command);
 
         return new ResponseEntity<GroupDTO>(new GroupDTO(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/groups/{group_id}/members", method = RequestMethod.GET
+            , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<GroupMemberCollectionDTO> groupMembers(
+            @PathVariable("group_id") String aGroupId,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "10") Integer size) {
+
+        Page<GroupMember> groupMembers =
+                this.identityApplicationService
+                    .allGroupMember(aGroupId,
+                            new PageRequest(page, size));
+
+        List<GroupMemberDTO> groupMemberDTO =
+                groupMembers.getContent()
+                .stream().map(groupMember -> {
+                    return new GroupMemberDTO(groupMember.name(),
+                            groupMember.type().name());
+                }).collect(Collectors.toList());
+
+        return new ResponseEntity<GroupMemberCollectionDTO>(
+                new GroupMemberCollectionDTO(
+                        groupMemberDTO,
+                        new MetaDTO(
+                                page,
+                                groupMembers.getTotalPages(),
+                                groupMembers.getTotalElements()
+                        )
+                ), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/groups/{group_id}/users/{user_id}", method = RequestMethod.DELETE

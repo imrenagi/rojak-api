@@ -1,5 +1,6 @@
 package id.rojak.auth.controllers.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import id.rojak.auth.domain.model.identity.User;
 
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Created by inagi on 8/3/17.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
 
     @JsonProperty("username")
@@ -33,7 +35,6 @@ public class UserDTO {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
-
     }
 
     public UserDTO(User user) {
