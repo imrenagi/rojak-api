@@ -61,7 +61,7 @@ public class FullName extends AssertionConcern implements Serializable {
         return equalObjects;
     }
 
-    public void setFirstName(String firstName) {
+    protected void setFirstName(String firstName) {
         this.assertArgumentNotEmpty(firstName, "First name is required.");
         this.assertArgumentLength(firstName, 1, 50, "First name must be 50 characters or less.");
         this.assertArgumentTrue(
@@ -72,7 +72,7 @@ public class FullName extends AssertionConcern implements Serializable {
     }
 
 
-    public void setLastName(String lastName) {
+    protected void setLastName(String lastName) {
         this.assertArgumentNotEmpty(lastName, "The last name is required.");
         this.assertArgumentLength(lastName, 1, 50, "The last name must be 50 characters or less.");
         this.assertArgumentTrue(

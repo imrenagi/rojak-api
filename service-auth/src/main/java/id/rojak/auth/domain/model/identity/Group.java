@@ -74,20 +74,6 @@ public class Group extends IdentifiedDomainObject {
         this.setGroupMembers(new HashSet<GroupMember>(0));
     }
 
-    public void addGroup(Group aGroup, GroupMemberService aGroupMemberService) {
-        this.assertArgumentNotNull(aGroup, "Group must not be null.");
-//        this.assertArgumentFalse(aGroupMemberService.isMemberGroup(aGroup, this.toGroupMember()), "Group recurrsion.");
-
-//        if (this.groupMembers().add(aGroup.toGroupMember()) && !this.isInternalGroup()) {
-//            DomainEventPublisher
-//                    .instance()
-//                    .publish(new GroupGroupAdded(
-//                            this.tenantId(),
-//                            this.name(),
-//                            aGroup.name()));
-//        }
-    }
-
     public void addUser(User aUser) {
         this.assertArgumentNotNull(aUser, "User must not be null.");
         this.assertArgumentTrue(aUser.isEnabled(), "User is not enabled.");
@@ -141,20 +127,6 @@ public class Group extends IdentifiedDomainObject {
         return this.name;
     }
 
-    public void removeGroup(Group aGroup) {
-        this.assertArgumentNotNull(aGroup, "Group must not be null.");
-
-        // not a nested remove, only direct member
-//        if (this.groupMembers().remove(aGroup.toGroupMember()) && !this.isInternalGroup()) {
-//            DomainEventPublisher
-//                    .instance()
-//                    .publish(new GroupGroupRemoved(
-//                            this.tenantId(),
-//                            this.name(),
-//                            aGroup.name()));
-//        }
-    }
-
     public void removeUser(User aUser) {
         this.assertArgumentNotNull(aUser, "User must not be null.");
 
@@ -206,27 +178,9 @@ public class Group extends IdentifiedDomainObject {
         this.groupMembers = aGroupMembers;
     }
 
-    protected boolean isInternalGroup() {
-        return this.isInternalGroup(this.name());
-    }
-
-    protected boolean isInternalGroup(String aName) {
-        return aName.startsWith(ROLE_GROUP_PREFIX);
-    }
-
     protected void setName(String aName) {
         this.assertArgumentNotEmpty(aName, "Group name is required.");
         this.assertArgumentLength(aName, 1, 100, "Group name must be 100 characters or less.");
-
-        if (this.isInternalGroup(aName)) {
-            String uuid = aName.substring(ROLE_GROUP_PREFIX.length());
-
-            try {
-                UUID.fromString(uuid);
-            } catch (Exception e) {
-                throw new IllegalArgumentException("The group name has an invalid format.");
-            }
-        }
 
         this.name = aName;
     }

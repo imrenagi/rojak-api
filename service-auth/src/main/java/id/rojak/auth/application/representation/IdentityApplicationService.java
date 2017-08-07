@@ -100,15 +100,7 @@ public class IdentityApplicationService {
     @Transactional
     public void addUserToGroup(AddUserToGroupCommand aCommand) {
 
-        Group group = this.groupRepository
-                .findByGroupId(
-                        new GroupId(aCommand.getGroupId()));
-
-        if (group == null) {
-            throw new IllegalArgumentException("Group " +
-                    aCommand.getGroupId() +
-                    " doesn't exist exist");
-        }
+        Group group = this.existingGroup(new GroupId(aCommand.getGroupId()));
 
         for (String username : aCommand.getUsernames()) {
 
@@ -129,7 +121,8 @@ public class IdentityApplicationService {
                 new GroupId(command.getGroupId()));
 
         for (String username : command.getUsers()) {
-            User user = this.existingUser(username);
+            User user = this.userRepository
+                    .findByUsername(username);
 
             if (user == null) continue;
 

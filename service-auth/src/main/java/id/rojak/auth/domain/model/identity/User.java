@@ -114,6 +114,12 @@ public class User extends IdentifiedDomainObject {
         return this.enablement().isEnablementEnabled();
     }
 
+    public void disable() {
+        this.setEnablement(new Enablement(false,
+                this.enablement.startDate(),
+                this.enablement.endDate()));
+    }
+
     public Person person() {
         return this.person;
     }

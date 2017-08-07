@@ -55,7 +55,7 @@ public class GroupId extends ValueObject {
     }
 
     public void setId(String id) {
-        this.assertArgumentNotNull(id, "The News identity is required");
+        this.assertArgumentNotNull(id, "The Group identity is required");
 
         this.id = id;
     }
