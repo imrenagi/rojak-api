@@ -1,10 +1,13 @@
 package id.rojak.auth.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import id.rojak.auth.AuthApplication;
-import id.rojak.auth.domain.User;
-import id.rojak.auth.service.UserService;
 import com.sun.security.auth.UserPrincipal;
+import id.rojak.auth.AuthApplication;
+import id.rojak.auth.application.command.RegisterUserCommand;
+import id.rojak.auth.application.representation.IIdentityApplicationService;
+import id.rojak.auth.application.representation.IdentityApplicationService;
+import id.rojak.auth.domain.model.identity.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,8 +20,11 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,14 +44,16 @@ public class UserControllerTest {
     private UserController userController;
 
     @Mock
-    private UserService userService;
+    private IIdentityApplicationService identityApplicationService;
 
     private MockMvc mockMvc;
 
     @Before
     public void setup() {
         initMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(userController)
+                .setControllerAdvice(new ErrorHandler())
+                .build();
     }
 
     @Test
@@ -56,37 +64,76 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldCreateNewUser() throws Exception {
-        final User user = new User("imrenagi", "imrenagi", "imre", "nagi");
-        String json = mapper.writeValueAsString(user);
+    public void shouldRegisterNewUserWithValidFields() throws Exception {
+        RegisterUserCommand command =
+                new RegisterUserCommand(
+                        "admin",
+                        "Password01",
+                        "Admin",
+                        "Admin",
+                        true, null, null,
+                        "rojak.admin@gmail.com",
+                        "021-856-9876",
+                        "021-856-9876",
+                        "Jl. Pegangsaan Timur",
+                        "Jakarta Selatan",
+                        "DKI Jakarta",
+                        "25134",
+                        "Indonesia");
+        String json = mapper.writeValueAsString(command);
 
-        mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(json))
-                .andExpect(status().isOk());
+        User user = new User("admin",
+                "Password01",
+                new Enablement(true, null, null),
+                new Person(
+                        new FullName("Admin", "Admin"),
+                        new ContactInformation(
+                                new EmailAddress("rojak.admin@gmail.com"),
+                                new PostalAddress(
+                                        "Jl. Pegangsaan Timur",
+                                        "Jakarta Selatan",
+                                        "DKI Jakarta",
+                                        "25134",
+                                        "Indonesia"),
+                                new Telephone("021-856-9876"),
+                                new Telephone("021-856-9876"))));
+
+        when(this.identityApplicationService
+                .newUser(any(RegisterUserCommand.class))).thenReturn(user);
+
+        mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(jsonPath("$.username").value("admin"))
+                .andExpect(status().isCreated());
+
     }
 
     @Test
-    public void shouldCreateNewUserWith3ValidFields() throws Exception {
-        final User user = new User("imrenagi", "imrenagi", "imre");
-        String json = mapper.writeValueAsString(user);
+    public void shouldReturnBadRequestIfGetException() throws Exception {
 
-        mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(json))
-                .andExpect(status().isOk());
-    }
+        RegisterUserCommand command =
+                new RegisterUserCommand(
+                        "admin",
+                        "Password01",
+                        "Admin",
+                        "Admin",
+                        true, null, null,
+                        "rojak.admin@gmail.com",
+                        "021-856-9876",
+                        "021-856-9876",
+                        "Jl. Pegangsaan Timur",
+                        "Jakarta Selatan",
+                        "DKI Jakarta",
+                        "25134",
+                        "Indonesia");
+        String json = mapper.writeValueAsString(command);
 
-    @Test
-    public void shouldFailWhenThereIsNoUserData() throws Exception {
-        mockMvc.perform(post("/users")).andExpect(status().isBadRequest());
-    }
+        when(this.identityApplicationService.newUser(any(RegisterUserCommand.class)))
+                .thenThrow(new IllegalArgumentException("This is failed"));
 
-    @Test
-    public void shouldFailWhenTheUserDataIsIncomplete() throws Exception {
-        final User user = new User();
-        user.setUsername("imrenagi");
-        user.setPassword("imrenagi");
-        String json = mapper.writeValueAsString(user);
-
-        mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(json))
+        mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON)
+                .content(json))
                 .andExpect(status().isBadRequest());
     }
-
+    
 }

@@ -1,8 +1,7 @@
 package id.rojak.auth.service.security;
 
 import id.rojak.auth.AuthApplication;
-import id.rojak.auth.domain.User;
-import id.rojak.auth.repository.UserRepository;
+import id.rojak.auth.domain.model.identity.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -40,15 +40,17 @@ public class MysqlUserDetailsServiceTest {
 
     @Test
     public void shouldReturnUserDetailWhenAUserIsFound() throws Exception {
-        final User user = new User("imrenagi", "1234", "imre", "nagi");
+        User user = this.userStub();
 
-        doReturn(user).when(repository).findByUsername(user.getUsername());
-        UserDetails found = userDetailsService.loadUserByUsername(user.getUsername());
+        doReturn(user).when(repository).findByUsername(user.username());
 
-        assertEquals(user.getUsername(), found.getUsername());
-        assertEquals(user.getPassword(), found.getPassword());
+        UserDetails found = userDetailsService.loadUserByUsername(user.username());
 
-        verify(repository, times(1)).findByUsername(user.getUsername());
+        assertEquals(user.username(), found.getUsername());
+        assertEquals(user.password(), found.getPassword());
+        assertEquals(user.isEnabled(), found.isEnabled());
+
+        verify(repository, times(1)).findByUsername(user.username());
     }
 
     @Test
@@ -60,5 +62,24 @@ public class MysqlUserDetailsServiceTest {
         } catch (Exception e) {
 
         }
+    }
+
+    private User userStub() {
+        return new User("imrenagi",
+                "Password01",
+                Enablement.indefiniteEnablement(),
+                new Person(
+                        new FullName("Imre", "Nagi"),
+                        new ContactInformation(
+                                new EmailAddress("imre.nagi2812@gmail.com"),
+                                new PostalAddress(
+                                        "Jl. ABS",
+                                        "Jakarta Selatan",
+                                        "DKI Jakarta",
+                                        "25134",
+                                        "Indonesia"
+                                ),
+                                new Telephone("021-123-1234"),
+                                new Telephone("021-123-1234"))));
     }
 }
