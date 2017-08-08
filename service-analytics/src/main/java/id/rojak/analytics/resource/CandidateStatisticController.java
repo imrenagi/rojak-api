@@ -1,5 +1,6 @@
 package id.rojak.analytics.resource;
 
+import id.rojak.analytics.application.media.MediaApplicationService;
 import id.rojak.analytics.application.statistic.CandidateStatisticApplicationService;
 import id.rojak.analytics.common.date.DateHelper;
 import id.rojak.analytics.domain.model.media.Media;
@@ -17,17 +18,19 @@ import id.rojak.analytics.resource.dto.chart.XAxis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -36,10 +39,11 @@ import java.util.stream.Collectors;
 @RestController
 public class CandidateStatisticController {
 
-    private final Logger log = LoggerFactory.getLogger(CandidateStatisticController.class);
+    @Resource(name = "candidateStatisticApplicationService")
+    private CandidateStatisticApplicationService candidateStatisticApplicationService;
 
     @Autowired
-    private CandidateStatisticApplicationService candidateStatisticApplicationService;
+    private MediaApplicationService mediaApplicationService;
 
     @Autowired
     private NewsSentimentRepository newsSentimentRepository;
@@ -47,34 +51,43 @@ public class CandidateStatisticController {
     @RequestMapping(path = "/elections/{election_id}/candidates/{candidate_id}/statistics",
             method = RequestMethod.GET)
     public ResponseEntity<ChartDTO> candidateNewsPerDayStatistic(
+            @RequestParam(value = "start_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(value = "end_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @PathVariable("election_id") String anElectionId,
             @PathVariable("candidate_id") String aCandidateId) {
 
-        Date startDate = DateHelper.nMonthAgoOf(1, new Date());
-        Date endDate = new Date();
+        Date fromDate = Date
+                .from(startDate.atStartOfDay(ZoneId.systemDefault())
+                        .toInstant());
 
-        List<Date> dateSeries = DateHelper.daysBetween(startDate, endDate);
+        Date toDate = Date
+                .from(endDate.atStartOfDay(ZoneId.systemDefault())
+                        .toInstant());
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println(df.format(fromDate) + "-->" + df.format(toDate));
+
 
         Series<Long> positiveSeries = new Series<>(
                 "# Positive News",
                 this.candidateStatisticApplicationService
                         .sentimentsOverTime(anElectionId, aCandidateId,
-                                SentimentType.POSITIVE, startDate, endDate, dateSeries));
+                                SentimentType.POSITIVE, fromDate, toDate));
 
         Series<Long> negativeSeries = new Series<>(
                 "# Negative News",
                 this.candidateStatisticApplicationService
                         .sentimentsOverTime(anElectionId, aCandidateId,
-                                SentimentType.NEGATIVE, startDate, endDate, dateSeries));
+                                SentimentType.NEGATIVE, fromDate, toDate));
 
         Series<Long> neutralSeries = new Series<>(
                 "# Neutral News",
                 this.candidateStatisticApplicationService
                         .sentimentsOverTime(anElectionId, aCandidateId,
-                                SentimentType.NEUTRAL, startDate, endDate, dateSeries));
+                                SentimentType.NEUTRAL, fromDate, toDate));
 
         ChartDTO chartDTO = new ChartDTO(
-                new XAxis<>(dateSeries),
+                new XAxis<>(DateHelper.daysBetween(fromDate, toDate)),
                 new ArrayList<Series>() {{
                     add(positiveSeries);
                     add(negativeSeries);
@@ -86,51 +99,54 @@ public class CandidateStatisticController {
 
     @RequestMapping(path = "/elections/{election_id}/candidates/{candidate_id}/medias",
             method = RequestMethod.GET)
-    public ResponseEntity<CandidateMediaDTO> candidateMediaList(
+    public ResponseEntity<CandidateMediaDTO> groupedMediaBySentimentFor(
+            @PathVariable("election_id") String anElectionId,
+            @PathVariable("candidate_id") String aCandidateId) {
+
+        MediaSentimentGroup sentimentGroup =
+                this.candidateStatisticApplicationService
+                        .mediaAbout(anElectionId, aCandidateId);
+
+        List<MediaDTO> positives =
+                this.convertFrom(sentimentGroup.getPositiveMedias());
+
+        List<MediaDTO> negatives =
+                this.convertFrom(sentimentGroup.getNegativeMedias());
+
+        List<MediaDTO> neutrals =
+                this.convertFrom(sentimentGroup.getNeutralMedias());
+
+        CandidateMediaDTO dto =
+                new CandidateMediaDTO(positives, negatives, neutrals);
+
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    private List<MediaDTO> convertFrom(List<MediaNewsCount> mediaNewsCounts) {
+        return mediaNewsCounts.stream()
+                .map(newsCount -> {
+                    Media media =
+                            this.mediaApplicationService
+                                    .media(newsCount.mediaId().id());
+
+                    return new MediaDTO(media.mediaId().id(),
+                            media.name(),
+                            media.websiteUrl(),
+                            media.logo(),
+                            new MediaNewsCountDTO(newsCount.totalPositiveNews(),
+                                    newsCount.totalNegativeNews(),
+                                    newsCount.totalNeutralNews()));
+                }).collect(Collectors.toList());
+    }
+
+    @RequestMapping(path = "/elections/{election_id}/candidates/{candidate_id}/stat_summary",
+            method = RequestMethod.GET)
+    public ResponseEntity<CandidateStatSummaryDTO> numberOfMediaGroupedBySentiments(
             @PathVariable("election_id") String anElectionId,
             @PathVariable("candidate_id") String aCandidateId) {
 
         MediaSentimentGroup sentimentGroup =
                 this.candidateStatisticApplicationService.mediaAbout(anElectionId, aCandidateId);
-
-        List<MediaDTO> positives = sentimentGroup.getPositiveMedias().stream()
-                .map(this.newsCountToMediaDTO()).collect(Collectors.toList());
-
-        List<MediaDTO> negatives = sentimentGroup.getNegativeMedias().stream()
-                .map(this.newsCountToMediaDTO()).collect(Collectors.toList());
-
-        List<MediaDTO> neutrals = sentimentGroup.getNeutralMedias().stream()
-                .map(this.newsCountToMediaDTO()).collect(Collectors.toList());
-
-        CandidateMediaDTO dto = new CandidateMediaDTO(positives, negatives, neutrals);
-
-        return new ResponseEntity<>(dto, HttpStatus.OK);
-    }
-
-    private Function<MediaNewsCount, MediaDTO> newsCountToMediaDTO() {
-        return new Function<MediaNewsCount, MediaDTO>() {
-            @Override
-            public MediaDTO apply(MediaNewsCount newsCount) {
-                Media media = newsCount.media();
-                return new MediaDTO(media.mediaId().id(),
-                        media.name(),
-                        media.websiteUrl(),
-                        media.websiteUrl(), //todo change with logo url
-                        new MediaNewsCountDTO(newsCount.totalPositiveNews(),
-                                newsCount.totalNegativeNews(),
-                                newsCount.totalNeutralNews()));
-            }
-        };
-    }
-
-    @RequestMapping(path = "/elections/{election_id}/candidates/{candidate_id}/stat_summary",
-            method = RequestMethod.GET)
-    public ResponseEntity<CandidateStatSummaryDTO> candidateMediaSummaryStatistic(
-            @PathVariable("election_id") String anElectionId,
-            @PathVariable("candidate_id") String aCandidateId) {
-
-        MediaSentimentGroup sentimentGroup =
-                this.candidateStatisticApplicationService.mediaSentimentGroupOf(anElectionId, aCandidateId);
 
         CandidateStatSummaryDTO statSummary = new CandidateStatSummaryDTO(
                 sentimentGroup.getPositiveMedias().size(),

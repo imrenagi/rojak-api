@@ -39,6 +39,15 @@ public class NewsId extends ValueObject {
         return equalObjects;
     }
 
+    @Override
+    public int hashCode() {
+        int hashCodeValue =
+                + (2508 * 5)
+                        + this.id().hashCode();
+
+        return hashCodeValue;
+    }
+
     protected NewsId() {
         super();
     }

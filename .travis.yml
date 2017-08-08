@@ -7,13 +7,79 @@ services:
 language: java
 jdk: oraclejdk8
 
+env:
+  global:
+    - COMMIT=${TRAVIS_COMMIT::8}
+    - CONFIG_VER=0.1.0
+    - REGISTRY_VER=0.1.0
+    - GATEWAY_VER=0.1.0
+    - MONITORING_VER=0.1.0
+    - AUTH_VER=0.1.0
+    - ACCOUNT_VER=0.1.0
+    - ELECTION_VER=0.1.0
+    - ANALYTICS_VER=0.1.0
+
 script: ./compile.sh all
 
 before_install:
   - mysql -e 'CREATE DATABASE account_test;'
   - mysql -e 'CREATE DATABASE auth_test;'
   - mysql -e 'CREATE DATABASE election_test;'
+  - mysql -e 'CREATE DATABASE analytics_test;'
   - chmod a+x compile.sh
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+  - if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_BRANCH" == "develop" ] || [ "$TRAVIS_BRANCH" == "travis-docker" ]; then
+
+    fi
+
+  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+
+  # CONFIG
+  - export CONFIG=imrenagi/rojak-config
+  - docker build -t $CONFIG:$CONFIG_VER ./config
+  - docker tag $CONFIG:$CONFIG_VER $CONFIG:$CONFIG_VER
+  - docker push $CONFIG
+
+  # REGISTRY
+  - export REGISTRY=imrenagi/rojak-registry
+  - docker build -t $REGISTRY:$REGISTRY_VER ./registry
+  - docker tag $REGISTRY:$REGISTRY_VER $REGISTRY:$REGISTRY_VER
+  - docker push $REGISTRY
+
+  # GATEWAY
+  - export GATEWAY=imrenagi/rojak-gateway
+  - docker build -t $GATEWAY:$GATEWAY_VER ./gateway
+  - docker tag $GATEWAY:$GATEWAY_VER $GATEWAY:$GATEWAY_VER
+  - docker push $GATEWAY
+
+  # MONITORING
+  - export MONITORING=imrenagi/rojak-monitoring
+  - docker build -t $MONITORING:$MONITORING_VER ./monitoring
+  - docker tag $MONITORING:$MONITORING_VER $MONITORING:$MONITORING_VER
+  - docker push $MONITORING
+
+  # AUTH
+  - export SERVICE_AUTH=imrenagi/rojak-service-auth
+  - docker build -t $SERVICE_AUTH:$AUTH_VER ./service-auth
+  - docker tag $SERVICE_AUTH:$AUTH_VER $SERVICE_AUTH:$AUTH_VER
+  - docker push $SERVICE_AUTH
+
+  # ACCOUNT
+  - export SERVICE_ACCOUNT=imrenagi/rojak-service-account
+  - docker build -t $SERVICE_ACCOUNT:$ACCOUNT_VER ./service-account
+  - docker tag $SERVICE_ACCOUNT:$ACCOUNT_VER $SERVICE_ACCOUNT:$ACCOUNT_VER
+  - docker push $SERVICE_ACCOUNT
+
+  # ELECTION
+  - export SERVICE_ELECTION=imrenagi/rojak-service-election
+  - docker build -t $SERVICE_ELECTION:$ELECTION_VER ./service-election
+  - docker tag $SERVICE_ELECTION:$ELECTION_VER $SERVICE_ELECTION:$ELECTION_VER
+  - docker push $SERVICE_ELECTION
+
+  # ANALYTICS
+  - export SERVICE_ANALYTICS=imrenagi/rojak-service-analytics
+  - docker build -t $SERVICE_ANALYTICS:$ANALYTICS_VER ./service-analytics
+  - docker tag $SERVICE_ANALYTICS:$ANALYTICS_VER $SERVICE_ANALYTICS:$ANALYTICS_VER
+  - docker push $SERVICE_ANALYTICS

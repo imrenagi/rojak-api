@@ -11,6 +11,8 @@ import javax.validation.constraints.NotNull;
 public class NewCandidateCommand {
 
     @NotNull
+    private String id;
+    @NotNull
     private String electionId;
     @NotNull
     private Integer candidateNumber;
@@ -27,16 +29,19 @@ public class NewCandidateCommand {
     protected NewCandidateCommand() {
     }
 
-    public NewCandidateCommand(String electionId,
-                               Integer candidateNumber,
-                               String mainCandidateId,
-                               String viceCandidateId,
-                               String imageUrl,
-                               String twitterId,
-                               String facebookUrl,
-                               String instagramId) {
+    public NewCandidateCommand(
+            String id,
+            String electionId,
+            Integer candidateNumber,
+            String mainCandidateId,
+            String viceCandidateId,
+            String imageUrl,
+            String twitterId,
+            String facebookUrl,
+            String instagramId) {
         this();
 
+        this.id = id;
         this.electionId = electionId;
         this.candidateNumber = candidateNumber;
         this.mainCandidateId = mainCandidateId;
@@ -45,6 +50,16 @@ public class NewCandidateCommand {
         this.twitterId = twitterId;
         this.facebookUrl = facebookUrl;
         this.instagramId = instagramId;
+    }
+
+    @JsonProperty("id")
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @JsonProperty("id")
+    public String getId() {
+        return id;
     }
 
     @JsonProperty("election_id")

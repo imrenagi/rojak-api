@@ -37,8 +37,7 @@ public class DateHelper {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(startDate);
 
-        while (isSimilar(calendar.getTime(), endDate) ||
-                calendar.getTime().before(endDate)) {
+        while (calendar.getTime().before(endDate)) {
             Date result = calendar.getTime();
             dates.add(result);
             calendar.add(Calendar.DATE, 1);
@@ -58,21 +57,5 @@ public class DateHelper {
 
         return sameDay;
     }
-
-    public static Date nMonthAgoOf(int n, Date now) {
-        Calendar cal = Calendar.getInstance();
-
-        cal.setTime(now);
-
-        cal.set(Calendar.HOUR, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-
-        cal.add(Calendar.MONTH, -1*n);
-
-        return cal.getTime();
-    }
-
 
 }

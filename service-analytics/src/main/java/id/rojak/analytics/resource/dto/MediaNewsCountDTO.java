@@ -11,7 +11,7 @@ public class MediaNewsCountDTO {
     private long positiveCount;
     @JsonProperty("negative_news")
     private long negativeCount;
-    @JsonProperty("neutral_media")
+    @JsonProperty("neutral_news")
     private long neutralCount;
 
     public MediaNewsCountDTO() {

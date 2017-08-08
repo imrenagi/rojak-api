@@ -105,4 +105,8 @@ public class CandidateDTO {
     public void setWebUrl(String webUrl) {
         this.webUrl = webUrl;
     }
+
+    public void setStatisticSummary(StatisticSummaryDTO statisticSummary) {
+        this.statisticSummary = statisticSummary;
+    }
 }

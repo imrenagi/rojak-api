@@ -10,10 +10,10 @@ import java.util.List;
 public class Series<T> {
 
     @JsonProperty("name")
-    public String name;
+    private String name;
 
     @JsonProperty("data")
-    public List<T> data;
+    private List<T> data;
 
     public Series(String name, List<T> data) {
         this.name = name;

@@ -26,6 +26,9 @@ public class Media extends IdentifiedDomainObject {
     @Column(name="mobile_website_url")
     private String mobileWebsiteUrl;
 
+    @Column(name="logo_url")
+    private String logoUrl;
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "social_media_id")
     private SocialMedia socialMedia;
@@ -55,7 +58,18 @@ public class Media extends IdentifiedDomainObject {
         this.setMobileWebsiteUrl(mobileWebsiteUrl);
         this.setSocialMedia(socialMedia);
         this.setPostalAddress(postalAddress);
+    }
 
+    public Media(MediaId mediaId,
+                 String name,
+                 String websiteUrl,
+                 String mobileWebsiteUrl,
+                 String logoUrl,
+                 SocialMedia socialMedia,
+                 PostalAddress postalAddress) {
+        this(mediaId, name, websiteUrl, mobileWebsiteUrl, socialMedia, postalAddress);
+
+        this.setLogoUrl(logoUrl);
     }
 
     public void addNews(News news) {
@@ -122,6 +136,21 @@ public class Media extends IdentifiedDomainObject {
 
     public void setPostalAddress(PostalAddress postalAddress) {
         this.postalAddress = postalAddress;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.assertArgumentNotNull(logoUrl, "Logo URL is required and can't be null");
+        this.assertArgumentNotEmpty(logoUrl, "Logo URL can't be empty");
+
+        this.logoUrl = logoUrl;
+    }
+
+    public List<News> news() {
+        return this.news;
+    }
+
+    public String logo() {
+        return this.logoUrl;
     }
 
     private boolean isValidUrl(String url) {

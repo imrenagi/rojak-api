@@ -62,8 +62,17 @@ public class CustomUserInfoTokenServices implements ResourceServerTokenServices 
     private OAuth2Authentication extractAuthentication(Map<String, Object> map) {
         Object principal = this.getPrincipal(map);
         List<GrantedAuthority> authorities = getAuthorities(map);
+        Set<String> scopes = getScopes(map);
 
-        OAuth2Request request = new OAuth2Request((Map) null, this.clientId, authorities, true, (Set) null, (Set) null, (String) null, (Set) null, (Map) null);
+        OAuth2Request request = new OAuth2Request((Map) null,
+                this.clientId,
+                authorities, true,
+                scopes,
+                (Set) null,
+                (String) null,
+                (Set) null,
+                (Map) null);
+
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
         token.setDetails(map);
         return new OAuth2Authentication(request, token);
@@ -78,6 +87,15 @@ public class CustomUserInfoTokenServices implements ResourceServerTokenServices 
             authorities.add(new SimpleGrantedAuthority(authority.get("authority")));
         }
         return authorities;
+    }
+
+    private Set<String> getScopes(Map<String, Object> map) {
+        Map<String, Object> oauth2RequestMap = (Map<String, Object>) map.get("oauth2Request");
+
+        Set<String> scopes = new LinkedHashSet<>(oauth2RequestMap.containsKey("scope") ?
+                (Collection<String>) oauth2RequestMap.get("scope") : Collections.<String>emptySet());
+
+        return scopes;
     }
 
     private Object getPrincipal(Map<String, Object> map) {
@@ -107,6 +125,7 @@ public class CustomUserInfoTokenServices implements ResourceServerTokenServices 
                 BaseOAuth2ProtectedResourceDetails existingToken = new BaseOAuth2ProtectedResourceDetails();
                 existingToken.setClientId(this.clientId);
                 ex = new OAuth2RestTemplate(existingToken);
+
             }
 
             OAuth2AccessToken existingToken1 = ((OAuth2RestOperations) ex).getOAuth2ClientContext().getAccessToken();

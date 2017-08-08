@@ -17,6 +17,8 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 
     List<Candidate> findByElectionId(ElectionId electionId);
 
+    Candidate findByCandidateId(CandidateId candidateId);
+
     Page<Candidate> findByElectionId(ElectionId electionId, Pageable pageRequest);
 
     Candidate findByElectionIdAndCandidateId(ElectionId electionId,

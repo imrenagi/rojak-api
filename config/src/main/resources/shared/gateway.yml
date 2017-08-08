@@ -23,12 +23,6 @@ zuul:
       stripPrefix: false
       sensitiveHeaders:
 
-    service-account:
-      path: /accounts/**
-      serviceId: service-account
-      stripPrefix: false
-      sensitiveHeaders:
-
     service-election:
       path: /elections/**
       serviceId: service-election

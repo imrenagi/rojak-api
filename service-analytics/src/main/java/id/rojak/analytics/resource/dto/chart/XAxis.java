@@ -9,6 +9,9 @@ import java.util.List;
  */
 public class XAxis<T> {
 
+    @JsonProperty("name")
+    private String name;
+
     @JsonProperty("categories")
     private List<T> categories;
 
@@ -16,5 +19,8 @@ public class XAxis<T> {
         this.categories = categories;
     }
 
-
+    public XAxis(String name, List<T> categories) {
+        this.name = name;
+        this.categories = categories;
+    }
 }
