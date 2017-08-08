@@ -15,14 +15,13 @@ env:
     - GATEWAY_VER=0.1.0
     - MONITORING_VER=0.1.0
     - AUTH_VER=0.1.0
-    - ACCOUNT_VER=0.1.0
     - ELECTION_VER=0.1.0
     - ANALYTICS_VER=0.1.0
 
 script: ./compile.sh all
 
 before_install:
-  - mysql -e 'CREATE DATABASE account_test;'
+
   - mysql -e 'CREATE DATABASE auth_test;'
   - mysql -e 'CREATE DATABASE election_test;'
   - mysql -e 'CREATE DATABASE analytics_test;'
@@ -65,12 +64,6 @@ after_success:
   - docker build -t $SERVICE_AUTH:$AUTH_VER ./service-auth
   - docker tag $SERVICE_AUTH:$AUTH_VER $SERVICE_AUTH:$AUTH_VER
   - docker push $SERVICE_AUTH
-
-  # ACCOUNT
-  - export SERVICE_ACCOUNT=imrenagi/rojak-service-account
-  - docker build -t $SERVICE_ACCOUNT:$ACCOUNT_VER ./service-account
-  - docker tag $SERVICE_ACCOUNT:$ACCOUNT_VER $SERVICE_ACCOUNT:$ACCOUNT_VER
-  - docker push $SERVICE_ACCOUNT
 
   # ELECTION
   - export SERVICE_ELECTION=imrenagi/rojak-service-election
