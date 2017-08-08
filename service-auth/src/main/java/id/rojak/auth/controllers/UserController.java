@@ -1,6 +1,7 @@
 package id.rojak.auth.controllers;
 
 import id.rojak.auth.application.command.RegisterUserCommand;
+import id.rojak.auth.application.representation.IIdentityApplicationService;
 import id.rojak.auth.application.representation.IdentityApplicationService;
 import id.rojak.auth.controllers.dto.UserDTO;
 import id.rojak.auth.domain.model.identity.User;
@@ -26,7 +27,7 @@ public class UserController {
     private final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    private IdentityApplicationService identityApplicationService;
+    private IIdentityApplicationService identityApplicationService;
 
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     public Principal getUser(Principal principal) {
@@ -45,7 +46,11 @@ public class UserController {
 
         User user = this.identityApplicationService.newUser(aCommand);
 
-        log.info("{} has been created", user.username());
+        if (user == null) {
+            System.out.println("user null");
+        }
+
+//        log.info("{} has been created", user.username());
 
         return new ResponseEntity<>(new UserDTO(user), HttpStatus.CREATED);
     }

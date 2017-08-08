@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by inagi on 8/1/17.
  */
 @Service("identityApplicationService")
-public class IdentityApplicationService {
+public class IdentityApplicationService implements IIdentityApplicationService {
 
     @Autowired
     private UserRepository userRepository;
@@ -31,6 +31,7 @@ public class IdentityApplicationService {
     @Autowired
     private GroupMemberRepository groupMemberRepository;
 
+    @Override
     @Transactional
     public User newUser(RegisterUserCommand aCommand) {
 

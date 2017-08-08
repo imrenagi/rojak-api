@@ -26,39 +26,39 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by imrenagi on 5/14/17.
  */
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@SpringApplicationConfiguration(classes = AuthApplication.class)
-//@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = AuthApplication.class)
+@WebAppConfiguration
 public class AuthControllerTest {
-//
-//    private static final ObjectMapper mapper = new ObjectMapper();
-//
-//    @InjectMocks
-//    private AuthController authController;
-//
-//    @Mock
-//    private ConsumerTokenServices tokenServices;
-//
-//    private MockMvc mockMvc;
-//
-//    @Before
-//    public void setup() {
-//        initMocks(this);
-//        mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
-//    }
-//
-//    @Test
-//    public void logoutWitTokenShouldCallRevokeToken() throws Exception {
-//        mockMvc.perform(get("/oauth/logout").header("Authorization", "Bearer 123434234235"))
-//                .andExpect(status().isOk());
-//        verify(tokenServices, times(1)).revokeToken("123434234235");
-//    }
-//
-//    @Test
-//    public void logoutWithoutTokenShouldDoNothing() throws Exception {
-//        mockMvc.perform(get("/oauth/logout").header("Authorization", "Bearer "))
-//                .andExpect(status().isOk());
-//        verify(tokenServices, times(0)).revokeToken(anyString());
-//    }
+
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    @InjectMocks
+    private AuthController authController;
+
+    @Mock
+    private ConsumerTokenServices tokenServices;
+
+    private MockMvc mockMvc;
+
+    @Before
+    public void setup() {
+        initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
+    }
+
+    @Test
+    public void logoutWitTokenShouldCallRevokeToken() throws Exception {
+        mockMvc.perform(get("/oauth/logout").header("Authorization", "Bearer 123434234235"))
+                .andExpect(status().isOk());
+        verify(tokenServices, times(1)).revokeToken("123434234235");
+    }
+
+    @Test
+    public void logoutWithoutTokenShouldDoNothing() throws Exception {
+        mockMvc.perform(get("/oauth/logout").header("Authorization", "Bearer "))
+                .andExpect(status().isOk());
+        verify(tokenServices, times(0)).revokeToken(anyString());
+    }
 
 }
