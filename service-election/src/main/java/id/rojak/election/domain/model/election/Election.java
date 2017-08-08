@@ -6,6 +6,7 @@ import id.rojak.election.common.domain.model.IdentifiedDomainObject;
 import id.rojak.election.domain.model.candidate.Candidate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -58,6 +59,8 @@ public class Election extends IdentifiedDomainObject {
         ));
         this.setCity(city);
         this.setType(type);
+
+        this.candidates = new ArrayList<>(0);
 
         //TODO handle other variable initialization
 

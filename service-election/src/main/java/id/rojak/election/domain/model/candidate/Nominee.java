@@ -45,6 +45,8 @@ public class Nominee extends IdentifiedDomainObject {
         this.setNickName(aNickName);
         this.setSocialMediaInformation(aSocialMediaInformation);
         this.setNomineeId(nomineeId);
+
+
     }
 
     public Nominee(NomineeId nomineeId,

@@ -10,53 +10,47 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.Date;
 
 /**
  * Created by inagi on 7/4/17.
  */
 @Service
-public class ElectionApplicationService {
+public class ElectionApplicationService implements IElectionApplicationService {
 
     private static Logger log = LoggerFactory.getLogger(ElectionApplicationService.class);
 
     @Autowired
     private ElectionRepository electionRepository;
 
-    //    @Autowired
-//    private CountryRepository countryRepository;
-//
-//    @Autowired
-//    private ProvinceRepository provinceRepository;
-//
     @Autowired
     private CityRepository cityRepository;
 
+    @Override
     @Transactional
     public Page<Election> allElections(Pageable pageRequest) {
-//        Country c = countryRepository.findOne(1L);
-//        log.info("Country is {}-{} has {} provinces", c.name(), c.code(), c.provinces().size());
-//
-//        Province p = provinceRepository.findOne(1L);
-//        log.info("Province {} has {} cities and the country is {}", p.name(), p.cities().size(), p.country().name());
-//
-//        City city = cityRepository.findOne(1L);
-//        log.info("City {} is a part of {} province", city.name(), city.province().name());
-
         Page<Election> elections = electionRepository().findAll(pageRequest);
 
         return elections;
     }
 
+    @Override
     @Transactional
     public Election election(String anElectionId) {
 
         Election election = electionRepository()
                 .findByElectionId(new ElectionId(anElectionId));
 
+        if (election == null) {
+            throw new ResourceNotFoundException("Election " + anElectionId +
+                    " doesn't exist");
+        }
+
         return election;
     }
 
+    @Override
     @Transactional
     public Election newElection(NewElectionCommand aCommand) {
 
@@ -86,6 +80,7 @@ public class ElectionApplicationService {
         return election;
     }
 
+    @Override
     @Transactional
     public void changeElectionDetail(ElectionDetailChangeCommand aCommand) {
 

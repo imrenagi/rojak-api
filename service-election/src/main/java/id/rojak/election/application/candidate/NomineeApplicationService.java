@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by imrenagi on 7/9/17.
  */
 @Service
-public class NomineeApplicationService {
+public class NomineeApplicationService implements INomineeApplicationService {
 
     private static Logger log = LoggerFactory.getLogger(ElectionApplicationService.class);
 
@@ -28,6 +28,7 @@ public class NomineeApplicationService {
         return nominees;
     }
 
+    @Override
     @Transactional
     public Nominee newNominee(NewNomineeCommand aCommand) {
 
