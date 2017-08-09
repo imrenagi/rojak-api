@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by imrenagi on 7/8/17.
  */
 @Service
-public class CandidateApplicationService {
+public class CandidateApplicationService implements ICandidateApplicationService {
 
     private static final Logger log = LoggerFactory.getLogger(ElectionController.class);
 
@@ -32,9 +32,6 @@ public class CandidateApplicationService {
 
     @Autowired
     private ElectionRepository electionRepository;
-
-    @Autowired
-    private ElectionCandidateService electionCandidateService;
 
     @Autowired
     private AnalyticsServiceClient analyticsService;
@@ -55,6 +52,7 @@ public class CandidateApplicationService {
 
     }
 
+    @Override
     @Transactional
     public Candidate candidate(String anElectionId,
                                String candidateId) {
@@ -71,6 +69,7 @@ public class CandidateApplicationService {
         return candidate;
     }
 
+    @Override
     @Transactional
     public Candidate newCandidate(NewCandidateCommand aCommand) {
 
@@ -122,6 +121,7 @@ public class CandidateApplicationService {
         return candidate;
     }
 
+    @Override
     @Transactional
     public void removeCandidate(RemoveCandidateCommand aCommand) {
 

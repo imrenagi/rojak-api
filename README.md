@@ -261,10 +261,34 @@ docker-compose up -d
 
 ### Development
 For development mode, all source code will be compiled and packaged as a jar. These jar files will be used later for
-creating the image for every service. To build, use this command:
+creating the image for every service.
+
+To build all projects, use this command:
+```
+./compile.sh all
+```
+To build the docker images, use this command:
 ```$xslt
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 ```
+In short, run:
+```
+./compile.sh all && docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+```
+
+If you made changes to a single service and you already have all service running, you only need to build the project and its docker image for a single service by:
+```
+./deploy-local.sh <<service_name>>
+
+for instance:
+./deploy-local.sh service-analytics
+./deploy-local.sh service-auth
+./deploy-local.sh service-election
+or
+./deploy-local.sh config
+etc
+```
+
 
 ### Important Endpoint *
 * [http://localhost:80](http://localhost:80) - Gateway

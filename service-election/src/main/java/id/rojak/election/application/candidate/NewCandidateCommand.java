@@ -36,6 +36,7 @@ public class NewCandidateCommand {
             String mainCandidateId,
             String viceCandidateId,
             String imageUrl,
+            String webUrl,
             String twitterId,
             String facebookUrl,
             String instagramId) {
@@ -46,6 +47,7 @@ public class NewCandidateCommand {
         this.candidateNumber = candidateNumber;
         this.mainCandidateId = mainCandidateId;
         this.viceCandidateId = viceCandidateId;
+        this.webUrl = webUrl;
         this.imageUrl = imageUrl;
         this.twitterId = twitterId;
         this.facebookUrl = facebookUrl;

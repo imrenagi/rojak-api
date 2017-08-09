@@ -46,7 +46,7 @@ public class NewNomineeCommand {
         this.facebookUrl = facebookUrl;
     }
 
-    public NewNomineeCommand(
+    protected NewNomineeCommand(
             String id,
             String firstName,
             String lastName,
