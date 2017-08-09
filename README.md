@@ -263,7 +263,7 @@ docker-compose up -d
 For development mode, all source code will be compiled and packaged as a jar. These jar files will be used later for
 creating the image for every service.
 
-To build all projects, use this command:
+To build all projects, please make sure you already have Maven and MySQL database installed (along with its test db). Then use this command:
 ```
 ./compile.sh all
 ```
