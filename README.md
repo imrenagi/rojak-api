@@ -264,6 +264,13 @@ For development mode, all source code will be compiled and packaged as a jar. Th
 creating the image for every service.
 
 To build all projects, please make sure you already have Maven and MySQL database installed (along with its test db). Then use this command:
+You need to create several test dabase before start compiling the application:
+```
+create database auth_test;
+create database election_test;
+create database analytics_test;
+```
+
 ```
 ./compile.sh all
 ```
