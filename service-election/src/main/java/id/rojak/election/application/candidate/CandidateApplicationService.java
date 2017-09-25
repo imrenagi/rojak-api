@@ -7,6 +7,7 @@ import id.rojak.election.domain.model.election.Election;
 import id.rojak.election.domain.model.election.ElectionId;
 import id.rojak.election.domain.model.election.ElectionRepository;
 import id.rojak.election.resource.ElectionController;
+import id.rojak.election.resource.dto.StatisticDTO;
 import id.rojak.election.resource.dto.StatisticSummaryDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +45,12 @@ public class CandidateApplicationService implements ICandidateApplicationService
                         pageRequest);
 
         return result;
+    }
+
+    public StatisticDTO candidateStatistic(String anElectionId, String candidateId) {
+        return analyticsService.newsStatistic(
+                anElectionId,
+                candidateId);
     }
 
     public StatisticSummaryDTO summaryStatisticOf(String anElectionId, String candidateid) {

@@ -14,6 +14,7 @@ public class CandidateDTO {
     private String electionId;
     private int candidateNumber;
     private String name;
+    private String shortName;
     private NomineeSmallDTO mainCandidate;
     private NomineeSmallDTO viceCandidate;
     private String webUrl;
@@ -21,7 +22,7 @@ public class CandidateDTO {
     private String twitterId;
     private String facebookUrl;
     private String instagramId;
-    private StatisticSummaryDTO statisticSummary;
+    private StatisticDTO statistic;
 
     public CandidateDTO(Candidate candidate) {
         this.id = candidate.candidateId().id();
@@ -29,6 +30,8 @@ public class CandidateDTO {
         this.candidateNumber = candidate.candidateNumber();
         this.name = candidate.mainCandidate().fullName().asFormattedName() + " & " +
                 candidate.viceCandidate().fullName().asFormattedName();
+        this.shortName = candidate.mainCandidate().nickName() + "-" +
+                candidate.viceCandidate().nickName();
         this.mainCandidate = new NomineeSmallDTO(candidate.mainCandidate());
         this.viceCandidate = new NomineeSmallDTO(candidate.viceCandidate());
 
@@ -38,7 +41,7 @@ public class CandidateDTO {
         this.facebookUrl = candidate.socialMediaInformation().facebookUrl();
         this.instagramId = candidate.socialMediaInformation().instagramId();
         //TODO change this
-        this.statisticSummary = new StatisticSummaryDTO();
+        this.statistic = new StatisticDTO();
     }
 
     @JsonProperty("id")
@@ -59,6 +62,11 @@ public class CandidateDTO {
     @JsonProperty("name")
     public String getName() {
         return name;
+    }
+
+    @JsonProperty("short_name")
+    public String getshortName() {
+        return shortName;
     }
 
     @JsonProperty("main_candidate")
@@ -91,9 +99,9 @@ public class CandidateDTO {
         return instagramId;
     }
 
-    @JsonProperty("statistic_summary")
-    public StatisticSummaryDTO getStatisticSummary() {
-        return statisticSummary;
+    @JsonProperty("statistic")
+    public StatisticDTO getStatistic() {
+        return this.statistic;
     }
 
     @JsonProperty("web_url")
@@ -106,7 +114,7 @@ public class CandidateDTO {
         this.webUrl = webUrl;
     }
 
-    public void setStatisticSummary(StatisticSummaryDTO statisticSummary) {
-        this.statisticSummary = statisticSummary;
+    public void setStatistic(StatisticDTO statistic) {
+        this.statistic = statistic;
     }
 }
