@@ -14,6 +14,7 @@ public class CandidateDTO {
     private String electionId;
     private int candidateNumber;
     private String name;
+    private String shortName;
     private NomineeSmallDTO mainCandidate;
     private NomineeSmallDTO viceCandidate;
     private String webUrl;
@@ -29,6 +30,8 @@ public class CandidateDTO {
         this.candidateNumber = candidate.candidateNumber();
         this.name = candidate.mainCandidate().fullName().asFormattedName() + " & " +
                 candidate.viceCandidate().fullName().asFormattedName();
+        this.shortName = candidate.mainCandidate().nickName() + "-" +
+                candidate.viceCandidate().nickName();
         this.mainCandidate = new NomineeSmallDTO(candidate.mainCandidate());
         this.viceCandidate = new NomineeSmallDTO(candidate.viceCandidate());
 
@@ -59,6 +62,11 @@ public class CandidateDTO {
     @JsonProperty("name")
     public String getName() {
         return name;
+    }
+
+    @JsonProperty("short_name")
+    public String getshortName() {
+        return shortName;
     }
 
     @JsonProperty("main_candidate")
