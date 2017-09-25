@@ -1,14 +1,17 @@
 package id.rojak.analytics.application.statistic;
 
+import com.netflix.discovery.converters.Auto;
+import id.rojak.analytics.application.media.MediaApplicationService;
 import id.rojak.analytics.common.date.DateHelper;
 import id.rojak.analytics.domain.model.candidate.CandidateId;
 import id.rojak.analytics.domain.model.election.ElectionId;
 import id.rojak.analytics.domain.model.media.MediaId;
-import id.rojak.analytics.domain.model.media.MediaRepository;
 import id.rojak.analytics.domain.model.news.NewsSentimentRepository;
 import id.rojak.analytics.domain.model.news.NewsSentimentService;
 import id.rojak.analytics.domain.model.news.SentimentType;
-import id.rojak.analytics.domain.model.sentiments.*;
+import id.rojak.analytics.domain.model.sentiments.AggregatedSentiment;
+import id.rojak.analytics.domain.model.sentiments.CandidateNewsCounter;
+import id.rojak.analytics.domain.model.sentiments.MediaNewsCount;
 import id.rojak.analytics.resource.dto.StatisticDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,17 +35,16 @@ public class CandidateStatisticApplicationService extends StatisticApplicationSe
     private final Logger log = LoggerFactory.getLogger(CandidateStatisticApplicationService.class);
 
     @Autowired
-    private NewsSentimentService newsSentimentService;
-
-    @Autowired
     private NewsSentimentRepository newsSentimentRepository;
 
-    @Autowired
-    private MediaRepository mediaRepository;
-
-    @Autowired
-    private SentimentClassifier sentimentClassifier;
-
+    /**
+     * Get statistic (total news, total positive, negative and neutral
+     * sentiments) from a candidate
+     *
+     * @param anElectionId
+     * @param aCandidateId
+     * @return
+     */
     @Transactional
     public StatisticDTO candidateStatistic(String anElectionId, String aCandidateId) {
 
@@ -55,7 +57,7 @@ public class CandidateStatisticApplicationService extends StatisticApplicationSe
             return new StatisticDTO();
         else {
             CandidateNewsCounter counter = newsCounter.get(0);
-            return new StatisticDTO (
+            return new StatisticDTO(
                     counter.totalSentiment(),
                     counter.numOfPositiveSentiment(),
                     counter.numOfNegativeSentiment(),
@@ -63,35 +65,23 @@ public class CandidateStatisticApplicationService extends StatisticApplicationSe
         }
     }
 
+    /**
+     * Get statistic (total news, total positive, negative and neutral
+     * sentiments) for all media which belong to a candidate
+     *
+     * @return
+     */
     @Transactional
-    public MediaSentimentGroup mediaAbout(String anElectionId, String aCandidateId) {
+    public List<CandidateNewsCounter> candidateMediaStatistic(String anElectionId,
+                                                              String aCandidateId) {
 
-        ElectionId electionId = new ElectionId(anElectionId);
-        CandidateId candidateId = new CandidateId(aCandidateId);
+        List<CandidateNewsCounter> newsCounter =
+                this.newsSentimentRepository.getCandidateSentimentsGroupedByMedia(
+                        new ElectionId(anElectionId),
+                        new CandidateId(aCandidateId));
 
-        List<AggregatedSentiment> sentiments = this.newsSentimentRepository
-                .sentimentsGroupedByMediaAndSentiment(
-                        electionId,
-                        candidateId);
-
-        Map<MediaId, MediaNewsCount> mediaMap =
-                this.groupSentimentsByMedia(sentiments);
-
-        MediaSentimentGroup sentimentGroup =
-                new MediaSentimentGroup(candidateId);
-
-        for (MediaNewsCount newsCount : mediaMap.values()) {
-
-            SentimentType mediaSentiment =
-                    this.newsSentimentService
-                            .sentimentTypeOf(newsCount);
-
-            sentimentGroup.insert(mediaSentiment, newsCount);
-        }
-
-        return sentimentGroup;
+        return newsCounter;
     }
-
 
     private Map<MediaId, MediaNewsCount> groupSentimentsByMedia(List<AggregatedSentiment> sentiments) {
 

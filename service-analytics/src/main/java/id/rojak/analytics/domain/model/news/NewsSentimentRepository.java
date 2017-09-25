@@ -75,4 +75,15 @@ public interface NewsSentimentRepository extends JpaRepository<NewsSentiment, Lo
             @Param("electionId") ElectionId electionId,
             @Param("candidateId") CandidateId candidateId);
 
+    @Query("SELECT new id.rojak.analytics.domain.model.sentiments.CandidateNewsCounter(electionId, candidateId, mediaId, " +
+            "sum(case when sentimentType='POSITIVE' then 1 else 0 end)," +
+            "sum(case when sentimentType='NEGATIVE' then 1 else 0 end)," +
+            "sum(case when sentimentType='NEUTRAL' then 1 else 0 end))" +
+            "from NewsSentiment " +
+            "where electionId = :electionId and candidateId = :candidateId " +
+            "group by 1,2, 3 ")
+    List<CandidateNewsCounter> getCandidateSentimentsGroupedByMedia (
+            @Param("electionId") ElectionId electionId,
+            @Param("candidateId") CandidateId candidateId);
+
 }
