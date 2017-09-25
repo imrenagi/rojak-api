@@ -17,7 +17,7 @@ public class MediaDTO {
     private String logoUrl;
 
     private CandidateDTO candidate;
-    private MediaNewsCountDTO totalNews;
+    private StatisticDTO statistic;
 
 
     public MediaDTO(String id,
@@ -34,10 +34,10 @@ public class MediaDTO {
                     String name,
                     String webUrl,
                     String logoUrl,
-                    MediaNewsCountDTO totalNews) {
+                    StatisticDTO statistic) {
         this(id, name, webUrl, logoUrl);
 
-        this.setTotalNews(totalNews);
+        this.statistic = statistic;
     }
 
     public MediaDTO(String id,
@@ -45,7 +45,7 @@ public class MediaDTO {
                     String webUrl,
                     String logoUrl,
                     CandidateDTO candidate) {
-        this(id, name, webUrl, logoUrl);
+
 
         this.setCandidate(candidate);
     }
@@ -90,14 +90,9 @@ public class MediaDTO {
         this.logoUrl = logoUrl;
     }
 
-    @JsonProperty("total_news")
-    public MediaNewsCountDTO getTotalNews() {
-        return totalNews;
-    }
-
-    @JsonProperty("total_news")
-    public void setTotalNews(MediaNewsCountDTO totalNews) {
-        this.totalNews = totalNews;
+    @JsonProperty("statistic")
+    public StatisticDTO getStatistic() {
+        return this.statistic;
     }
 
     @JsonProperty("candidate")

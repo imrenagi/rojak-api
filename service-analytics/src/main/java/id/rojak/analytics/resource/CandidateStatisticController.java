@@ -3,9 +3,12 @@ package id.rojak.analytics.resource;
 import id.rojak.analytics.application.media.MediaApplicationService;
 import id.rojak.analytics.application.statistic.CandidateStatisticApplicationService;
 import id.rojak.analytics.common.date.DateHelper;
+import id.rojak.analytics.common.error.ResourceNotFoundException;
 import id.rojak.analytics.domain.model.media.Media;
 import id.rojak.analytics.domain.model.news.NewsSentimentRepository;
 import id.rojak.analytics.domain.model.news.SentimentType;
+import id.rojak.analytics.domain.model.sentiments.CandidateNewsCount;
+import id.rojak.analytics.domain.model.sentiments.CandidateNewsCounter;
 import id.rojak.analytics.domain.model.sentiments.MediaNewsCount;
 import id.rojak.analytics.domain.model.sentiments.MediaSentimentGroup;
 import id.rojak.analytics.resource.dto.*;
@@ -100,57 +103,51 @@ public class CandidateStatisticController {
             @PathVariable("election_id") String anElectionId,
             @PathVariable("candidate_id") String aCandidateId) {
 
-        MediaSentimentGroup sentimentGroup =
+        List<CandidateNewsCounter> counters =
                 this.candidateStatisticApplicationService
-                        .mediaAbout(anElectionId, aCandidateId);
+                    .candidateMediaStatistic(anElectionId,
+                            aCandidateId);
 
-        List<MediaDTO> positives =
-                this.convertFrom(sentimentGroup.getPositiveMedias());
+        List<MediaDTO> positiveMedia = new ArrayList<>();
+        List<MediaDTO> negativeMedia = new ArrayList<>();
+        List<MediaDTO> neutralMedia = new ArrayList<>();
 
-        List<MediaDTO> negatives =
-                this.convertFrom(sentimentGroup.getNegativeMedias());
+        for (CandidateNewsCounter aCounter : counters) {
 
-        List<MediaDTO> neutrals =
-                this.convertFrom(sentimentGroup.getNeutralMedias());
+            Media media = null;
+            try {
+                media = this.mediaApplicationService
+                        .media(aCounter.mediaId().id());
+            } catch (ResourceNotFoundException e) {
+                continue;
+            }
 
-        CandidateMediaDTO dto =
-                new CandidateMediaDTO(positives, negatives, neutrals);
+            MediaDTO mediaDTO = new MediaDTO(
+                media.mediaId().id(),
+                    media.name(),
+                    media.websiteUrl(),
+                    media.logo(),
+                    new StatisticDTO(
+                            aCounter.totalSentiment(),
+                            aCounter.numOfPositiveSentiment(),
+                            aCounter.numOfNegativeSentiment(),
+                            aCounter.numOfNeutralSentiment()));
+
+            if (aCounter.sentiment().isPositive()) {
+                positiveMedia.add(mediaDTO);
+            } else if (aCounter.sentiment().isNegative()) {
+                negativeMedia.add(mediaDTO);
+            } else {
+                neutralMedia.add(mediaDTO);
+            }
+        }
+
+        CandidateMediaDTO dto = new CandidateMediaDTO(
+                positiveMedia,
+                negativeMedia,
+                neutralMedia);
 
         return new ResponseEntity<>(dto, HttpStatus.OK);
-    }
-
-    private List<MediaDTO> convertFrom(List<MediaNewsCount> mediaNewsCounts) {
-        return mediaNewsCounts.stream()
-                .map(newsCount -> {
-                    Media media =
-                            this.mediaApplicationService
-                                    .media(newsCount.mediaId().id());
-
-                    return new MediaDTO(media.mediaId().id(),
-                            media.name(),
-                            media.websiteUrl(),
-                            media.logo(),
-                            new MediaNewsCountDTO(newsCount.totalPositiveNews(),
-                                    newsCount.totalNegativeNews(),
-                                    newsCount.totalNeutralNews()));
-                }).collect(Collectors.toList());
-    }
-
-    @RequestMapping(path = "/elections/{election_id}/candidates/{candidate_id}/stat_summary",
-            method = RequestMethod.GET)
-    public ResponseEntity<CandidateStatSummaryDTO> numberOfMediaGroupedBySentiments(
-            @PathVariable("election_id") String anElectionId,
-            @PathVariable("candidate_id") String aCandidateId) {
-
-        MediaSentimentGroup sentimentGroup =
-                this.candidateStatisticApplicationService.mediaAbout(anElectionId, aCandidateId);
-
-        CandidateStatSummaryDTO statSummary = new CandidateStatSummaryDTO(
-                sentimentGroup.getPositiveMedias().size(),
-                sentimentGroup.getNegativeMedias().size(),
-                sentimentGroup.getNeutralMedias().size());
-
-        return new ResponseEntity<>(statSummary, HttpStatus.OK);
     }
 
     @RequestMapping(path = "/elections/{election_id}/candidates/{candidate_id}/news_stat",
