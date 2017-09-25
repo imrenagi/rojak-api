@@ -22,7 +22,6 @@ public class CandidateDTO {
     private String facebookUrl;
     private String instagramId;
     private StatisticDTO statistic;
-//    private StatisticSummaryDTO statisticSummary;
 
     public CandidateDTO(Candidate candidate) {
         this.id = candidate.candidateId().id();
@@ -92,7 +91,7 @@ public class CandidateDTO {
         return instagramId;
     }
 
-    @JsonProperty("statistic_summary")
+    @JsonProperty("statistic")
     public StatisticDTO getStatistic() {
         return this.statistic;
     }
