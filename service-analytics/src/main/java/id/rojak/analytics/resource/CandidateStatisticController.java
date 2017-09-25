@@ -146,7 +146,7 @@ public class CandidateStatisticController {
                 positiveMedia,
                 negativeMedia,
                 neutralMedia);
-                
+
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 

@@ -138,11 +138,5 @@ public class MediaStatisticController {
                                 medias.getTotalPages(),
                                 medias.getTotalElements())), HttpStatus.OK);
     }
-
-    @RequestMapping(path = "/elections/{election_id}/medias/{media_id}/candidates", method = RequestMethod.GET)
-    public ResponseEntity<String> candidateSupportedBy(@PathVariable("media_id") String aMediaId,
-                                                       @PathVariable("election_id") String anElectionId) {
-        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
-    }
-
+    
 }

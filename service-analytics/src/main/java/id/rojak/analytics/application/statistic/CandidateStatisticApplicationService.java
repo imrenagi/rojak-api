@@ -83,32 +83,6 @@ public class CandidateStatisticApplicationService extends StatisticApplicationSe
         return newsCounter;
     }
 
-    private Map<MediaId, MediaNewsCount> groupSentimentsByMedia(List<AggregatedSentiment> sentiments) {
-
-        Map<MediaId, MediaNewsCount> mediaMap = new HashMap<>();
-
-        for (AggregatedSentiment sentiment : sentiments) {
-            MediaNewsCount mediaNewsCount;
-
-            if (mediaMap.containsKey(sentiment.getMediaId())) {
-                mediaNewsCount =
-                        mediaMap.get(sentiment.getMediaId());
-
-            } else {
-                mediaNewsCount =
-                        new MediaNewsCount(sentiment.getMediaId());
-
-            }
-
-            mediaNewsCount.insert(sentiment.getSentimentType(),
-                    sentiment.getCount());
-
-            mediaMap.put(mediaNewsCount.mediaId(), mediaNewsCount);
-        }
-
-        return mediaMap;
-    }
-
     public List<Long> sentimentsOverTime(String electionId, String candidateId,
                                          SentimentType sentimentType,
                                          Date startDate,
