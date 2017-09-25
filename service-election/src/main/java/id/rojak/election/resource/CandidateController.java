@@ -44,8 +44,9 @@ public class CandidateController {
         List<CandidateDTO> candidates = candidatesPage
                 .map(candidate -> {
                     CandidateDTO dto = new CandidateDTO(candidate);
-                    dto.setStatisticSummary(
-                            this.candidateApplicationService.summaryStatisticOf(anElectionId,
+                    dto.setStatistic(
+                            this.candidateApplicationService.candidateStatistic(
+                                    anElectionId,
                                     candidate.candidateId().id())
                     );
                     return dto;

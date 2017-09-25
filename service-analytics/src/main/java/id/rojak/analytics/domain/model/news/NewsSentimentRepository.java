@@ -4,6 +4,7 @@ import id.rojak.analytics.domain.model.candidate.CandidateId;
 import id.rojak.analytics.domain.model.election.ElectionId;
 import id.rojak.analytics.domain.model.media.MediaId;
 import id.rojak.analytics.domain.model.sentiments.AggregatedSentiment;
+import id.rojak.analytics.domain.model.sentiments.CandidateNewsCounter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -62,5 +63,16 @@ public interface NewsSentimentRepository extends JpaRepository<NewsSentiment, Lo
     List<AggregatedSentiment> sentimentsGroupByMediaAndCandidateAndType(
             @Param("electionId") ElectionId electionId,
             @Param("mediaId") MediaId mediaId);
+
+    @Query("SELECT new id.rojak.analytics.domain.model.sentiments.CandidateNewsCounter(electionId, candidateId, " +
+                "sum(case when sentimentType='POSITIVE' then 1 else 0 end)," +
+                "sum(case when sentimentType='NEGATIVE' then 1 else 0 end)," +
+                "sum(case when sentimentType='NEUTRAL' then 1 else 0 end))" +
+            "from NewsSentiment " +
+            "where electionId = :electionId and candidateId = :candidateId " +
+            "group by 1,2 ")
+    List<CandidateNewsCounter> getCandidateSentiments (
+            @Param("electionId") ElectionId electionId,
+            @Param("candidateId") CandidateId candidateId);
 
 }

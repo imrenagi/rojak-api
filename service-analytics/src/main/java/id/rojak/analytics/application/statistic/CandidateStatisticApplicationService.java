@@ -8,10 +8,8 @@ import id.rojak.analytics.domain.model.media.MediaRepository;
 import id.rojak.analytics.domain.model.news.NewsSentimentRepository;
 import id.rojak.analytics.domain.model.news.NewsSentimentService;
 import id.rojak.analytics.domain.model.news.SentimentType;
-import id.rojak.analytics.domain.model.sentiments.AggregatedSentiment;
-import id.rojak.analytics.domain.model.sentiments.MediaNewsCount;
-import id.rojak.analytics.domain.model.sentiments.MediaSentimentGroup;
-import id.rojak.analytics.domain.model.sentiments.SentimentClassifier;
+import id.rojak.analytics.domain.model.sentiments.*;
+import id.rojak.analytics.resource.dto.StatisticDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +39,29 @@ public class CandidateStatisticApplicationService extends StatisticApplicationSe
 
     @Autowired
     private MediaRepository mediaRepository;
+
     @Autowired
     private SentimentClassifier sentimentClassifier;
+
+    @Transactional
+    public StatisticDTO candidateStatistic(String anElectionId, String aCandidateId) {
+
+        List<CandidateNewsCounter> newsCounter = this.newsSentimentRepository
+                .getCandidateSentiments(
+                        new ElectionId(anElectionId),
+                        new CandidateId(aCandidateId));
+
+        if (newsCounter.size() == 0)
+            return new StatisticDTO();
+        else {
+            CandidateNewsCounter counter = newsCounter.get(0);
+            return new StatisticDTO (
+                    counter.totalSentiment(),
+                    counter.numOfPositiveSentiment(),
+                    counter.numOfNegativeSentiment(),
+                    counter.numOfNeutralSentiment());
+        }
+    }
 
     @Transactional
     public MediaSentimentGroup mediaAbout(String anElectionId, String aCandidateId) {

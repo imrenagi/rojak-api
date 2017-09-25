@@ -21,7 +21,8 @@ public class CandidateDTO {
     private String twitterId;
     private String facebookUrl;
     private String instagramId;
-    private StatisticSummaryDTO statisticSummary;
+    private StatisticDTO statistic;
+//    private StatisticSummaryDTO statisticSummary;
 
     public CandidateDTO(Candidate candidate) {
         this.id = candidate.candidateId().id();
@@ -38,7 +39,7 @@ public class CandidateDTO {
         this.facebookUrl = candidate.socialMediaInformation().facebookUrl();
         this.instagramId = candidate.socialMediaInformation().instagramId();
         //TODO change this
-        this.statisticSummary = new StatisticSummaryDTO();
+        this.statistic = new StatisticDTO();
     }
 
     @JsonProperty("id")
@@ -92,8 +93,8 @@ public class CandidateDTO {
     }
 
     @JsonProperty("statistic_summary")
-    public StatisticSummaryDTO getStatisticSummary() {
-        return statisticSummary;
+    public StatisticDTO getStatistic() {
+        return this.statistic;
     }
 
     @JsonProperty("web_url")
@@ -106,7 +107,7 @@ public class CandidateDTO {
         this.webUrl = webUrl;
     }
 
-    public void setStatisticSummary(StatisticSummaryDTO statisticSummary) {
-        this.statisticSummary = statisticSummary;
+    public void setStatistic(StatisticDTO statistic) {
+        this.statistic = statistic;
     }
 }

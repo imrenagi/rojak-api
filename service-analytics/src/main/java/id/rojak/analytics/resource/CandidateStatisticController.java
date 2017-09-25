@@ -8,10 +8,7 @@ import id.rojak.analytics.domain.model.news.NewsSentimentRepository;
 import id.rojak.analytics.domain.model.news.SentimentType;
 import id.rojak.analytics.domain.model.sentiments.MediaNewsCount;
 import id.rojak.analytics.domain.model.sentiments.MediaSentimentGroup;
-import id.rojak.analytics.resource.dto.CandidateMediaDTO;
-import id.rojak.analytics.resource.dto.CandidateStatSummaryDTO;
-import id.rojak.analytics.resource.dto.MediaDTO;
-import id.rojak.analytics.resource.dto.MediaNewsCountDTO;
+import id.rojak.analytics.resource.dto.*;
 import id.rojak.analytics.resource.dto.chart.ChartDTO;
 import id.rojak.analytics.resource.dto.chart.Series;
 import id.rojak.analytics.resource.dto.chart.XAxis;
@@ -154,6 +151,18 @@ public class CandidateStatisticController {
                 sentimentGroup.getNeutralMedias().size());
 
         return new ResponseEntity<>(statSummary, HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/elections/{election_id}/candidates/{candidate_id}/news_stat",
+            method = RequestMethod.GET)
+    public ResponseEntity<StatisticDTO> newsStatisticForCandidate(
+            @PathVariable("election_id") String anElectionId,
+            @PathVariable("candidate_id") String aCandidateId) {
+
+        StatisticDTO dto = this.candidateStatisticApplicationService
+                .candidateStatistic(anElectionId, aCandidateId);
+
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
 }
