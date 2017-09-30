@@ -96,47 +96,14 @@ public class MediaStatisticController {
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "limit", defaultValue = "10") Integer size) {
 
-        Page<Media> medias = this.mediaApplicationService
-                .allMedias(new PageRequest(page, size));
-
-        List<MediaDTO> mediaDTOs = medias.getContent().stream()
-                .map(media -> {
-                            CandidateId candidateId =
-                                    this.mediaStatisticApplicationService
-                                            .topCandidateFor(anElectionId, media.mediaId().id());
-
-                            Candidate candidate =
-                                    this.mediaStatisticApplicationService
-                                            .candidate(anElectionId, candidateId.id());
-
-                            //TODO refactor this
-                            if (candidate != null) {
-                                return new MediaDTO(
-                                        media.mediaId().id(),
-                                        media.name(),
-                                        media.websiteUrl(),
-                                        media.logo(),
-                                        new CandidateDTO(
-                                                candidate.getCandidateNumber(),
-                                                candidate.getName(),
-                                                candidate.getImageUrl()
-                                        ));
-                            } else {
-                                return new MediaDTO(
-                                        media.mediaId().id(),
-                                        media.name(),
-                                        media.websiteUrl(),
-                                        media.logo());
-                            }
-                        }
-                )
-                .collect(Collectors.toList());
+        List<MediaDTO> mediaDTOs = this.mediaStatisticApplicationService
+                .groupedCandidateSentiments(anElectionId);
 
         return new ResponseEntity<>(
                 new MediaCollectionDTO(mediaDTOs,
                         new MetaDTO(page,
-                                medias.getTotalPages(),
-                                medias.getTotalElements())), HttpStatus.OK);
+                                0,
+                                0)), HttpStatus.OK);
     }
     
 }

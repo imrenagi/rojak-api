@@ -79,6 +79,10 @@ public class MediaApplicationService {
         return this.mediaRepository.save(newMedia);
     }
 
+    public Long numberOfArticles(String electionId, String mediaId) {
+        return 100L;
+    }
+
 
 }
 

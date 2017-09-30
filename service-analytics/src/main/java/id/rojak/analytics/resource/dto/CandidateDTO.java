@@ -15,30 +15,18 @@ public class CandidateDTO {
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("image_url")
-    private String imageUrl;
+    @JsonProperty("short_name")
+    private String shortName;
 
-    public CandidateDTO() {}
+    protected CandidateDTO() {}
 
     public CandidateDTO(int number,
                         String name,
-                        String imageUrl) {
+                        String shortName) {
         this();
 
         this.number = number;
         this.name = name;
-        this.imageUrl = imageUrl;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
+        this.shortName = shortName;
     }
 }

@@ -1,17 +1,12 @@
 package id.rojak.analytics.application.statistic;
 
-import com.netflix.discovery.converters.Auto;
-import id.rojak.analytics.application.media.MediaApplicationService;
 import id.rojak.analytics.common.date.DateHelper;
 import id.rojak.analytics.domain.model.candidate.CandidateId;
 import id.rojak.analytics.domain.model.election.ElectionId;
-import id.rojak.analytics.domain.model.media.MediaId;
 import id.rojak.analytics.domain.model.news.NewsSentimentRepository;
-import id.rojak.analytics.domain.model.news.NewsSentimentService;
 import id.rojak.analytics.domain.model.news.SentimentType;
 import id.rojak.analytics.domain.model.sentiments.AggregatedSentiment;
 import id.rojak.analytics.domain.model.sentiments.CandidateNewsCounter;
-import id.rojak.analytics.domain.model.sentiments.MediaNewsCount;
 import id.rojak.analytics.resource.dto.StatisticDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by inagi on 7/20/17.

@@ -17,6 +17,9 @@ public class Candidate extends ValueObject {
     @JsonProperty("name")
     private String name;
 
+    @JsonProperty("short_name")
+    private String shortName;
+
     @JsonProperty("image_url")
     private String imageUrl;
 
@@ -46,6 +49,7 @@ public class Candidate extends ValueObject {
                      String instagramId,
                      int candidateNumber,
                      String name,
+                     String shortName,
                      String imageUrl) {
         this.id = id;
         this.electionId = electionId;

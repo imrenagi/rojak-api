@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by imrenagi on 7/18/17.
  */
@@ -16,9 +19,14 @@ public class MediaDTO {
     private String webUrl;
     private String logoUrl;
 
-    private CandidateDTO candidate;
+    @JsonProperty("statistic")
     private StatisticDTO statistic;
 
+    @JsonProperty("candidates")
+    private List<CandidateStatisticDTO> candidateStatistics;
+
+    @JsonProperty("related_tags")
+    private List<String> relatedTags;
 
     public MediaDTO(String id,
                     String name,
@@ -28,6 +36,7 @@ public class MediaDTO {
         this.name = name;
         this.webUrl = webUrl;
         this.logoUrl = logoUrl;
+        this.relatedTags = new ArrayList<>();
     }
 
     public MediaDTO(String id,
@@ -44,10 +53,10 @@ public class MediaDTO {
                     String name,
                     String webUrl,
                     String logoUrl,
-                    CandidateDTO candidate) {
+                    List<CandidateStatisticDTO> candidatesStatistic) {
+        this(id, name, webUrl, logoUrl);
 
-
-        this.setCandidate(candidate);
+        this.candidateStatistics = candidatesStatistic;
     }
 
     @JsonProperty("id")
@@ -90,18 +99,7 @@ public class MediaDTO {
         this.logoUrl = logoUrl;
     }
 
-    @JsonProperty("statistic")
-    public StatisticDTO getStatistic() {
-        return this.statistic;
-    }
 
-    @JsonProperty("candidate")
-    public CandidateDTO getCandidate() {
-        return this.candidate;
-    }
 
-    @JsonProperty("candidate")
-    public void setCandidate(CandidateDTO candidate) {
-        this.candidate = candidate;
-    }
+
 }

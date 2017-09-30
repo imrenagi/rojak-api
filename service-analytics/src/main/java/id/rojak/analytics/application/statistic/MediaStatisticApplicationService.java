@@ -1,15 +1,23 @@
 package id.rojak.analytics.application.statistic;
 
+import id.rojak.analytics.application.election.ElectionApplicationService;
+import id.rojak.analytics.application.media.MediaApplicationService;
 import id.rojak.analytics.clients.ElectionServiceClient;
 import id.rojak.analytics.common.date.DateHelper;
-import id.rojak.analytics.domain.model.candidate.Candidate;
+import id.rojak.analytics.common.error.ResourceNotFoundException;
 import id.rojak.analytics.domain.model.candidate.CandidateId;
 import id.rojak.analytics.domain.model.election.ElectionId;
+import id.rojak.analytics.domain.model.media.Media;
 import id.rojak.analytics.domain.model.media.MediaId;
 import id.rojak.analytics.domain.model.media.MediaRepository;
-import id.rojak.analytics.domain.model.sentiments.*;
 import id.rojak.analytics.domain.model.news.NewsSentimentRepository;
 import id.rojak.analytics.domain.model.news.SentimentType;
+import id.rojak.analytics.domain.model.sentiments.AggregatedSentiment;
+import id.rojak.analytics.domain.model.sentiments.CandidateNewsCounter;
+import id.rojak.analytics.resource.dto.CandidateDTO;
+import id.rojak.analytics.resource.dto.CandidateStatisticDTO;
+import id.rojak.analytics.resource.dto.MediaDTO;
+import id.rojak.analytics.resource.dto.StatisticDTO;
 import id.rojak.analytics.resource.dto.chart.Series;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by inagi on 7/26/17.
@@ -27,14 +36,14 @@ public class MediaStatisticApplicationService extends StatisticApplicationServic
 
     private final Logger log = LoggerFactory.getLogger(MediaStatisticApplicationService.class);
 
-//    @Autowired
-//    private NewsSentimentService newsSentimentService;
+    @Autowired
+    private MediaApplicationService mediaApplicationService;
 
     @Autowired
     private NewsSentimentRepository newsSentimentRepository;
 
     @Autowired
-    private ElectionServiceClient electionServiceClient;
+    private ElectionApplicationService electionApplicationService;
 
     @Autowired
     private MediaRepository mediaRepository;
@@ -144,45 +153,13 @@ public class MediaStatisticApplicationService extends StatisticApplicationServic
         return candidateCounts;
     }
 
-    public CandidateId topCandidateFor(String electionId, String aMediaId) {
 
-        List<AggregatedSentiment> sentiments =
-                this.newsSentimentRepository
-                        .sentimentsGroupByMediaAndCandidateAndType(
-                                new ElectionId(electionId),
-                                new MediaId(aMediaId));
-
-        Map<CandidateId, CandidateNewsCount> candidateMap =
-                new HashMap<>();
-
-        for (AggregatedSentiment sentiment : sentiments) {
-            CandidateId candidateId = sentiment.getCandidateId();
-
-            CandidateNewsCount newsCount = null;
-            if (candidateMap.containsKey(candidateId)) {
-                newsCount = candidateMap.get(candidateId);
-            } else {
-                newsCount = new CandidateNewsCount(candidateId);
-            }
-
-            newsCount.insert(sentiment.getSentimentType(), sentiment.getCount());
-
-            candidateMap.put(candidateId, newsCount);
-        }
-
-        TopCandidateCalculator calculator = new BasicTopCandidateCalculator();
-
-        return calculator.topCandidateFrom(candidateMap.values());
-    }
-
-    public Candidate candidate(String electionId, String candidateId) {
-
-        //TODO add cache checking later
-        return this.electionServiceClient
-                .candidate(electionId, candidateId);
-    }
-
-
+//    public Candidate candidate(String electionId, String candidateId) {
+//
+//        //TODO add cache checking later
+//        return this.electionServiceClient
+//                .candidate(electionId, candidateId);
+//    }
 
     public Map<CandidateId, List<AggregatedSentiment>> groupSentimentsByCandidateId(List<AggregatedSentiment> sentiments) {
 
@@ -207,7 +184,67 @@ public class MediaStatisticApplicationService extends StatisticApplicationServic
         return candidateMap;
     }
 
+    public List<MediaDTO> groupedCandidateSentiments(String electionId) {
 
+        List<MediaDTO> result = new ArrayList<>();
+
+        Map<MediaId, List<CandidateNewsCounter>> mediaMap = new HashMap<>();
+
+        List<CandidateNewsCounter> counters =
+                this.newsSentimentRepository
+                        .getCandidateSentiments(new ElectionId(electionId));
+
+        for (CandidateNewsCounter aCounter : counters) {
+            List<CandidateNewsCounter> candidates;
+            if (mediaMap.containsKey(aCounter.mediaId())) {
+                candidates = mediaMap.get(aCounter.mediaId());
+            } else {
+                candidates = new ArrayList<>();
+            }
+            candidates.add(aCounter);
+            mediaMap.put(aCounter.mediaId(), candidates);
+        }
+
+        for (Map.Entry<MediaId, List<CandidateNewsCounter>> entry : mediaMap.entrySet()) {
+
+            Media media = null;
+            try {
+                media = this.mediaApplicationService.media(entry.getKey().id());
+            } catch (ResourceNotFoundException e) {
+                continue;
+            }
+
+            List<CandidateStatisticDTO> candidateStatisticDTO =
+                    entry.getValue()
+                            .stream()
+                            .map(counter -> {
+                                CandidateDTO candidateDTO =
+                                        this.electionApplicationService
+                                                .candidate(electionId,
+                                                        counter.candidateId().id());
+
+                                return new CandidateStatisticDTO(
+                                        candidateDTO,
+                                        new StatisticDTO(
+                                                counter.totalSentiment(),
+                                                counter.numOfPositiveSentiment(),
+                                                counter.numOfNegativeSentiment(),
+                                                counter.numOfNeutralSentiment()));
+                            })
+                            .collect(Collectors.toList());
+
+            MediaDTO dto = new MediaDTO(
+                    media.mediaId().id(),
+                    media.name(),
+                    media.websiteUrl(),
+                    media.logo(),
+                    candidateStatisticDTO);
+
+            result.add(dto);
+
+        }
+        return result;
+    }
 
 
 }
