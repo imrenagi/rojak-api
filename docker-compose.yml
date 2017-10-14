@@ -22,6 +22,7 @@ services:
 
   registry:
     environment:
+      APP_ENV: $APP_ENV
       CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
     image: imrenagi/rojak-registry:0.1.0
     restart: always
@@ -34,6 +35,7 @@ services:
 
   gateway:
     environment:
+      APP_ENV: $APP_ENV
       CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
     image: imrenagi/rojak-gateway:0.1.0
     restart: always
@@ -43,9 +45,10 @@ services:
       options:
         max-size: "10M"
         max-file: "10"
-#
+
   monitoring:
     environment:
+      APP_ENV: $APP_ENV
       CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
     image: imrenagi/rojak-monitoring:0.1.0
     restart: always
@@ -56,9 +59,10 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-#
+
   service-auth:
     environment:
+      APP_ENV: $APP_ENV
       CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
       SERVICE_ANALYTICS_PASSWORD: $MSW_SERVICE_ANALYTICS_PASSWORD
       SERVICE_ELECTION_PASSWORD: $MSW_SERVICE_ELECTION_PASSWORD
@@ -89,6 +93,7 @@ services:
 
   service-election:
     environment:
+      APP_ENV: $APP_ENV
       CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
       SERVICE_ELECTION_PASSWORD: $MSW_SERVICE_ELECTION_PASSWORD
       SERVICE_ELECTION_DB_USER: $MSW_DB_USER
@@ -117,6 +122,7 @@ services:
 
   service-analytics:
     environment:
+      APP_ENV: $APP_ENV
       CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
       SERVICE_ANALYTICS_PASSWORD: $MSW_SERVICE_ANALYTICS_PASSWORD
       SERVICE_ANALYTICS_DB_USER: $MSW_DB_USER
