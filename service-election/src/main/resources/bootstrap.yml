@@ -7,5 +7,7 @@ spring:
       uri: http://config:8888
       fail-fast: true
       password: ${CONFIG_SERVICE_PASSWORD}
-      username: user
+      username: ${CONFIG_SERVICE_USER}
+  profiles:
+    active: ${APP_ENV}
 
