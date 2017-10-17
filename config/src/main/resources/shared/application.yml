@@ -12,6 +12,7 @@ hystrix:
             timeoutInMilliseconds: 10000
 
 eureka:
+  environment: prod
   instance:
     prefer-ip-address: true
   client:
