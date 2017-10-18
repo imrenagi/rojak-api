@@ -13,30 +13,25 @@ import org.springframework.data.redis.core.RedisTemplate;
  */
 @Configuration
 @PropertySources({
-        @PropertySource(ignoreResourceNotFound = true, value="classpath:redis.properties")
+        @PropertySource(ignoreResourceNotFound = true, value="classpath:/shared/service-analytics.properties")
 })
 public class RedisConfig {
 
     @Value("${redis.hostname}")
     private String hostName;
 
-//    @Value("${redis.port}")
-//    private int port;
-//
-//    @Value("${redis.password}")
-//    private String password;
+    @Value("${redis.port}")
+    private int port;
 
-    @Value("${spring.datasource.url}")
-    private String test;
+    @Value("${redis.password}")
+    private String password;
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         JedisConnectionFactory factory = new JedisConnectionFactory();
-        System.out.println("------------- " + hostName);
         factory.setHostName(this.hostName);
-//        factory.setPort(this.port);
+        factory.setPort(this.port);
         factory.setUsePool(true);
-        System.out.println("REDIS CONFIG IS CALLED!!!!! ");
         return factory;
     }
 
