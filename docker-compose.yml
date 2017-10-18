@@ -155,3 +155,13 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
+
+  redis:
+    image: redis:3.2.10
+    container_name: redis
+    ports:
+        - "6379:6379"
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
