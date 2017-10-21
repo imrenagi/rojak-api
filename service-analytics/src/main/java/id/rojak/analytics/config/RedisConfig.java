@@ -20,8 +20,8 @@ public class RedisConfig {
     @Value("${redis.hostname}")
     private String hostName;
 
-    @Value("${redis.port}")
-    private int port;
+//    @Value("${redis.port}")
+//    private int port;
 
     @Value("${redis.password}")
     private String password;
@@ -30,7 +30,7 @@ public class RedisConfig {
     JedisConnectionFactory jedisConnectionFactory() {
         JedisConnectionFactory factory = new JedisConnectionFactory();
         factory.setHostName(this.hostName);
-        factory.setPort(this.port);
+//        factory.setPort(this.port);
         factory.setUsePool(true);
         return factory;
     }

@@ -47,7 +47,10 @@ public class MediaApplicationService {
         if (media == null) {
             log.info("Media doesn't exists in cache. Retrieve it from db!");
             media = this.mediaRepository.findByMediaId(new MediaId(mediaId));
-            this.mediaCacheRepository.saveMedia(media);
+
+            if (media != null)
+                this.mediaCacheRepository.saveMedia(media);
+            
         } else {
             log.info("Media does exists in cache. Don't retrieved it from db!");
         }

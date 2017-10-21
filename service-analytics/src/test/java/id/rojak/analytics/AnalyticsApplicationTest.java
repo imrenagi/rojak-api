@@ -1,8 +1,12 @@
 package id.rojak.analytics;
 
+import id.rojak.analytics.config.RedisConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -15,7 +19,8 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AnalyticsApplicationTest.class)
 @WebAppConfiguration
-@TestPropertySource("classpath:application.properties")
+@TestPropertySource(locations="classpath:application.properties")
+@Import(RedisConfig.class)
 public class AnalyticsApplicationTest {
 
     @Test
