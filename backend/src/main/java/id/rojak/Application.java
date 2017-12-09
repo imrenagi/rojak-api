@@ -1,4 +1,4 @@
-package id.rojak.auth;
+package id.rojak;
 
 import id.rojak.auth.application.command.*;
 import id.rojak.auth.application.representation.AccessApplicationService;
@@ -30,6 +30,7 @@ import java.util.List;
 @EnableDiscoveryClient
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Import({AppConfig.class})
+@ComponentScan({"id.rojak.auth"})
 public class Application {
 
     private final static Logger log = LoggerFactory.getLogger(Application.class);
