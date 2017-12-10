@@ -7,10 +7,12 @@ import id.rojak.auth.config.AppConfig;
 import id.rojak.auth.domain.model.DomainRegistry;
 import id.rojak.auth.domain.model.identity.Group;
 import id.rojak.auth.domain.model.identity.User;
+import id.rojak.election.ContextConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -30,8 +32,9 @@ import java.util.List;
 @EnableDiscoveryClient
 @EnableOAuth2Client
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@Import({AppConfig.class})
-@EnableConfigurationProperties
+@Import({AppConfig.class, ContextConfig.class})
+//@EnableConfigurationProperties
+@EnableAutoConfiguration
 @ComponentScan({"id.rojak.auth", "id.rojak.election"})
 public class Application {
 

@@ -2,11 +2,9 @@ package id.rojak.auth.domain.model;
 
 import id.rojak.auth.application.representation.AccessApplicationService;
 import id.rojak.auth.application.representation.IdentityApplicationService;
-import id.rojak.auth.common.domain.model.Identity;
 import id.rojak.auth.domain.model.identity.GroupMemberService;
 import id.rojak.auth.domain.model.identity.PasswordService;
 import id.rojak.auth.infrastructure.service.EncryptionService;
-import id.rojak.auth.domain.model.identity.BasicPasswordService;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

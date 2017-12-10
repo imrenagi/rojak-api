@@ -1,9 +1,6 @@
 package id.rojak.auth.infrastructure.service;
 
-import id.rojak.auth.common.AssertionConcern;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import id.rojak.common.AssertionConcern;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;

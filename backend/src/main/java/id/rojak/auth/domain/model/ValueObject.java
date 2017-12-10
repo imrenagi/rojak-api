@@ -1,6 +1,6 @@
 package id.rojak.auth.domain.model;
 
-import id.rojak.auth.common.AssertionConcern;
+import id.rojak.common.AssertionConcern;
 
 /**
  * Created by inagi on 8/6/17.

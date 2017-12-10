@@ -1,22 +1,13 @@
 package id.rojak.auth.service.security;
 
-import id.rojak.auth.common.error.ResourceNotFoundException;
-import id.rojak.auth.domain.model.access.Permission;
-import id.rojak.auth.domain.model.access.Role;
 import id.rojak.auth.domain.model.identity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by imrenagi on 5/8/17.

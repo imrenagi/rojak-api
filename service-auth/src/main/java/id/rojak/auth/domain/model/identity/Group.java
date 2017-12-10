@@ -1,6 +1,6 @@
 package id.rojak.auth.domain.model.identity;
 
-import id.rojak.auth.common.domain.model.IdentifiedDomainObject;
+import id.rojak.common.domain.model.IdentifiedDomainObject;
 import id.rojak.auth.domain.model.access.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Created by inagi on 8/1/17.

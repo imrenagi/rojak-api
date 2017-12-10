@@ -1,7 +1,7 @@
 package id.rojak.auth.domain.model.identity;
 
 
-import id.rojak.auth.common.AssertionConcern;
+import id.rojak.common.AssertionConcern;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

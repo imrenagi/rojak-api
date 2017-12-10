@@ -1,6 +1,6 @@
 package id.rojak.auth.domain.model.access;
 
-import id.rojak.auth.common.domain.model.IdentifiedDomainObject;
+import id.rojak.common.domain.model.IdentifiedDomainObject;
 import id.rojak.auth.domain.model.identity.Group;
 import id.rojak.auth.domain.model.identity.User;
 

@@ -6,6 +6,7 @@ import id.rojak.Application;
 import id.rojak.auth.application.command.RegisterUserCommand;
 import id.rojak.auth.application.representation.IdentityApplicationService;
 import id.rojak.auth.domain.model.identity.*;
+import id.rojak.common.resources.ErrorHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

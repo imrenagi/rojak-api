@@ -1,6 +1,6 @@
 package id.rojak.auth.domain.model.identity;
 
-import id.rojak.auth.common.domain.model.IdentifiedDomainObject;
+import id.rojak.common.domain.model.IdentifiedDomainObject;
 import id.rojak.auth.domain.model.access.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

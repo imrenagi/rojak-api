@@ -1,6 +1,6 @@
 package id.rojak.auth.controllers;
 
-import id.rojak.auth.common.error.ResourceNotFoundException;
+import id.rojak.common.error.ResourceNotFoundException;
 import id.rojak.auth.controllers.dto.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

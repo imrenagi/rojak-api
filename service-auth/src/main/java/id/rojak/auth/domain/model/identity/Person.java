@@ -1,6 +1,6 @@
 package id.rojak.auth.domain.model.identity;
 
-import id.rojak.auth.common.domain.model.IdentifiedValueObject;
+import id.rojak.common.domain.model.IdentifiedValueObject;
 
 import javax.persistence.*;
 
