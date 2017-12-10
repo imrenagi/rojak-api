@@ -47,9 +47,6 @@ public class JdbcServerSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-
-//                .antMatchers("/admin/**").hasAnyRole("ADMIN")
-//                .antMatchers("/permissions**").hasAuthority("BASIC_WRITE")
                 .anyRequest().authenticated()
                 .antMatchers("/users**").permitAll();
 

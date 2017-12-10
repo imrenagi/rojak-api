@@ -12,11 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,11 +27,12 @@ import java.util.List;
  * Created by imrenagi on 12/7/17.
  */
 @SpringBootApplication
-@EnableResourceServer
 @EnableDiscoveryClient
+@EnableOAuth2Client
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Import({AppConfig.class})
-@ComponentScan({"id.rojak.auth"})
+@EnableConfigurationProperties
+@ComponentScan({"id.rojak.auth", "id.rojak.election"})
 public class Application {
 
     private final static Logger log = LoggerFactory.getLogger(Application.class);
@@ -40,6 +42,7 @@ public class Application {
 
     @Autowired
     private AccessApplicationService accessApplicationService;
+
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
