@@ -29,6 +29,6 @@ after_success:
 
   # BACKEND
   - export BACKEND=imrenagi/rojak-backend
-  - docker build -t $BACKEND:$BACKEND_VER ./config
+  - docker build -t $BACKEND:$BACKEND_VER .
   - docker tag $BACKEND:$BACKEND_VER $BACKEND:$BACKEND_VER
   - docker push $BACKEND
