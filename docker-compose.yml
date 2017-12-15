@@ -1,94 +1,27 @@
 version: '2'
 services:
-  rabbitmq:
-    image: rabbitmq:3-management
-    restart: always
-    ports:
-      - 15672:15672
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "10"
-
-  config:
-    environment:
-      CONFIG_SERVICE_USER: $MSW_CONFIG_SERVICE_USER
-      CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
-    image: imrenagi/rojak-config:0.1.0
-    restart: always
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "10"
-
-  registry:
+  backend:
     environment:
       APP_ENV: $APP_ENV
-      CONFIG_SERVICE_USER: $MSW_CONFIG_SERVICE_USER
-      CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
-    image: imrenagi/rojak-registry:0.1.0
-    restart: always
-    ports:
-      - 8761:8761
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "10"
-
-  gateway:
-    environment:
-      APP_ENV: $APP_ENV
-      CONFIG_SERVICE_USER: $MSW_CONFIG_SERVICE_USER
-      CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
-    image: imrenagi/rojak-gateway:0.1.0
-    restart: always
-    ports:
-      - 80:4000
-    logging:
-      options:
-        max-size: "10M"
-        max-file: "10"
-
-  monitoring:
-    environment:
-      APP_ENV: $APP_ENV
-      CONFIG_SERVICE_USER: $MSW_CONFIG_SERVICE_USER
-      CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
-    image: imrenagi/rojak-monitoring:0.1.0
-    restart: always
-    ports:
-      - 9000:8080
-      - 8989:8989
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "10"
-
-  service-auth:
-    environment:
-      APP_ENV: $APP_ENV
-      CONFIG_SERVICE_USER: $MSW_CONFIG_SERVICE_USER
-      CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
-      SERVICE_ANALYTICS_PASSWORD: $MSW_SERVICE_ANALYTICS_PASSWORD
-      SERVICE_ELECTION_PASSWORD: $MSW_SERVICE_ELECTION_PASSWORD
-      SERVICE_ACCOUNT_PASSWORD: $MSW_SERVICE_ACCOUNT_PASSWORD
-      SERVICE_AUTH_DB_USER: $MSW_DB_USER
-      SERVICE_AUTH_DB_PASSWORD: $MSW_DB_PASSWORD
-    image: imrenagi/rojak-service-auth:0.1.0
+      BACKEND_DB_USER: $BACKEND_DB_USER
+      BACKEND_DB_PASSWORD: $BACKEND_DB_PASSWORD
+      CLIENT_NAME: $CLIENT_NAME
+      CLIENT_PASSWORD: $CLIENT_PASSWORD
+    image: imrenagi/rojak-backend:0.1.0
     restart: always
     logging:
       options:
         max-size: "10m"
         max-file: "10"
 
-  service-auth-db:
+  mysql:
     image: mysql
-    container_name: rojak-auth-db
+    container_name: mysql
     environment:
-      - MYSQL_DATABASE=auth
-      - MYSQL_ROOT_PASSWORD=$MSW_ROOT_PASSWORD
-      - MYSQL_USER=$MSW_DB_USER
-      - MYSQL_PASSWORD=$MSW_DB_PASSWORD
+      - MYSQL_DATABASE=mediayanglebihbaik
+      - MYSQL_ROOT_PASSWORD=$BACKEND_DB_PASSWORD
+      - MYSQL_USER=$BACKEND_DB_USER
+      - MYSQL_PASSWORD=$BACKEND_DB_PASSWORD
     ports:
       - "3307:3306"
     logging:
@@ -96,74 +29,3 @@ services:
         max-size: "10m"
         max-file: "10"
 
-  service-election:
-    environment:
-      APP_ENV: $APP_ENV
-      CONFIG_SERVICE_USER: $MSW_CONFIG_SERVICE_USER
-      CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
-      SERVICE_ELECTION_PASSWORD: $MSW_SERVICE_ELECTION_PASSWORD
-      SERVICE_ELECTION_DB_USER: $MSW_DB_USER
-      SERVICE_ELECTION_DB_PASSWORD: $MSW_DB_PASSWORD
-    image: imrenagi/rojak-service-election:0.1.0
-    restart: always
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "10"
-
-  service-election-db:
-    image: mysql
-    container_name: rojak-election-db
-    environment:
-      - MYSQL_DATABASE=election
-      - MYSQL_ROOT_PASSWORD=$MSW_ROOT_PASSWORD
-      - MYSQL_USER=$MSW_DB_USER
-      - MYSQL_PASSWORD=$MSW_DB_PASSWORD
-    ports:
-      - "3309:3306"
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "10"
-
-  service-analytics:
-    environment:
-      APP_ENV: $APP_ENV
-      CONFIG_SERVICE_USER: $MSW_CONFIG_SERVICE_USER
-      CONFIG_SERVICE_PASSWORD: $MSW_CONFIG_SERVICE_PASSWORD
-      SERVICE_ANALYTICS_PASSWORD: $MSW_SERVICE_ANALYTICS_PASSWORD
-      SERVICE_ANALYTICS_DB_USER: $MSW_DB_USER
-      SERVICE_ANALYTICS_DB_PASSWORD: $MSW_DB_PASSWORD
-      REDIS_HOSTNAME: ${MSW_REDIS_HOSTNAME}
-      REDIS_PASSWORD: ${MSW_REDIS_PASSWORD}
-    image: imrenagi/rojak-service-analytics:0.1.0
-    restart: always
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "10"
-
-  service-analytics-db:
-    image: mysql
-    container_name: rojak-analytics-db
-    environment:
-      - MYSQL_DATABASE=analytics
-      - MYSQL_ROOT_PASSWORD=$MSW_ROOT_PASSWORD
-      - MYSQL_USER=$MSW_DB_USER
-      - MYSQL_PASSWORD=$MSW_DB_PASSWORD
-    ports:
-      - "3310:3306"
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "10"
-
-  redis:
-    image: redis:3.2.10
-    container_name: redis
-    ports:
-        - "6379:6379"
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "10"

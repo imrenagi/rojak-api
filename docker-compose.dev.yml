@@ -1,34 +1,6 @@
 version: '2'
 services:
-  rabbitmq:
+  backend:
+    build: backend
     ports:
-      - 5672:5672
-
-  config:
-    build: config
-    ports:
-      - 8888:8888
-
-  registry:
-    build: registry
-
-  gateway:
-    build: gateway
-
-  service-auth:
-    build: service-auth
-    ports:
-      - 5000:5000
-
-  service-election:
-    build: service-election
-    ports:
-      - 7000:7000
-
-  service-analytics:
-    build: service-analytics
-    ports:
-      - 8000:8000
-
-  monitoring:
-    build: monitoring
+      - 8080:8080

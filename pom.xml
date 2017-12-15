@@ -9,13 +9,7 @@
     <packaging>pom</packaging>
     <version>0.1.0</version>
     <modules>
-        <module>config</module>
-        <module>registry</module>
-        <module>gateway</module>
-        <module>monitoring</module>
-        <module>service-auth</module>
-        <module>service-election</module>
-        <module>service-analytics</module>
+        <module>backend</module>
     </modules>
 
 
