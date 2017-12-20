@@ -32,6 +32,10 @@ public class Election extends IdentifiedDomainObject {
     @JoinColumn(name = "city_id", referencedColumnName = "id")
     private City city;
 
+    @ManyToOne
+    @JoinColumn(name = "province_id", referencedColumnName = "id")
+    private Province province;
+
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "election", orphanRemoval = true)
     private List<Candidate> candidates;
 
@@ -66,6 +70,20 @@ public class Election extends IdentifiedDomainObject {
         //TODO publish event about new electio n creation
         DomainEventPublisher.instance()
                 .publish(new ElectionCreated());
+    }
+
+    public Election(
+            ElectionId electionId,
+            String name,
+            Date electionDate,
+            Date electionCampaignStart,
+            Date electionCampaignEnd,
+            Province province,
+            City city,
+            ElectionType type) {
+
+        this(electionId, name, electionDate, electionCampaignStart, electionCampaignEnd, city, type);
+        this.setProvince(province);
     }
 
     public void addCandidate(Candidate candidate) {
@@ -156,5 +174,15 @@ public class Election extends IdentifiedDomainObject {
         this.assertArgumentNotNull(city, "City is required");
 
         this.city = city;
+    }
+
+    public Province province() {
+        return this.province;
+    }
+
+    public void setProvince(Province province) {
+        this.assertArgumentNotNull(province, "Province is required");
+
+        this.province = province;
     }
 }

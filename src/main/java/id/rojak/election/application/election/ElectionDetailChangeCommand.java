@@ -7,32 +7,20 @@ import javax.validation.constraints.NotNull;
 /**
  * Created by imrenagi on 7/10/17.
  */
-public class ElectionDetailChangeCommand extends NewElectionCommand {
-
-    @NotNull
-    private String electionId;
+public class ElectionDetailChangeCommand extends ElectionCommand {
 
     protected ElectionDetailChangeCommand() {
         super();
     }
 
     public ElectionDetailChangeCommand(
-            String electionId,
             String name,
             Long electionDate,
             Long campaignStartDate,
             Long campaignEndDate,
+            Long provinceId,
             Long cityId,
             String electionType) {
-        super(name, electionDate, campaignStartDate, campaignEndDate, cityId, electionType);
-    }
-
-    public String getElectionId() {
-        return electionId;
-    }
-
-    @JsonProperty("election_id")
-    public void setElectionId(String electionId) {
-        this.electionId = electionId;
+        super(name, electionDate, campaignStartDate, campaignEndDate, provinceId, cityId, electionType);
     }
 }

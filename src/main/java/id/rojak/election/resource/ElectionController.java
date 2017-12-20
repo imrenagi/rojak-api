@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -35,7 +36,7 @@ public class ElectionController {
 
     @Autowired
     private ElectionApplicationService electionApplicationService;
-
+    
     @RequestMapping(path = "/", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ElectionCollectionDTO> getAllElection(
@@ -89,18 +90,19 @@ public class ElectionController {
     public ResponseEntity<String> updateElection(@PathVariable("election_id") String anElectionId,
                                                  @Valid @RequestBody ElectionDetailChangeCommand aCommand) {
 
-        aCommand.setElectionId(anElectionId);
-
-        this.electionApplicationService.changeElectionDetail(aCommand);
+        this.electionApplicationService.changeElectionDetail(anElectionId, aCommand);
 
         return new ResponseEntity<String>("", HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/{election_id}/date", method = RequestMethod.PUT)
-    public ResponseEntity<String> updateElectionDate(@PathVariable("election_id") String anElectionId,
-                                                     @Valid @RequestBody ElectionDateUpdateCommand aCommand) {
-        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+    @RequestMapping(path = "/{election_id}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> removeElection(@PathVariable("election_id") String anElectionId) {
+
+        this.electionApplicationService.removeElection(anElectionId);
+
+        return new ResponseEntity<String>("", HttpStatus.OK);
     }
+
 
 
 }
