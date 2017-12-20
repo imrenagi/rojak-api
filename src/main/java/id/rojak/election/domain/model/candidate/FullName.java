@@ -80,7 +80,7 @@ public class FullName extends AssertionConcern implements Serializable {
         this.assertArgumentLength(firstName, 1, 50, "First name must be 50 characters or less.");
         this.assertArgumentTrue(
                 Pattern.matches("[A-Z][a-z]*", firstName),
-                "First name must be at least one character in length, starting with a capital letter.");
+                "First name must be at least one character in length, starting with a capital letter");
 
         this.firstName = firstName;
     }

@@ -28,7 +28,6 @@ public class NomineeApplicationService { //implements INomineeApplicationService
         return nominees;
     }
 
-//    @Override
     @Transactional
     public Nominee newNominee(NewNomineeCommand aCommand) {
 
@@ -60,4 +59,48 @@ public class NomineeApplicationService { //implements INomineeApplicationService
         return newNominee;
     }
 
+    @Transactional
+    public Nominee updateNominee(String aNomineeId, UpdateNomineeCommand aCommand) {
+
+        Nominee nominee =
+                this.nomineeRepository
+                        .findByNomineeId(new NomineeId(aNomineeId));
+
+        if (nominee == null) {
+            throw new IllegalArgumentException(
+                    String.format("Nominee id %s is not exist", aNomineeId));
+        }
+
+        System.out.println(aCommand.getFirstName());
+
+        nominee.setFullName(new FullName(aCommand.getFirstName(),
+                            aCommand.getMiddleName(),
+                            aCommand.getLastName()));
+        nominee.setNickName(aCommand.getNickName());
+        nominee.installPhoto(aCommand.getImageUrl());
+        nominee.setSocialMediaInformation(new SocialMediaInformation(
+                aCommand.getWebUrl(),
+                aCommand.getTwitterId(),
+                aCommand.getInstagramId(),
+                aCommand.getFacebookUrl()));
+
+        nominee = this.nomineeRepository.save(nominee);
+
+        return nominee;
+    }
+
+    @Transactional
+    public void removeNominee(String aNomineeId) {
+
+        Nominee nominee =
+                this.nomineeRepository
+                        .findByNomineeId(new NomineeId(aNomineeId));
+
+        if (nominee == null) {
+            throw new IllegalArgumentException(
+                    String.format("Nominee id %s is not exist", aNomineeId));
+        }
+
+        this.nomineeRepository.delete(nominee);
+    }
 }

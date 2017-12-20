@@ -35,7 +35,7 @@ import java.util.List;
 @Import({AppConfig.class, ContextConfig.class})
 @EnableAutoConfiguration
 @EnableConfigurationProperties
-@ComponentScan({"id.rojak.auth", "id.rojak.election", "id.rojak.analytics"})
+@ComponentScan({"id.rojak.auth", "id.rojak.election", "id.rojak.analytics", "id.rojak.common"})
 public class Application {
 
     private final static Logger log = LoggerFactory.getLogger(Application.class);

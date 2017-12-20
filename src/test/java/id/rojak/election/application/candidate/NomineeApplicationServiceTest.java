@@ -74,6 +74,43 @@ public class NomineeApplicationServiceTest {
     }
 
     @Test
+    public void shouldBeAbleToCreateNewNomineeIfOptionalFieldIsEmpty() {
+
+        NewNomineeCommand command = new NewNomineeCommand("ahok",
+                "Basuki",
+                "",
+                "Tjahaja",
+                "http://facebook.com/image.jpg",
+                "ahok",
+                "",
+                "",
+                "",
+                "");
+
+        Nominee nominee1 = new Nominee(new NomineeId("ahok"),
+                new FullName("Basuki", "", "Tjahaja"),
+                "ahok",
+                new SocialMediaInformation("",
+                        "",
+                        "",
+                        ""));
+
+        when(this.nomineeRepository.findByNomineeId(new NomineeId(command.getId()))).thenReturn(null);
+        when(this.nomineeRepository.save(any(Nominee.class))).thenReturn(nominee1);
+
+        Nominee newNominee = this.nomineeApplicationService
+                .newNominee(command);
+
+        Assert.assertEquals(command.getId(), newNominee.nomineeId().id());
+        Assert.assertEquals(command.getFirstName(), newNominee.fullName().firstName());
+        Assert.assertEquals(command.getLastName(), newNominee.fullName().lastName());
+        Assert.assertEquals(command.getNickName(), newNominee.nickName());
+
+        verify(this.nomineeRepository, times(1)).findByNomineeId(any(NomineeId.class));
+        verify(this.nomineeRepository, timeout(1)).save(any(Nominee.class));
+    }
+
+    @Test
     public void shouldThrowExceptionIfnomineeExist() {
         try {
 
@@ -105,6 +142,52 @@ public class NomineeApplicationServiceTest {
         } catch (Exception e) {
 
         }
+    }
+
+    @Test
+    public void shouldBeAbleToUpdateNominee() {
+        String nomineeId = "ahok";
+        UpdateNomineeCommand command = new UpdateNomineeCommand(
+                "Basuki",
+                "",
+                "Tjahaja",
+                "http://facebook.com/image.jpg",
+                "ahok",
+                "",
+                "",
+                "",
+                "");
+
+        Nominee nominee1 = new Nominee(new NomineeId("ahok"),
+                new FullName("Basuki", "", "Tjahaja"),
+                "ahok",
+                new SocialMediaInformation("",
+                        "",
+                        "",
+                        ""));
+
+        Nominee updatedNominee = new Nominee(new NomineeId("ahok"),
+                new FullName("Basukiaru", "Ahok", "Tjahaja"),
+                "ahok",
+                new SocialMediaInformation("",
+                        "",
+                        "",
+                        ""));
+
+        when(this.nomineeRepository.findByNomineeId(new NomineeId(nomineeId))).thenReturn(nominee1);
+        when(this.nomineeRepository.save(any(Nominee.class))).thenReturn(updatedNominee);
+
+        Nominee newNominee = this.nomineeApplicationService
+                .updateNominee(nomineeId, command);
+
+        Assert.assertEquals(nomineeId, newNominee.nomineeId().id());
+        Assert.assertEquals(updatedNominee.fullName().firstName(), newNominee.fullName().firstName());
+        Assert.assertEquals(updatedNominee.fullName().middleName(), newNominee.fullName().middleName());
+        Assert.assertEquals(updatedNominee.fullName().lastName(), newNominee.fullName().lastName());
+        Assert.assertEquals(command.getNickName(), newNominee.nickName());
+
+        verify(this.nomineeRepository, times(1)).findByNomineeId(any(NomineeId.class));
+        verify(this.nomineeRepository, timeout(1)).save(any(Nominee.class));
     }
 
 

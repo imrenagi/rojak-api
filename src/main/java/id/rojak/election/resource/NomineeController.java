@@ -2,6 +2,7 @@ package id.rojak.election.resource;
 
 import id.rojak.election.application.candidate.NewNomineeCommand;
 import id.rojak.election.application.candidate.NomineeApplicationService;
+import id.rojak.election.application.candidate.UpdateNomineeCommand;
 import id.rojak.election.application.election.ElectionApplicationService;
 import id.rojak.election.domain.model.candidate.Nominee;
 import id.rojak.election.resource.dto.MetaDTO;
@@ -23,7 +24,6 @@ import java.util.List;
  * Created by imrenagi on 7/9/17.
  */
 @RestController
-@RequestMapping("/elections")
 public class NomineeController {
 
     private static Logger log = LoggerFactory.getLogger(ElectionApplicationService.class);
@@ -61,4 +61,27 @@ public class NomineeController {
                 HttpStatus.OK
         );
     }
+
+    @RequestMapping(path = "/nominees/{nominee_id}", method = RequestMethod.PUT)
+    public ResponseEntity<NomineeDTO> updateNominee(
+            @PathVariable("nominee_id") String aNomineeId,
+            @Valid @RequestBody UpdateNomineeCommand aCommand) {
+
+        Nominee nominee = nomineeApplicationService.updateNominee(aNomineeId, aCommand);
+
+        return new ResponseEntity<NomineeDTO>(
+                new NomineeDTO(nominee),
+                HttpStatus.OK
+        );
+    }
+
+    @RequestMapping(path = "/nominees/{nominee_id}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> removeNominee(@PathVariable("nominee_id") String aNomineeId) {
+
+        nomineeApplicationService.removeNominee(aNomineeId);
+
+        return new ResponseEntity<String>("", HttpStatus.OK);
+    }
+
+
 }

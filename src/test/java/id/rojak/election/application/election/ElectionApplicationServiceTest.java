@@ -38,6 +38,9 @@ public class ElectionApplicationServiceTest {
     @Mock
     private CityRepository cityRepository;
 
+    @Mock
+    private ProvinceRepository provinceRepository;
+
     @Before
     public void setup() {
         initMocks(this);
@@ -85,17 +88,19 @@ public class ElectionApplicationServiceTest {
 
         NewElectionCommand command =
                 new NewElectionCommand(
+                        "pilkada_dki_jakarta_2017",
                         "Pilkada DKI Jakarta 2017",
                         new GregorianCalendar(2017, Calendar.JULY,1).getTime().getTime(),
                         new GregorianCalendar(2017, Calendar.JANUARY,1).getTime().getTime(),
                         new GregorianCalendar(2017, Calendar.FEBRUARY,1).getTime().getTime(),
+                        1L,
                         1L,
                         "GOVERNOR");
 
         String uuid = UUID.randomUUID().toString();
 
         Election election = new Election(
-                new ElectionId(uuid),
+                new ElectionId("pilkada_dki_jakarta_2017"),
                 "Pilkada DKI Jakarta 2017",
                 new GregorianCalendar(2017, Calendar.JULY,1).getTime(),
                 new GregorianCalendar(2017, Calendar.JANUARY,1).getTime(),
@@ -105,16 +110,17 @@ public class ElectionApplicationServiceTest {
 
 
         City city = new City("Jakarta Selatan", mock(Location.class), mock(Province.class));
-
+        Province province = new Province("DKI Jakarta", "JKT", mock(Country.class));
 
         when(this.cityRepository.findOne(anyLong())).thenReturn(city);
+        when(this.provinceRepository.findOne(anyLong())).thenReturn(province);
         when(this.electionRepository.nextId()).thenReturn(uuid);
         when(this.electionRepository.save(any(Election.class))).thenReturn(election);
 
         Election newElection = this.electionApplicationService
                 .newElection(command);
 
-        Assert.assertEquals(uuid, election.electionId().id());
+        Assert.assertEquals("pilkada_dki_jakarta_2017", election.electionId().id());
         Assert.assertEquals(ElectionType.GOVERNOR, election.type());
 
         verify(this.cityRepository, times(1)).findOne(anyLong());
