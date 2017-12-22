@@ -89,6 +89,7 @@ public class Election extends IdentifiedDomainObject {
     public void addCandidate(Candidate candidate) {
         this.assertArgumentNotNull(candidate, "Candidate must not be null");
 
+        candidate.setElection(this);
         this.candidates().add(candidate);
 
         DomainEventPublisher

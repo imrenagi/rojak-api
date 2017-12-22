@@ -307,16 +307,93 @@ public class CandidateApplicationServiceTest {
         Assert.assertEquals(1, election.candidates().size());
 
         when(this.electionRepository.findByElectionId(new ElectionId(command.getElectionId()))).thenReturn(election);
-        when(this.candidateRepository.findByElectionIdAndCandidateId(any(ElectionId.class), any(CandidateId.class)))
-                .thenReturn(existingCandidate);
+        when(this.candidateRepository.findByCandidateId(any(CandidateId.class))).thenReturn(existingCandidate);
 
-        this.candidateApplicationService.removeCandidate(command);
+        this.candidateApplicationService.removeCandidate(existingCandidate.candidateId().id());
 
         Assert.assertEquals(0, election.candidates().size());
 
         verify(this.electionRepository, times(1)).findByElectionId(any());
-        verify(this.candidateRepository, times(1)).findByElectionIdAndCandidateId(any(), any());
+        verify(this.candidateRepository, times(1)).findByCandidateId(any());
 
+    }
+
+    @Test
+    public void shouldBeAbleToUpdateCandidate() {
+        String candidateId = "okeoce";
+
+        UpdateCandidateDetailCommand command =
+                new UpdateCandidateDetailCommand(
+                        "dkijakarta2",
+                        2,
+                        "ahok", "aniesbaswedan",
+                        "http://facebook.com",
+                        "http://facebook.com",
+                        "okeoce",
+                        "https://facebook.com",
+                        "okeoce");
+
+        Election election = new Election(
+                new ElectionId("dkijakarta"),
+                "Pemilu DKI Jakarta 2017",
+                new GregorianCalendar(2017, Calendar.MARCH, 1).getTime(),
+                new GregorianCalendar(2017, Calendar.JANUARY, 1).getTime(),
+                new GregorianCalendar(2017, Calendar.FEBRUARY, 1).getTime(),
+                mock(Province.class),
+                mock(City.class),
+                ElectionType.GOVERNOR);
+
+        Election election2 = new Election(
+                new ElectionId("dkijakarta2"),
+                "Pemilu DKI Jakarta 2018",
+                new GregorianCalendar(2017, Calendar.MARCH, 1).getTime(),
+                new GregorianCalendar(2017, Calendar.JANUARY, 1).getTime(),
+                new GregorianCalendar(2017, Calendar.FEBRUARY, 1).getTime(),
+                mock(Province.class),
+                mock(City.class),
+                ElectionType.GOVERNOR);
+
+        Nominee nominee1 = new Nominee(new NomineeId("ahok"),
+                mock(FullName.class),
+                "ahok",
+                mock(SocialMediaInformation.class));
+
+        Nominee nominee2 = new Nominee(new NomineeId("aniesbaswedan"),
+                mock(FullName.class),
+                "anies",
+                mock(SocialMediaInformation.class));
+
+        Candidate originalCandidate = new Candidate(
+                new CandidateId("okeoce"),
+                new ElectionId("dkijakarta"),
+                1,
+                "http://2.bp.blogspot.com/-0lGfBSjI754/VMkoenAX6MI/AAAAAAAANR4/KsbVvD9T5yg/s1600/Tri-Rismaharini.jpg",
+                nominee1, nominee2,
+                new SocialMediaInformation("https://facebook.com",
+                        "ahok",
+                        "ahok",
+                        "https://facebook.com/ahok"));
+
+        Assert.assertEquals(0, election.candidates().size());
+        Assert.assertEquals(0, election2.candidates().size());
+
+        election.addCandidate(originalCandidate);
+
+        Assert.assertEquals(1, election.candidates().size());
+        Assert.assertEquals(0, election2.candidates().size());
+
+        when(this.electionRepository.findByElectionId(new ElectionId("dkijakarta"))).thenReturn(election);
+        when(this.electionRepository.findByElectionId(new ElectionId("dkijakarta2"))).thenReturn(election2);
+        when(this.nomineeRepository.findByNomineeId(any(NomineeId.class))).thenReturn(nominee1);
+        when(this.candidateRepository.findByCandidateId(any(CandidateId.class))).thenReturn(originalCandidate);
+
+        Candidate updatedCandidate = this.candidateApplicationService.updateCandidate(candidateId,command);
+
+        Assert.assertEquals(0, election.candidates().size());
+        Assert.assertEquals(1, election2.candidates().size());
+
+        Assert.assertEquals(command.getElectionId(), updatedCandidate.electionId().id());
+        Assert.assertEquals(command.getCandidateNumber().intValue(), updatedCandidate.candidateNumber());
     }
 
 }

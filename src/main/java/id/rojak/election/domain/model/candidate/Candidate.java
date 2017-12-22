@@ -83,22 +83,12 @@ public class Candidate extends IdentifiedDomainObject {
         //TODO publish domain event if needed
     }
 
-    public void cancelCandidacyInElection(Election election, CandidateService aCandidateService) {
+    public void changeElection(Election newElection) {
 
-        //TODO check candidate electionID sama atau gak.
-
-//        this.assertArgumentNotNull(aGroup, "Group must not be null.");
-//        this.assertArgumentEquals(this.tenantId(), aGroup.tenantId(), "Wrong tenant for this group.");
-//        this.assertArgumentFalse(aGroupMemberService.isMemberGroup(aGroup, this.toGroupMember()), "Group recurrsion.");
-//
-//        if (this.groupMembers().add(aGroup.toGroupMember()) && !this.isInternalGroup()) {
-//            DomainEventPublisher
-//                    .instance()
-//                    .publish(new GroupGroupAdded(
-//                            this.tenantId(),
-//                            this.name(),
-//                            aGroup.name()));
-//        }
+        if (!this.election().equals(newElection)) {
+            this.election().removeCandidate(this);
+            newElection.addCandidate(this);
+        }
 
         //TODO publish domain event
     }
@@ -183,6 +173,8 @@ public class Candidate extends IdentifiedDomainObject {
 
         this.election = election;
     }
+
+
 
     public CandidateId candidateId() { return this.candidateId; }
 

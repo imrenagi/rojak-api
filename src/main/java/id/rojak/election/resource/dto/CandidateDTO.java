@@ -1,6 +1,7 @@
 package id.rojak.election.resource.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import id.rojak.election.domain.model.candidate.Candidate;
 
@@ -8,6 +9,7 @@ import id.rojak.election.domain.model.candidate.Candidate;
  * Created by imrenagi on 7/8/17.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CandidateDTO {
 
     private String id;
@@ -41,7 +43,7 @@ public class CandidateDTO {
         this.facebookUrl = candidate.socialMediaInformation().facebookUrl();
         this.instagramId = candidate.socialMediaInformation().instagramId();
         //TODO change this
-        this.statistic = new StatisticDTO();
+//        this.statistic = new StatisticDTO();
     }
 
     @JsonProperty("id")

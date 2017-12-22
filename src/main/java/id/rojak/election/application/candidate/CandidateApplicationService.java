@@ -50,6 +50,13 @@ public class CandidateApplicationService { //implements ICandidateApplicationSer
         return result;
     }
 
+    @Transactional
+    public Page<Candidate> allCandidates(Pageable pageRequest) {
+
+        Page<Candidate> result = this.candidateRepository.findAll(pageRequest);
+        return result;
+    }
+
     public StatisticDTO candidateStatistic(String anElectionId, String candidateId) {
         return analyticsService.newsStatistic(
                 anElectionId,
@@ -62,7 +69,6 @@ public class CandidateApplicationService { //implements ICandidateApplicationSer
 
     }
 
-//    @Override
     @Transactional
     public Candidate candidate(String anElectionId,
                                String candidateId) {
@@ -79,7 +85,20 @@ public class CandidateApplicationService { //implements ICandidateApplicationSer
         return candidate;
     }
 
-//    @Override
+    @Transactional
+    public Candidate candidate(String candidateId) {
+
+        Candidate candidate = this.candidateRepository
+                .findByCandidateId(new CandidateId(candidateId));
+
+        if (candidate == null) {
+            throw new ResourceNotFoundException(
+                    String.format("Candidate %s is not found", candidateId));
+        }
+
+        return candidate;
+    }
+
     @Transactional
     public Candidate newCandidate(NewCandidateCommand aCommand) {
 
@@ -132,15 +151,56 @@ public class CandidateApplicationService { //implements ICandidateApplicationSer
         return candidate;
     }
 
-//    @Override
     @Transactional
-    public void removeCandidate(RemoveCandidateCommand aCommand) {
+    public Candidate updateCandidate(String candidateId, UpdateCandidateDetailCommand aCommand) {
 
-        Election election = this.election(aCommand.getElectionId());
+        Nominee mainCandidate = this.nominee(
+                aCommand.getMainCandidateId());
 
-        Candidate candidate = this.candidate(aCommand.getElectionId(),
-                aCommand.getCandidateId());
+        Nominee viceCandidate = this.nominee(
+                aCommand.getViceCandidateId());
 
+        Candidate existingCandidate =
+                this.candidateRepository
+                        .findByCandidateId(new CandidateId(candidateId));
+
+        if (existingCandidate == null) {
+            throw new IllegalArgumentException(
+                    String.format("Candidate with id %s doesn't exist",
+                            candidateId));
+        }
+
+        existingCandidate.setCandidateNumber(aCommand.getCandidateNumber());
+        existingCandidate.setImageUrl(aCommand.getImageUrl());
+        existingCandidate.setMainCandidate(mainCandidate);
+        existingCandidate.setViceCandidate(viceCandidate);
+        existingCandidate.setSocialMediaInformation(new SocialMediaInformation(
+                aCommand.getWebUrl(),
+                aCommand.getTwitterId(),
+                aCommand.getInstagramId(),
+                aCommand.getFacebookUrl()));
+
+        Election newElection = this.election(aCommand.getElectionId());
+        Election oldElection = existingCandidate.election();
+
+//        if (!newElection.equals(oldElection)) {
+//            existingCandidate.setElectionId(new ElectionId(aCommand.getElectionId()));
+//
+//            newElection.addCandidate(existingCandidate);
+//
+//            oldElection.removeCandidate(existingCandidate);
+//        }
+
+        existingCandidate.setElectionId(new ElectionId(aCommand.getElectionId()));
+        existingCandidate.changeElection(newElection);
+
+        return existingCandidate;
+    }
+
+    @Transactional
+    public void removeCandidate(String aCandidateId) {
+        Candidate candidate = this.candidate(aCandidateId);
+        Election election = this.election(candidate.electionId().id());
         election.removeCandidate(candidate);
     }
 

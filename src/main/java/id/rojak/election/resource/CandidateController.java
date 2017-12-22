@@ -22,7 +22,6 @@ import java.util.List;
  * Created by imrenagi on 7/8/17.
  */
 @RestController
-@RequestMapping("/elections")
 public class CandidateController {
 
     private static final Logger log = LoggerFactory.getLogger(ElectionController.class);
@@ -30,7 +29,7 @@ public class CandidateController {
     @Autowired
     private CandidateApplicationService candidateApplicationService;
 
-    @RequestMapping(path = "/{election_id}/candidates", method = RequestMethod.GET)
+    @RequestMapping(path = "/elections/{election_id}/candidates", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<CandidateCollectionDTO> getAllCandidates(
             @PathVariable("election_id") String anElectionId,
@@ -65,7 +64,7 @@ public class CandidateController {
 
     }
 
-    @RequestMapping(path = "/{election_id}/candidates/{candidate_id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/elections/{election_id}/candidates/{candidate_id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<CandidateDTO> getCandidateFromElection(
             @PathVariable("election_id") String anElectionId,
@@ -77,50 +76,7 @@ public class CandidateController {
                 new CandidateDTO(candidate), HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/{election_id}/candidates", method = RequestMethod.POST)
-    public ResponseEntity<CandidateDTO> newCandidateForElection(@PathVariable("election_id") String anElectionId,
-                                                          @Valid @RequestBody NewCandidateCommand aCommand) {
-
-        aCommand.setElectionId(anElectionId);
-
-        Candidate candidate = this.candidateApplicationService.newCandidate(aCommand);
-
-        return new ResponseEntity<CandidateDTO>(
-                new CandidateDTO(candidate), HttpStatus.CREATED);
-    }
-
-    @RequestMapping(path = "/{election_id}/candidates/{candidate_id}", method = RequestMethod.PUT)
-    public ResponseEntity<String> updateCandidateForAnElection(
-            @PathVariable("election_id") String anElectionId,
-            @PathVariable("candidate_id") String candidateId,
-            @Valid @RequestBody UpdateCandidateDetailCommand aCommand) {
-
-        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
-    }
-
-    @RequestMapping(path = "/{election_id}/candidates/{candidate_id}/socmed", method = RequestMethod.PUT)
-    public ResponseEntity<String> updateCandidateSocialMediaInElection(
-            @PathVariable("election_id") String anElectionId,
-            @PathVariable("candidate_id") String candidateId,
-            @Valid @RequestBody UpdateCandidateSocialMediaCommand aCommand) {
-
-        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
-    }
-
-    @RequestMapping(path = "/{election_id}/candidates/{candidate_id}",
-            method = RequestMethod.DELETE,
-            produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<String> deleteCandidateOfAnElection(
-            @PathVariable("election_id") String anElectionId,
-            @PathVariable("candidate_id") String candidateId) {
-
-        this.candidateApplicationService.removeCandidate(
-                new RemoveCandidateCommand(anElectionId, candidateId));
-
-        return new ResponseEntity<String>("", HttpStatus.OK);
-    }
-
-    @RequestMapping(path = "/{election_id}/candidates/{candidate_id}/statistics", method = RequestMethod.GET)
+    @RequestMapping(path = "/elections/{election_id}/candidates/{candidate_id}/statistics", method = RequestMethod.GET)
     public ResponseEntity<String> candidateStatisticOverTheTime(
             @PathVariable("election_id") String anElectionId,
             @PathVariable("candidate_id") String candidateId) {
@@ -128,13 +84,80 @@ public class CandidateController {
         return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @RequestMapping(path = "/{election_id}/candidates/{candidate_id}/media", method = RequestMethod.GET)
+    @RequestMapping(path = "/elections/{election_id}/candidates/{candidate_id}/media", method = RequestMethod.GET)
     public ResponseEntity<String> allMediaStatisticForCandidate(
             @PathVariable("election_id") String anElectionId,
             @PathVariable("candidate_id") String candidateId) {
 
         return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
     }
+
+    @RequestMapping(path = "/candidates", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<CandidateCollectionDTO> getAllCandidates(
+            @RequestParam(value="page", defaultValue = "0") Integer page,
+            @RequestParam(value="limit", defaultValue="10") Integer size) {
+
+        Page<Candidate> candidatesPage = this.candidateApplicationService
+                .allCandidates(new PageRequest(page, size));
+
+        List<CandidateDTO> candidates = candidatesPage
+                .map(candidate -> {
+                    CandidateDTO dto = new CandidateDTO(candidate);
+                    return dto;
+                })
+                .getContent();
+
+        return new ResponseEntity<>(
+                new CandidateCollectionDTO(
+                        candidates,
+                        new MetaDTO(
+                                page,
+                                candidatesPage.getTotalPages(),
+                                candidatesPage.getTotalElements())),
+                HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/candidates/{candidate_id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<CandidateDTO> getCandidate(@PathVariable("candidate_id") String candidateId) {
+
+        Candidate candidate = this.candidateApplicationService
+                .candidate(candidateId);
+
+        return new ResponseEntity<CandidateDTO>(new CandidateDTO(candidate), HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/candidates", method = RequestMethod.POST)
+    public ResponseEntity<CandidateDTO> newCandidateForElection(@Valid @RequestBody NewCandidateCommand aCommand) {
+
+        Candidate candidate = this.candidateApplicationService.newCandidate(aCommand);
+
+        return new ResponseEntity<CandidateDTO>(
+                new CandidateDTO(candidate), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(path = "/candidates/{candidate_id}", method = RequestMethod.PUT)
+    public ResponseEntity<String> updateCandidateForAnElection(
+            @PathVariable("candidate_id") String candidateId,
+            @Valid @RequestBody UpdateCandidateDetailCommand aCommand) {
+
+        Candidate candidate = this.candidateApplicationService.updateCandidate(candidateId, aCommand);
+
+        return new ResponseEntity<String>("", HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/candidates/{candidate_id}",
+            method = RequestMethod.DELETE,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<String> removeCandidate(@PathVariable("candidate_id") String candidateId) {
+
+        this.candidateApplicationService.removeCandidate(candidateId);
+
+        return new ResponseEntity<String>("", HttpStatus.OK);
+    }
+
+
 
 }
 
