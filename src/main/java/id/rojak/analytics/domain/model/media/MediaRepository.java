@@ -15,5 +15,5 @@ public interface MediaRepository extends JpaRepository<Media, Long> {
 
     Page<Media> findAll(Pageable pageRequest);
 
-
+    void deleteByMediaId(MediaId mediaId);
 }

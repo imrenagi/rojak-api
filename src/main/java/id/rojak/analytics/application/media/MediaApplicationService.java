@@ -51,37 +51,60 @@ public class MediaApplicationService {
             throw new IllegalArgumentException("Media with the same id exists!");
         }
 
-        SocialMedia socialMedia = null;
-        if (aCommand.getSocialMedia() != null) {
-            socialMedia = new SocialMedia(aCommand.getSocialMedia().getFacebookUrl(),
-                    aCommand.getSocialMedia().getTwitterId(),
-                    aCommand.getSocialMedia().getInstagramId());
-        }
-
-        PostalAddress postalAddress = null;
-        if (aCommand.getPostalAddress() != null) {
-            postalAddress = new PostalAddress(aCommand.getPostalAddress().getStreetAddress(),
-                    aCommand.getPostalAddress().getCountry(),
-                    aCommand.getPostalAddress().getProvince(),
-                    aCommand.getPostalAddress().getCity(),
-                    aCommand.getPostalAddress().getZipCode());
-        }
+        SocialMedia socialMedia = new SocialMedia(
+                    aCommand.getFacebookUrl(),
+                    aCommand.getTwitterId(),
+                    aCommand.getInstagramId());
 
         Media newMedia = new Media(new MediaId(aCommand.getId()),
                 aCommand.getName(),
                 aCommand.getWebUrl(),
                 aCommand.getMobileWebUrl(),
                 socialMedia,
-                postalAddress);
+                null);
 
         return this.mediaRepository.save(newMedia);
+    }
+
+    @Transactional
+    public Media updateMedia(String aMediaId, UpdateMediaCommand aCommand) {
+
+        Media media = this.mediaRepository.findByMediaId(
+                new MediaId(aMediaId));
+
+        if (media == null) {
+            throw new ResourceNotFoundException("Media doesn't exist");
+        }
+
+        SocialMedia socialMedia = new SocialMedia(
+                aCommand.getFacebookUrl(),
+                aCommand.getTwitterId(),
+                aCommand.getInstagramId());
+
+        media.setName(aCommand.getName());
+        media.setWebsiteUrl(aCommand.getWebUrl());
+        media.setMobileWebsiteUrl(aCommand.getMobileWebUrl());
+        media.setSocialMedia(socialMedia);
+
+        return this.mediaRepository.save(media);
     }
 
     public Long numberOfArticles(String electionId, String mediaId) {
         return 100L;
     }
 
+    @Transactional
+    public void remove(String aMediaId) {
 
+        Media media = this.mediaRepository.findByMediaId(
+                new MediaId(aMediaId));
+
+        if (media == null) {
+            throw new ResourceNotFoundException("Media doesn't exist");
+        }
+
+        this.mediaRepository.delete(media);
+    }
 }
 
 

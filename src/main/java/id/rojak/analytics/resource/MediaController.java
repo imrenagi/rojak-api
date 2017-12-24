@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
  * Created by imrenagi on 7/14/17.
  */
 @RestController
-@RequestMapping("/analytics")
+@RequestMapping("/medias")
 public class MediaController {
 
     @Autowired
     MediaApplicationService mediaApplicationService;
 
-    @RequestMapping(path = "/medias", method = RequestMethod.GET)
+    @RequestMapping(path = "", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<MediaCollectionDTO> getAllMedias(
             @RequestParam(value="page", defaultValue = "0") Integer page,
@@ -55,7 +55,7 @@ public class MediaController {
 
     }
 
-    @RequestMapping(path = "/medias", method = RequestMethod.POST)
+    @RequestMapping(path = "", method = RequestMethod.POST)
     public ResponseEntity<MediaDTO> createNewMedia(@Valid @RequestBody NewMediaCommand command) {
 
         Media media = this.mediaApplicationService.newMedia(command);
@@ -68,12 +68,21 @@ public class MediaController {
         return new ResponseEntity<>(mediaDTO, HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/medias/{media_id}", method = RequestMethod.PUT)
-    public ResponseEntity<String> updateMedia(@Valid @RequestBody UpdateMediaCommand command) {
-        return new ResponseEntity<String>("", HttpStatus.NOT_IMPLEMENTED);
+    @RequestMapping(path = "/{media_id}", method = RequestMethod.PUT)
+    public ResponseEntity<MediaDTO> updateMedia(@PathVariable("media_id") String aMediaId,
+                                                @Valid @RequestBody UpdateMediaCommand command) {
+
+        Media media = this.mediaApplicationService.updateMedia(aMediaId, command);
+
+        MediaDTO mediaDTO = new MediaDTO(media.mediaId().id(),
+                media.name(),
+                media.websiteUrl(),
+                media.logo());
+
+        return new ResponseEntity<>(mediaDTO, HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/medias/{media_id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/{media_id}", method = RequestMethod.GET)
     public ResponseEntity<MediaDTO> mediaDetail(@PathVariable("media_id") String aMediaId) {
 
         Media media = this.mediaApplicationService.media(aMediaId);
@@ -84,6 +93,15 @@ public class MediaController {
                 media.logo());
 
         return new ResponseEntity<>(mediaDTO, HttpStatus.OK);
+    }
+
+    @RequestMapping(path="/{media_id}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> removeMedia(@PathVariable("media_id") String aMediaId) {
+
+        this.mediaApplicationService.remove(aMediaId);
+
+        return new ResponseEntity<>("", HttpStatus.OK);
+
     }
 
 }
